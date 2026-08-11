@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
   for (const rec of records) {
     const f        = rec.fields;
     const name     = f['Your name'] || 'Unknown';
-    const software = Number(f['Software closed']) || 0;
+    const software = Number(f['software closed']) || 0;
     const dials    = Number(f['Outbound dials']) || 0;
     if (!repMap[name]) repMap[name] = { name, software: 0, dials: 0 };
     repMap[name].software += software;
