@@ -28,7 +28,11 @@ module.exports = async function handler(req, res) {
   if (!AIRTABLE_TOKEN) return res.status(500).json({ error: 'AIRTABLE_TOKEN not set' });
   if (!DISCORD_WEBHOOK) return res.status(500).json({ error: 'DISCORD_WEBHOOK_URL not set' });
 
-  const { iso, display } = yesterdayEST();
+  let { iso, display } = yesterdayEST();
+  if (req.query.date) {
+    iso = req.query.date;
+    display = new Date(`${iso}T00:00:00`).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
 
   if (req.query.debug === 'all') {
     const rAll = await fetch(
