@@ -30,6 +30,15 @@ module.exports = async function handler(req, res) {
 
   const { iso, display } = yesterdayEST();
 
+  if (req.query.debug === 'all') {
+    const rAll = await fetch(
+      `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}?pageSize=100`,
+      { headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` } }
+    );
+    const dataAll = await rAll.json();
+    return res.status(200).json({ iso, records: (dataAll.records || []).map(rec => rec.fields) });
+  }
+
   const formula = encodeURIComponent(`IS_SAME({Date},"${iso}","day")`);
   const r = await fetch(
     `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}?filterByFormula=${formula}&pageSize=100`,
