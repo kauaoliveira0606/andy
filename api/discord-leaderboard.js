@@ -1,0 +1,88 @@
+const AIRTABLE_TOKEN  = process.env.AIRTABLE_TOKEN;
+const AIRTABLE_BASE   = 'appgcEYqudlGfqBjE'; // Andy - EcomSimulation
+const AIRTABLE_TABLE  = 'Affiliate EOD';
+const DISCORD_WEBHOOK = process.env.DISCORD_WEBHOOK_URL;
+
+function yesterdayEST() {
+  const nyStr = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/New_York' }).format(new Date());
+  const [y, m, d] = nyStr.split('-').map(Number);
+  const prev = new Date(y, m - 1, d - 1);
+  return {
+    iso:     `${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,'0')}-${String(prev.getDate()).padStart(2,'0')}`,
+    display: prev.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }),
+  };
+}
+
+const MEDALS = ['🥇', '🥈', '🥉'];
+
+function buildRanking(reps, key, format) {
+  return [...reps]
+    .sort((a, b) => b[key] - a[key])
+    .filter(r => r[key] > 0)
+    .map((r, i) => `${MEDALS[i] || `${i+1}.`} ${r.name} — ${format(r[key])}`)
+    .join('\n') || 'No submissions yet';
+}
+
+module.exports = async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (!AIRTABLE_TOKEN) return res.status(500).json({ error: 'AIRTABLE_TOKEN not set' });
+  if (!DISCORD_WEBHOOK) return res.status(500).json({ error: 'DISCORD_WEBHOOK_URL not set' });
+
+  const { iso, display } = yesterdayEST();
+
+  const formula = encodeURIComponent(`IS_SAME({Date},"${iso}","day")`);
+  const r = await fetch(
+    `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}?filterByFormula=${formula}&pageSize=100`,
+    { headers: { 'Authorization': `Bearer ${AIRTABLE_TOKEN}` } }
+  );
+  const data = await r.json();
+  const records = data.records || [];
+
+  if (req.query.debug === '1') return res.status(200).json({ iso, records: records.map(rec => rec.fields) });
+
+  if (!records.length) {
+    return res.status(200).json({ ok: true, message: `No EOD submissions found for ${iso}` });
+  }
+
+  // Aggregate by rep name (handle duplicate submissions by summing)
+  const repMap = {};
+  for (const rec of records) {
+    const f        = rec.fields;
+    const name     = f['Your name'] || 'Unknown';
+    const software = Number(f['Software closed']) || 0;
+    const dials    = Number(f['Outbound dials']) || 0;
+    if (!repMap[name]) repMap[name] = { name, software: 0, dials: 0 };
+    repMap[name].software += software;
+    repMap[name].dials    += dials;
+  }
+  const reps = Object.values(repMap);
+
+  const softwareRanking = buildRanking(reps, 'software', v => v.toLocaleString());
+  const dialsRanking    = buildRanking(reps, 'dials',    v => v.toLocaleString());
+
+  const totalSoftware = reps.reduce((s, r) => s + r.software, 0);
+  const totalDials    = reps.reduce((s, r) => s + r.dials,    0);
+
+  const embed = {
+    title:  `🛒 Andy - EcomSimulation Daily Leaderboard — ${display}`,
+    color:  0xf59e0b,
+    fields: [
+      { name: '🖥️ Software Closed', value: softwareRanking, inline: true },
+      { name: '📞 Outbound Dials',  value: dialsRanking,    inline: true },
+    ],
+    footer: { text: `Team total: ${totalSoftware.toLocaleString()} software closed · ${totalDials.toLocaleString()} dials` },
+  };
+
+  const discordRes = await fetch(DISCORD_WEBHOOK, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify({ embeds: [embed] }),
+  });
+
+  if (!discordRes.ok) {
+    const err = await discordRes.text();
+    return res.status(500).json({ error: 'Discord post failed', detail: err });
+  }
+
+  res.status(200).json({ ok: true, reps: reps.length, totalSoftware, totalDials });
+};
