@@ -245,7 +245,10 @@ export async function GET(req: NextRequest) {
 
   if (req.nextUrl.searchParams.get("debug") === "1") {
     try {
-      const callsNoFilter = await closeFetch<{ data: CloseCall[] }>("/activity/call/", { _limit: "5" });
+      const callsNoFilter = await closeFetch<{ data: CloseCall[] }>("/activity/call/", {
+        _limit: "5",
+        _order_by: "-date_created",
+      });
       const callsDateCreated = await fetchAllPages<CloseCall>(
         "/activity/call/",
         { date_created__gte: bounds.gte, date_created__lt: bounds.lt },
@@ -253,7 +256,7 @@ export async function GET(req: NextRequest) {
       );
       const callsActivityAt = await fetchAllPages<CloseCall>(
         "/activity/call/",
-        { activity_at__gte: bounds.gte, activity_at__lt: bounds.lt },
+        { activity_at__gte: bounds.gte, activity_at__lt: bounds.lt, _order_by: "activity_at" },
         1
       );
       return NextResponse.json({
