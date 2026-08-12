@@ -53,6 +53,20 @@ module.exports = async function handler(req, res) {
 
   if (req.query.debug === '1') return res.status(200).json({ iso, records: records.map(rec => rec.fields) });
 
+  // Only Vercel's own cron trigger (or an explicit ?force=1) is allowed to actually post to
+  // Discord. This stops accidental re-opens, refreshes, or link-preview crawlers hitting this
+  // URL from silently sending duplicate messages.
+  const isCron = (req.headers['user-agent'] || '').includes('vercel-cron');
+  if (!isCron && req.query.force !== '1') {
+    return res.status(200).json({
+      ok: true,
+      dryRun: true,
+      message: 'Not triggered by cron — add &force=1 to actually post to Discord, or use debug=1 to just inspect data.',
+      iso,
+      reps: records.length,
+    });
+  }
+
   if (!records.length) {
     return res.status(200).json({ ok: true, message: `No EOD submissions found for ${iso}` });
   }
