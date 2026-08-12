@@ -104,25 +104,67 @@ async function fetchLeadsInRange(gte: string | undefined, lt: string | undefined
   return inRange;
 }
 
+// The sales team operates on Eastern Time, so "today"/"yesterday"/"this
+// week" must follow the Eastern calendar day, not a raw UTC slice.
+function nyDatePartsNow(): { y: number; m: number; d: number; dow: number } {
+  const fmt = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/New_York",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  });
+  const parts = fmt.formatToParts(new Date());
+  const get = (t: string) => parts.find((p) => p.type === t)?.value || "";
+  const y = Number(get("year"));
+  const m = Number(get("month"));
+  const d = Number(get("day"));
+  const dowMap: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  return { y, m, d, dow: dowMap[get("weekday")] ?? 0 };
+}
+
+// Converts an Eastern-local calendar date to the UTC instant of its midnight.
+function nyMidnightUTC(y: number, m: number, d: number): Date {
+  // Use noon UTC as an unambiguous reference point to read Eastern's current
+  // UTC offset (handles the EST/EDT switch), then apply that offset to the
+  // actual midnight instant.
+  const noonGuess = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  const offsetParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    timeZoneName: "shortOffset",
+  }).formatToParts(noonGuess);
+  const offsetStr = offsetParts.find((p) => p.type === "timeZoneName")?.value || "GMT-5";
+  const offsetHours = parseInt(offsetStr.replace("GMT", ""), 10) || -5;
+  // Eastern midnight, expressed in UTC, is UTC midnight minus the (negative) offset.
+  return new Date(Date.UTC(y, m - 1, d, 0, 0, 0) - offsetHours * 3600000);
+}
+
 function rangeBounds(range: string): { gte?: string; lt?: string } {
-  const now = new Date();
-  const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
   if (range === "all") return {};
+
+  const { y, m, d, dow } = nyDatePartsNow();
+  const today = nyMidnightUTC(y, m, d);
+
+  if (range === "yesterday") {
+    const start = new Date(today);
+    start.setUTCDate(start.getUTCDate() - 1);
+    return { gte: start.toISOString(), lt: today.toISOString() };
+  }
 
   const start = new Date(today);
   if (range === "today") {
     // start stays at today
   } else if (range === "7d") {
-    start.setUTCDate(today.getUTCDate() - 6);
+    start.setUTCDate(start.getUTCDate() - 6);
   } else if (range === "30d") {
-    start.setUTCDate(today.getUTCDate() - 29);
+    start.setUTCDate(start.getUTCDate() - 29);
   } else {
-    // "week" and default: this calendar week (Sun–Sat)
-    start.setUTCDate(today.getUTCDate() - today.getUTCDay());
+    // "week" and default: this calendar week (Sun–Sat), Eastern-local
+    start.setUTCDate(start.getUTCDate() - dow);
   }
 
   const lt = new Date(today);
-  lt.setUTCDate(today.getUTCDate() + 1);
+  lt.setUTCDate(lt.getUTCDate() + 1);
   return { gte: start.toISOString(), lt: lt.toISOString() };
 }
 

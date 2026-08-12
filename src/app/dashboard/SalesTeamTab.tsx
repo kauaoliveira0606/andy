@@ -10,6 +10,7 @@ const BG = "#F3EFE1";
 
 const RANGE_OPTIONS = [
   { label: "Today", value: "today" },
+  { label: "Yesterday", value: "yesterday" },
   { label: "This Week", value: "week" },
   { label: "Last 7 Days", value: "7d" },
   { label: "Last 30 Days", value: "30d" },
