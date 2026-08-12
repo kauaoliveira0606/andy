@@ -202,6 +202,25 @@ export async function GET(req: NextRequest) {
   const range = req.nextUrl.searchParams.get("range") || "week";
   const bounds = rangeBounds(range);
 
+  if (req.nextUrl.searchParams.get("debug") === "1") {
+    try {
+      const leads = await searchLeadsByDateRange(bounds.gte, bounds.lt);
+      const calls = await fetchAllPages<CloseCall>("/activity/call/", {
+        date_created__gte: bounds.gte,
+        date_created__lt: bounds.lt,
+      });
+      return NextResponse.json({
+        bounds,
+        leadCount: leads.length,
+        leadSample: leads.slice(0, 5),
+        callCount: calls.length,
+        callSample: calls.slice(0, 5),
+      });
+    } catch (err) {
+      return NextResponse.json({ error: String(err), bounds }, { status: 502 });
+    }
+  }
+
   try {
     // Fire all three Close list pulls concurrently — running them one after
     // another was blowing past Vercel's function timeout on accounts with
