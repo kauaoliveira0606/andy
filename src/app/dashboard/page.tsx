@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { buildMetrics, type Metric, type Totals } from "./metrics";
+import ScorecardTab from "./ScorecardTab";
 
 /* ---------------------------------------------------------------------- */
 /* Theme                                                                   */
@@ -150,7 +151,15 @@ type DashboardResponse = {
   error?: string;
 };
 
+type PageTab = "overview" | "scorecard";
+
+const PAGE_TABS: { label: string; value: PageTab }[] = [
+  { label: "Overview", value: "overview" },
+  { label: "Score Card", value: "scorecard" },
+];
+
 export default function DashboardPage() {
+  const [page, setPage] = useState<PageTab>("overview");
   const [range, setRange] = useState<RangeValue>("week");
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
@@ -181,44 +190,68 @@ export default function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-6xl" style={{ background: BG }}>
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <h1 className="text-xl font-extrabold" style={{ color: INK }}>
           Andy - EcomSimulation Dashboard
         </h1>
-        <div className="flex flex-wrap gap-2">
-          {RANGE_OPTIONS.map((opt) => (
-            <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
-              {opt.label}
-            </Pill>
-          ))}
-        </div>
+        {page === "overview" && (
+          <div className="flex flex-wrap gap-2">
+            {RANGE_OPTIONS.map((opt) => (
+              <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
+                {opt.label}
+              </Pill>
+            ))}
+          </div>
+        )}
       </div>
 
-      {status === "loading" && (
-        <p className="text-sm" style={{ color: MUTED }}>
-          Loading…
-        </p>
+      <div className="mb-6 flex gap-2 border-b" style={{ borderColor: BORDER }}>
+        {PAGE_TABS.map((t) => (
+          <button
+            key={t.value}
+            onClick={() => setPage(t.value)}
+            className="px-3 py-2 text-sm font-bold transition-colors"
+            style={{
+              color: page === t.value ? INK : MUTED,
+              borderBottom: page === t.value ? `2px solid ${INK}` : "2px solid transparent",
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {page === "overview" && (
+        <>
+          {status === "loading" && (
+            <p className="text-sm" style={{ color: MUTED }}>
+              Loading…
+            </p>
+          )}
+
+          {status === "error" && (
+            <p className="text-sm font-semibold" style={{ color: "#ef4444" }}>
+              Couldn&apos;t load dashboard data. Check AIRTABLE_TOKEN and the base/table configuration.
+            </p>
+          )}
+
+          {status === "ready" && data && (
+            <div className="flex flex-col gap-8">
+              <section>
+                <SectionLabel>Metrics</SectionLabel>
+                <MetricGrid items={metrics} />
+              </section>
+
+              <section>
+                <SectionLabel>By Rep</SectionLabel>
+                <RepTable reps={data.reps} />
+              </section>
+            </div>
+          )}
+        </>
       )}
 
-      {status === "error" && (
-        <p className="text-sm font-semibold" style={{ color: "#ef4444" }}>
-          Couldn&apos;t load dashboard data. Check AIRTABLE_TOKEN and the base/table configuration.
-        </p>
-      )}
-
-      {status === "ready" && data && (
-        <div className="flex flex-col gap-8">
-          <section>
-            <SectionLabel>Metrics</SectionLabel>
-            <MetricGrid items={metrics} />
-          </section>
-
-          <section>
-            <SectionLabel>By Rep</SectionLabel>
-            <RepTable reps={data.reps} />
-          </section>
-        </div>
-      )}
+      {page === "scorecard" && <ScorecardTab />}
     </div>
   );
 }
