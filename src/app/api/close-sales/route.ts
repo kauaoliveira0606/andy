@@ -106,7 +106,7 @@ async function searchLeadsByDateRange(gte: string | undefined, lt: string | unde
     });
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      throw new Error(`Close API /data/search/ failed: ${res.status} ${text.slice(0, 1500)}`);
+      throw new Error(`[v3] Close API /data/search/ failed: ${res.status} ${text.slice(0, 1500)}`);
     }
     const data: { data: CloseLead[]; cursor: string | null } = await res.json();
     all.push(...(data.data || []));
