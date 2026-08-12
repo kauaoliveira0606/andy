@@ -39,7 +39,8 @@ async function closeFetch<T = unknown>(path: string, params: Record<string, stri
   const res = await fetch(url.toString(), { headers: { Authorization: authHeader() }, cache: "no-store" });
   if (!res.ok) {
     const body = await res.text().catch(() => "");
-    throw new Error(`Close API ${path} failed: ${res.status} ${body.slice(0, 200)}`);
+    const retryAfter = res.headers.get("retry-after");
+    throw new Error(`Close API ${path} failed: ${res.status} retry-after=${retryAfter} ${body.slice(0, 200)}`);
   }
   return res.json();
 }
@@ -106,7 +107,10 @@ async function searchLeadsByDateRange(gte: string | undefined, lt: string | unde
     });
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      throw new Error(`Close API /data/search/ failed: ${res.status} ${text.slice(0, 500)}`);
+      const retryAfter = res.headers.get("retry-after");
+      throw new Error(
+        `Close API /data/search/ failed: ${res.status} retry-after=${retryAfter} ${text.slice(0, 500)}`
+      );
     }
     const data: { data: CloseLead[]; cursor: string | null } = await res.json();
     all.push(...(data.data || []));
