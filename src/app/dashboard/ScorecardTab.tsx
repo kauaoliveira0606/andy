@@ -148,9 +148,7 @@ function ScorecardTable({ data, filter }: { data: ScorecardData; filter: RangeFi
 
 function IntelligenceSummary({ data, filter }: { data: ScorecardData; filter: RangeFilter }) {
   const summary = generateSummary(data.metrics, filter);
-  if (!summary) return null;
-
-  const healthColor = summary.score >= 70 ? GREEN : summary.score >= 45 ? YELLOW : RED;
+  const healthColor = summary ? (summary.score >= 70 ? GREEN : summary.score >= 45 ? YELLOW : RED) : MUTED;
   const itemColor = { high: RED, medium: YELLOW, info: BLUE } as const;
 
   return (
@@ -172,38 +170,47 @@ function IntelligenceSummary({ data, filter }: { data: ScorecardData; filter: Ra
         </div>
       </div>
 
-      <div className="mb-4 flex items-center gap-4">
-        <div className="text-3xl font-extrabold" style={{ color: healthColor }}>
-          {summary.score}%
-        </div>
-        <div>
-          <p className="text-sm font-bold" style={{ color: INK }}>
-            Overall Health — {summary.healthLabel}
-          </p>
-          <p className="text-xs" style={{ color: MUTED }}>
-            {summary.healthDesc}
-          </p>
-        </div>
-      </div>
+      {!summary && (
+        <p className="text-sm" style={{ color: MUTED }}>
+          Not enough data yet — every metric for this range is either missing a goal (Daily Goal column) or has no
+          actual value on the sheet (shows as #DIV/0!). Once goals are set and daily numbers come in, this section
+          will fill in with a health score and prioritized action items.
+        </p>
+      )}
 
-      <div className="flex flex-col gap-3">
-        {summary.items.map((item, i) => (
-          <div key={i} className="flex gap-3 rounded-md p-3" style={{ background: "#F3EFE1" }}>
-            <div
-              className="mt-1 h-2 w-2 shrink-0 rounded-full"
-              style={{ background: itemColor[item.type] }}
-            />
+      {summary && (
+        <>
+          <div className="mb-4 flex items-center gap-4">
+            <div className="text-3xl font-extrabold" style={{ color: healthColor }}>
+              {summary.score}%
+            </div>
             <div>
-              <p className="text-xs font-bold" style={{ color: INK }}>
-                {item.title}
+              <p className="text-sm font-bold" style={{ color: INK }}>
+                Overall Health — {summary.healthLabel}
               </p>
-              <p className="mt-0.5 text-xs" style={{ color: MUTED }}>
-                {item.body}
+              <p className="text-xs" style={{ color: MUTED }}>
+                {summary.healthDesc}
               </p>
             </div>
           </div>
-        ))}
-      </div>
+
+          <div className="flex flex-col gap-3">
+            {summary.items.map((item, i) => (
+              <div key={i} className="flex gap-3 rounded-md p-3" style={{ background: "#F3EFE1" }}>
+                <div className="mt-1 h-2 w-2 shrink-0 rounded-full" style={{ background: itemColor[item.type] }} />
+                <div>
+                  <p className="text-xs font-bold" style={{ color: INK }}>
+                    {item.title}
+                  </p>
+                  <p className="mt-0.5 text-xs" style={{ color: MUTED }}>
+                    {item.body}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
