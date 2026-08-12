@@ -2,6 +2,8 @@
 // Requires CLOSE_API_KEY (Close → Settings → API Keys).
 import { NextRequest, NextResponse } from "next/server";
 
+export const maxDuration = 60;
+
 const CLOSE_API_KEY = process.env.CLOSE_API_KEY;
 const CLOSE_BASE = "https://api.close.com/api/v1";
 
@@ -45,7 +47,7 @@ async function closeFetch<T = unknown>(path: string, params: Record<string, stri
 async function fetchAllPages<T>(
   path: string,
   baseParams: Record<string, string | undefined>,
-  maxPages = 50
+  maxPages = 20
 ): Promise<T[]> {
   const all: T[] = [];
   let skip = 0;
@@ -109,10 +111,25 @@ export async function GET(req: NextRequest) {
   const bounds = rangeBounds(range);
 
   try {
-    const calls = await fetchAllPages<CloseCall>("/activity/call/", {
-      date_created__gte: bounds.gte,
-      date_created__lt: bounds.lt,
-    });
+    // Fire all three Close list pulls concurrently — running them one after
+    // another was blowing past Vercel's function timeout on accounts with
+    // real call volume.
+    const [calls, leads, outboundCalls] = await Promise.all([
+      fetchAllPages<CloseCall>("/activity/call/", {
+        date_created__gte: bounds.gte,
+        date_created__lt: bounds.lt,
+      }),
+      fetchAllPages<CloseLead>("/lead/", {
+        date_created__gte: bounds.gte,
+        date_created__lt: bounds.lt,
+        _fields: "id,date_created",
+      }),
+      fetchAllPages<CloseCall>("/activity/call/", {
+        direction: "outbound",
+        date_created__gte: bounds.gte,
+        _fields: "id,lead_id,direction,date_created",
+      }),
+    ]);
 
     const repMap: Record<string, RepStats> = {};
     let totalOutboundDials = 0;
@@ -142,24 +159,11 @@ export async function GET(req: NextRequest) {
 
     // Speed to lead: for leads created in this range, find the first outbound
     // call logged against them (which may land after the range window ends).
-    const leads = await fetchAllPages<CloseLead>("/lead/", {
-      date_created__gte: bounds.gte,
-      date_created__lt: bounds.lt,
-      _fields: "id,date_created",
-    });
-
     const firstCallByLead: Record<string, string> = {};
-    if (leads.length) {
-      const outboundCalls = await fetchAllPages<CloseCall>("/activity/call/", {
-        direction: "outbound",
-        date_created__gte: bounds.gte,
-        _fields: "id,lead_id,direction,date_created",
-      });
-      for (const call of outboundCalls) {
-        const existing = firstCallByLead[call.lead_id];
-        if (!existing || call.date_created < existing) {
-          firstCallByLead[call.lead_id] = call.date_created;
-        }
+    for (const call of outboundCalls) {
+      const existing = firstCallByLead[call.lead_id];
+      if (!existing || call.date_created < existing) {
+        firstCallByLead[call.lead_id] = call.date_created;
       }
     }
 

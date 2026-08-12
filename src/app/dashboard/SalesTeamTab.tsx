@@ -141,7 +141,9 @@ export default function SalesTeamTab() {
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
-    fetch(`/api/close-sales?range=${range}&t=${Date.now()}`)
+    const ctrl = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 55000);
+    fetch(`/api/close-sales?range=${range}&t=${Date.now()}`, { signal: ctrl.signal })
       .then((r) => r.json())
       .then((d: CloseSalesResponse) => {
         if (cancelled) return;
@@ -155,11 +157,14 @@ export default function SalesTeamTab() {
       })
       .catch((e) => {
         if (cancelled) return;
-        setErrorMsg(String(e));
+        setErrorMsg(e?.name === "AbortError" ? "Request timed out" : String(e));
         setStatus("error");
-      });
+      })
+      .finally(() => clearTimeout(timeout));
     return () => {
       cancelled = true;
+      clearTimeout(timeout);
+      ctrl.abort();
     };
   }, [range]);
 
