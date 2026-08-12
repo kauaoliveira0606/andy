@@ -7,6 +7,10 @@ const BORDER = "#E3DAC0";
 const INK = "#000000";
 const MUTED = "#262319";
 const BG = "#F3EFE1";
+const GREEN = "#22c55e";
+const YELLOW = "#f59e0b";
+const RED = "#ef4444";
+const GRAY = "#9ca3af";
 
 const RANGE_OPTIONS = [
   { label: "Today", value: "today" },
@@ -26,6 +30,14 @@ type RepStats = {
   longConversations: number;
 };
 
+type LeadRow = {
+  name: string;
+  createdAt: string;
+  firstCalledAt: string | null;
+  minutesToCall: number | null;
+  status: "green" | "yellow" | "red" | "pending";
+};
+
 type CloseSalesResponse = {
   range: string;
   speedToLead: {
@@ -34,6 +46,7 @@ type CloseSalesResponse = {
     sampleSize: number;
     leadsWithNoCall: number;
     totalLeads: number;
+    leadRows: LeadRow[];
   };
   totals: { outboundDials: number; pickups: number; longConversations: number };
   reps: RepStats[];
@@ -80,6 +93,99 @@ function formatMinutes(mins: number | null): string {
   const hours = Math.floor(mins / 60);
   const rem = Math.round(mins % 60);
   return `${hours}h ${rem}m`;
+}
+
+function formatTime(iso: string | null): string {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString(undefined, {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+const STATUS_COLOR: Record<LeadRow["status"], string> = {
+  green: GREEN,
+  yellow: YELLOW,
+  red: RED,
+  pending: GRAY,
+};
+
+const STATUS_LABEL: Record<LeadRow["status"], string> = {
+  green: "Under 5 min",
+  yellow: "Under 10 min",
+  red: "Over 10 min",
+  pending: "Not called yet",
+};
+
+function StatusPill({ status }: { status: LeadRow["status"] }) {
+  const color = STATUS_COLOR[status];
+  return (
+    <span
+      className="inline-block rounded-md px-2 py-0.5 text-[11px] font-bold"
+      style={{ background: `${color}22`, color }}
+    >
+      {STATUS_LABEL[status]}
+    </span>
+  );
+}
+
+function LeadTable({ rows }: { rows: LeadRow[] }) {
+  if (!rows.length) {
+    return (
+      <p className="text-sm" style={{ color: MUTED }}>
+        No leads created in this range.
+      </p>
+    );
+  }
+
+  return (
+    <div className="overflow-x-auto rounded-lg" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
+      <table className="w-full text-sm">
+        <thead>
+          <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
+            <th className="px-4 py-2 text-left font-bold" style={{ color: MUTED }}>
+              Lead
+            </th>
+            <th className="px-4 py-2 text-left font-bold" style={{ color: MUTED }}>
+              Created
+            </th>
+            <th className="px-4 py-2 text-left font-bold" style={{ color: MUTED }}>
+              First Called
+            </th>
+            <th className="px-4 py-2 text-right font-bold" style={{ color: MUTED }}>
+              Time to Call
+            </th>
+            <th className="px-4 py-2 text-left font-bold" style={{ color: MUTED }}>
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
+              <td className="px-4 py-2 font-semibold" style={{ color: INK }}>
+                {r.name}
+              </td>
+              <td className="px-4 py-2" style={{ color: INK }}>
+                {formatTime(r.createdAt)}
+              </td>
+              <td className="px-4 py-2" style={{ color: INK }}>
+                {formatTime(r.firstCalledAt)}
+              </td>
+              <td className="px-4 py-2 text-right" style={{ color: INK }}>
+                {formatMinutes(r.minutesToCall)}
+              </td>
+              <td className="px-4 py-2">
+                <StatusPill status={r.status} />
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 function RepTable({ reps }: { reps: RepStats[] }) {
@@ -224,6 +330,13 @@ export default function SalesTeamTab() {
               By Rep
             </p>
             <RepTable reps={data.reps} />
+          </section>
+
+          <section>
+            <p className="mb-3 text-xs font-bold uppercase tracking-wider" style={{ color: MUTED }}>
+              Leads — Speed to Lead Detail
+            </p>
+            <LeadTable rows={data.speedToLead.leadRows} />
           </section>
         </>
       )}

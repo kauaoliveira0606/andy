@@ -25,6 +25,7 @@ type CloseCall = {
 type CloseLead = {
   id: string;
   date_created: string;
+  display_name?: string;
 };
 
 function authHeader() {
@@ -84,7 +85,7 @@ async function fetchLeadsInRange(gte: string | undefined, lt: string | undefined
       _limit: String(limit),
       _skip: String(skip),
       _order_by: "-date_created",
-      _fields: "id,date_created",
+      _fields: "id,date_created,display_name",
     });
     const items = data.data || [];
     if (!items.length) break;
@@ -247,15 +248,44 @@ export async function GET(req: NextRequest) {
 
     const speedMinutes: number[] = [];
     let leadsWithNoCall = 0;
+    type LeadRow = {
+      name: string;
+      createdAt: string;
+      firstCalledAt: string | null;
+      minutesToCall: number | null;
+      status: "green" | "yellow" | "red" | "pending";
+    };
+    const leadRows: LeadRow[] = [];
+
     for (const lead of leads) {
       const firstCall = firstCallByLead[lead.id];
       if (!firstCall) {
         leadsWithNoCall += 1;
+        leadRows.push({
+          name: lead.display_name || "Unknown",
+          createdAt: lead.date_created,
+          firstCalledAt: null,
+          minutesToCall: null,
+          status: "pending",
+        });
         continue;
       }
       const diffMs = new Date(firstCall).getTime() - new Date(lead.date_created).getTime();
-      if (diffMs >= 0) speedMinutes.push(diffMs / 60000);
+      const minutesToCall = diffMs >= 0 ? diffMs / 60000 : null;
+      if (minutesToCall !== null) speedMinutes.push(minutesToCall);
+
+      const status: LeadRow["status"] =
+        minutesToCall === null ? "pending" : minutesToCall < 5 ? "green" : minutesToCall < 10 ? "yellow" : "red";
+
+      leadRows.push({
+        name: lead.display_name || "Unknown",
+        createdAt: lead.date_created,
+        firstCalledAt: firstCall,
+        minutesToCall: minutesToCall !== null ? Math.round(minutesToCall * 10) / 10 : null,
+        status,
+      });
     }
+    leadRows.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
     const avgMinutes = speedMinutes.length
       ? speedMinutes.reduce((a, b) => a + b, 0) / speedMinutes.length
@@ -272,6 +302,7 @@ export async function GET(req: NextRequest) {
         sampleSize: speedMinutes.length,
         leadsWithNoCall,
         totalLeads: leads.length,
+        leadRows,
       },
       totals: {
         outboundDials: totalOutboundDials,
