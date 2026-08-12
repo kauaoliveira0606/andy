@@ -202,19 +202,65 @@ export async function GET(req: NextRequest) {
   const range = req.nextUrl.searchParams.get("range") || "week";
   const bounds = rangeBounds(range);
 
+  if (req.nextUrl.searchParams.get("debug") === "2") {
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const variants: { name: string; condition: Record<string, unknown> }[] = [
+      { name: "gte/lt", condition: { type: "moment_range", gte: bounds.gte, lt: bounds.lt } },
+      { name: "gte/lte", condition: { type: "moment_range", gte: bounds.gte, lte: bounds.lt } },
+      { name: "on_or_after/before", condition: { type: "moment_range", on_or_after: bounds.gte, before: bounds.lt } },
+    ];
+    const results: Record<string, unknown> = {};
+    for (const v of variants) {
+      try {
+        const body = {
+          query: {
+            type: "and",
+            queries: [
+              { type: "object_type", object_type: "lead" },
+              {
+                type: "field_condition",
+                field: { type: "regular_field", object_type: "lead", field_name: "date_created" },
+                condition: v.condition,
+              },
+            ],
+          },
+          _limit: 5,
+          _fields: { lead: ["id", "date_created"] },
+        };
+        const res = await fetch(`${CLOSE_BASE}/data/search/`, {
+          method: "POST",
+          headers: { Authorization: authHeader(), "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+          cache: "no-store",
+        });
+        const text = await res.text();
+        results[v.name] = res.ok ? JSON.parse(text) : { status: res.status, body: text.slice(0, 300) };
+      } catch (e) {
+        results[v.name] = { error: String(e) };
+      }
+      await sleep(1500);
+    }
+    return NextResponse.json({ bounds, results });
+  }
+
   if (req.nextUrl.searchParams.get("debug") === "1") {
     try {
-      const leads = await searchLeadsByDateRange(bounds.gte, bounds.lt);
-      const calls = await fetchAllPages<CloseCall>("/activity/call/", {
-        date_created__gte: bounds.gte,
-        date_created__lt: bounds.lt,
-      });
+      const callsNoFilter = await closeFetch<{ data: CloseCall[] }>("/activity/call/", { _limit: "5" });
+      const callsDateCreated = await fetchAllPages<CloseCall>(
+        "/activity/call/",
+        { date_created__gte: bounds.gte, date_created__lt: bounds.lt },
+        1
+      );
+      const callsActivityAt = await fetchAllPages<CloseCall>(
+        "/activity/call/",
+        { activity_at__gte: bounds.gte, activity_at__lt: bounds.lt },
+        1
+      );
       return NextResponse.json({
         bounds,
-        leadCount: leads.length,
-        leadSample: leads.slice(0, 5),
-        callCount: calls.length,
-        callSample: calls.slice(0, 5),
+        callsNoFilterSample: callsNoFilter.data,
+        callsByDateCreated: callsDateCreated.length,
+        callsByActivityAt: callsActivityAt.length,
       });
     } catch (err) {
       return NextResponse.json({ error: String(err), bounds }, { status: 502 });
