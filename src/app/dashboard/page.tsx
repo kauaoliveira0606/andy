@@ -152,6 +152,9 @@ function RepTable({ reps }: { reps: RepRow[] }) {
         <thead>
           <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
             <th className="px-4 py-2 text-left font-bold" style={{ color: MUTED }}>
+              #
+            </th>
+            <th className="px-4 py-2 text-left font-bold" style={{ color: MUTED }}>
               Rep
             </th>
             <th className="px-4 py-2 text-right font-bold" style={{ color: MUTED }}>
@@ -166,25 +169,30 @@ function RepTable({ reps }: { reps: RepRow[] }) {
           </tr>
         </thead>
         <tbody>
-          {reps.map((r) => {
-            const cash = (r["Cash collected high ticket"] || 0) + (r["Cash collected low ticket"] || 0);
-            return (
-              <tr key={r.name} style={{ borderBottom: `1px solid ${BORDER}` }}>
-                <td className="px-4 py-2 font-semibold" style={{ color: INK }}>
-                  {r.name}
-                </td>
-                <td className="px-4 py-2 text-right" style={{ color: INK }}>
-                  {(r["software closed"] || 0).toLocaleString()}
-                </td>
-                <td className="px-4 py-2 text-right" style={{ color: INK }}>
-                  {(r["Outbound dials"] || 0).toLocaleString()}
-                </td>
-                <td className="px-4 py-2 text-right" style={{ color: INK }}>
-                  ${cash.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </td>
-              </tr>
-            );
-          })}
+          {[...reps]
+            .sort((a, b) => (b["software closed"] || 0) - (a["software closed"] || 0))
+            .map((r, i) => {
+              const cash = (r["Cash collected high ticket"] || 0) + (r["Cash collected low ticket"] || 0);
+              return (
+                <tr key={r.name} style={{ borderBottom: `1px solid ${BORDER}` }}>
+                  <td className="px-4 py-2 font-bold" style={{ color: MUTED }}>
+                    {i + 1}
+                  </td>
+                  <td className="px-4 py-2 font-semibold" style={{ color: INK }}>
+                    {r.name}
+                  </td>
+                  <td className="px-4 py-2 text-right" style={{ color: INK }}>
+                    {(r["software closed"] || 0).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2 text-right" style={{ color: INK }}>
+                    {(r["Outbound dials"] || 0).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2 text-right" style={{ color: INK }}>
+                    ${cash.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
     </div>
@@ -304,7 +312,7 @@ export default function DashboardPage() {
               </section>
 
               <section>
-                <SectionLabel>By Rep</SectionLabel>
+                <SectionLabel>Leaderboard</SectionLabel>
                 <RepTable reps={data.reps} />
               </section>
             </div>
