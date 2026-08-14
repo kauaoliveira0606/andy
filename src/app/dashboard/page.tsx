@@ -14,6 +14,8 @@ const PANEL = "#FFFFFF";
 const BORDER = "#E3DAC0";
 const INK = "#000000";
 const MUTED = "#262319";
+const SERIES_YEARLY = "#2a78d6";
+const SERIES_MONTHLY = "#eb6834";
 
 /* ---------------------------------------------------------------------- */
 /* Building blocks                                                         */
@@ -46,6 +48,55 @@ function MetricGrid({ items }: { items: Metric[] }) {
       {items.map((m) => (
         <MetricCard key={m.key} m={m} />
       ))}
+    </div>
+  );
+}
+
+function PlanSplitBar({ monthly, yearly }: { monthly: number; yearly: number }) {
+  const total = monthly + yearly;
+  if (!total) {
+    return (
+      <div className="rounded-lg p-4" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
+        <p className="text-sm" style={{ color: MUTED }}>
+          No monthly or yearly plans in this range.
+        </p>
+      </div>
+    );
+  }
+
+  const yearlyPct = (yearly / total) * 100;
+  const monthlyPct = (monthly / total) * 100;
+
+  return (
+    <div className="rounded-lg p-4" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
+      <div className="mb-3 flex items-center gap-5 text-xs font-bold" style={{ color: MUTED }}>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: SERIES_YEARLY }} />
+          Yearly — {yearly.toLocaleString()} ({yearlyPct.toFixed(1)}%)
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="inline-block h-2.5 w-2.5 rounded-sm" style={{ background: SERIES_MONTHLY }} />
+          Monthly — {monthly.toLocaleString()} ({monthlyPct.toFixed(1)}%)
+        </span>
+      </div>
+      <div className="flex h-6 w-full overflow-hidden rounded-md" style={{ background: BG }}>
+        {yearlyPct > 0 && (
+          <div
+            className="flex items-center justify-center text-[11px] font-bold text-white"
+            style={{ width: `${yearlyPct}%`, background: SERIES_YEARLY }}
+          >
+            {yearlyPct >= 12 ? `${yearlyPct.toFixed(0)}%` : ""}
+          </div>
+        )}
+        {monthlyPct > 0 && (
+          <div
+            className="flex items-center justify-center text-[11px] font-bold text-white"
+            style={{ width: `${monthlyPct}%`, background: SERIES_MONTHLY, marginLeft: yearlyPct > 0 ? "2px" : 0 }}
+          >
+            {monthlyPct >= 12 ? `${monthlyPct.toFixed(0)}%` : ""}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -242,6 +293,14 @@ export default function DashboardPage() {
               <section>
                 <SectionLabel>Metrics</SectionLabel>
                 <MetricGrid items={metrics} />
+              </section>
+
+              <section>
+                <SectionLabel>Yearly / Monthly Plan Split</SectionLabel>
+                <PlanSplitBar
+                  monthly={data.totals["How many monthly plans"] || 0}
+                  yearly={data.totals["How many yearly plans"] || 0}
+                />
               </section>
 
               <section>
