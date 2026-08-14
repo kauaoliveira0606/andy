@@ -90,62 +90,6 @@ function MetricCard({ m, filter }: { m: Metric; filter: RangeFilter }) {
   );
 }
 
-function ScorecardTable({ data, filter }: { data: ScorecardData; filter: RangeFilter }) {
-  const dayLabels = data.dayHeaders.length ? data.dayHeaders : ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-
-  return (
-    <div className="overflow-x-auto rounded-lg" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
-      <table className="w-full text-sm">
-        <thead>
-          <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
-            <th className="whitespace-nowrap px-3 py-2 text-left font-bold" style={{ color: MUTED }}>
-              Metric
-            </th>
-            {dayLabels.map((d, i) => (
-              <th key={i} className="px-3 py-2 text-right font-bold" style={{ color: MUTED }}>
-                {d || "—"}
-              </th>
-            ))}
-            <th className="px-3 py-2 text-right font-bold" style={{ color: MUTED }}>
-              Goal
-            </th>
-            <th className="px-3 py-2 text-right font-bold" style={{ color: MUTED }}>
-              Actual
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.metrics.map((m) => {
-            const noPct = NEVER_PERCENT.has(m.name.toLowerCase().trim());
-            const actual = parseVal(getFilteredActual(m, filter), noPct);
-            const goal = parseVal(m.weeklyGoal, noPct);
-            const status = trackStatus(actual, m.weeklyGoal);
-            const color = statusColor(status);
-            return (
-              <tr key={m.name} style={{ borderBottom: `1px solid ${BORDER}` }}>
-                <td className="whitespace-nowrap px-3 py-2 font-semibold" style={{ color: INK }}>
-                  {m.name}
-                </td>
-                {m.days.map((v, i) => (
-                  <td key={i} className="px-3 py-2 text-right" style={{ color: MUTED }}>
-                    {v || "—"}
-                  </td>
-                ))}
-                <td className="px-3 py-2 text-right" style={{ color: MUTED }}>
-                  {goal.display}
-                </td>
-                <td className="px-3 py-2 text-right font-bold" style={{ color }}>
-                  {actual.display}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
 function IntelligenceSummary({ data, filter }: { data: ScorecardData; filter: RangeFilter }) {
   const summary = generateSummary(data.metrics, filter);
   const healthColor = summary ? (summary.score >= 70 ? GREEN : summary.score >= 45 ? YELLOW : RED) : MUTED;
@@ -215,7 +159,7 @@ function IntelligenceSummary({ data, filter }: { data: ScorecardData; filter: Ra
   );
 }
 
-export default function ScorecardTab() {
+export default function ScorecardMetricsSection() {
   const [filter, setFilter] = useState<RangeFilter>("week");
   const [weekOffset, setWeekOffset] = useState(0);
   const [data, setData] = useState<ScorecardData | null>(null);
@@ -302,7 +246,6 @@ export default function ScorecardTab() {
                 </div>
               );
             })}
-            <ScorecardTable data={data} filter={filter} />
           </div>
         )}
       </section>

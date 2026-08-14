@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { buildMetrics, type Metric, type Totals } from "./metrics";
-import ScorecardTab from "./ScorecardTab";
+import ScorecardMetricsSection from "./ScorecardMetricsSection";
 import SalesTeamTab from "./SalesTeamTab";
 
 /* ---------------------------------------------------------------------- */
@@ -211,11 +211,10 @@ type DashboardResponse = {
   error?: string;
 };
 
-type PageTab = "overview" | "scorecard" | "salesTeam";
+type PageTab = "overview" | "salesTeam";
 
 const PAGE_TABS: { label: string; value: PageTab }[] = [
   { label: "Overview", value: "overview" },
-  { label: "Score Card", value: "scorecard" },
   { label: "Sales Team", value: "salesTeam" },
 ];
 
@@ -315,12 +314,12 @@ export default function DashboardPage() {
                 <SectionLabel>Leaderboard</SectionLabel>
                 <RepTable reps={data.reps} />
               </section>
+
+              <ScorecardMetricsSection />
             </div>
           )}
         </>
       )}
-
-      {page === "scorecard" && <ScorecardTab />}
 
       {page === "salesTeam" && <SalesTeamTab />}
     </div>
