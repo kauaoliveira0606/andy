@@ -70,36 +70,32 @@ async function fetchAllPages<T>(
 // GET /lead/ does not reliably filter by date_created via query params or
 // via POST /data/search/ moment_range conditions (both were tested live
 // against this account and returned unfiltered/partially-filtered results).
-// Instead: page through leads newest-first and stop as soon as a lead falls
-// below the range's start — everything after that point is guaranteed older.
+// Its "-date_created" sort is ALSO unreliable — verified live: ~59% of a
+// 500-record sample was out of order — so we can't early-stop once we see
+// an old lead either (a newer one could be sitting further down the list).
+// Only safe option: scan every page up to the cap and filter client-side.
 async function fetchLeadsInRange(gte: string | undefined, lt: string | undefined): Promise<CloseLead[]> {
   const gteTime = gte ? new Date(gte).getTime() : -Infinity;
   const ltTime = lt ? new Date(lt).getTime() : Infinity;
   const inRange: CloseLead[] = [];
   let skip = 0;
   const limit = 100;
-  const maxPages = 30;
+  const maxPages = 60;
 
   for (let page = 0; page < maxPages; page++) {
     const data = await closeFetch<{ data: CloseLead[]; has_more?: boolean }>("/lead/", {
       _limit: String(limit),
       _skip: String(skip),
-      _order_by: "-date_created",
       _fields: "id,date_created,display_name",
     });
     const items = data.data || [];
     if (!items.length) break;
 
-    let crossedLowerBound = false;
     for (const lead of items) {
       const t = new Date(lead.date_created).getTime();
       if (t >= gteTime && t < ltTime) inRange.push(lead);
-      if (t < gteTime) {
-        crossedLowerBound = true;
-        break;
-      }
     }
-    if (crossedLowerBound || !data.has_more) break;
+    if (!data.has_more) break;
     skip += items.length;
   }
   return inRange;
