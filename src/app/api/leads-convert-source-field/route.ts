@@ -20,18 +20,26 @@ export async function GET() {
   const sourceField = leadsTable.fields.find((f: { name: string }) => f.name === "Source");
   if (!sourceField) return NextResponse.json({ error: "Source field not found" }, { status: 404 });
 
-  const res = await fetch(
+  // Airtable's API doesn't support changing a field's type in place.
+  // The field is empty (confirmed before this was built), so delete and
+  // recreate under the same name is safe — no data loss.
+  const delRes = await fetch(
     `https://api.airtable.com/v0/meta/bases/${AIRTABLE_BASE}/tables/${leadsTable.id}/fields/${sourceField.id}`,
-    {
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        type: "singleSelect",
-        options: { choices: [{ name: "Paid" }, { name: "Organic" }] },
-      }),
-    }
+    { method: "DELETE", headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } }
   );
-  const data = await res.json();
-  if (!res.ok) return NextResponse.json({ error: "Field conversion failed", detail: data }, { status: res.status });
+  const delData = await delRes.json();
+  if (!delRes.ok) return NextResponse.json({ error: "Field delete failed", detail: delData }, { status: delRes.status });
+
+  const createRes = await fetch(`https://api.airtable.com/v0/meta/bases/${AIRTABLE_BASE}/tables/${leadsTable.id}/fields`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: "Source",
+      type: "singleSelect",
+      options: { choices: [{ name: "Paid" }, { name: "Organic" }] },
+    }),
+  });
+  const data = await createRes.json();
+  if (!createRes.ok) return NextResponse.json({ error: "Field create failed", detail: data }, { status: createRes.status });
   return NextResponse.json({ ok: true, field: data });
 }
