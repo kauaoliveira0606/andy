@@ -71,6 +71,56 @@ type ComputeResult = {
   netProfit: number;
 };
 
+function Row({
+  label,
+  unit,
+  input,
+  base: baseVal,
+  d15: d15Val,
+  d30: d30Val,
+  weekly,
+  monthly,
+}: {
+  label: string;
+  unit: string;
+  input?: React.ReactNode;
+  base: string;
+  d15: string;
+  d30: string;
+  weekly?: string;
+  monthly?: string;
+}) {
+  return (
+    <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
+      <td className="px-4 py-2.5 text-[13px] font-semibold" style={{ color: INK }}>
+        {label}
+      </td>
+      <td className="px-3 py-2.5 text-[12px]" style={{ color: MUTED }}>
+        {unit}
+      </td>
+      <td className="px-3 py-2.5">{input}</td>
+      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: GREEN }}>
+        {baseVal}
+      </td>
+      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: AMBER }}>
+        {d15Val}
+      </td>
+      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: RED }}>
+        {d30Val}
+      </td>
+      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: INK }}>
+        {weekly ?? "—"}
+      </td>
+      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: INK }}>
+        {monthly ?? "—"}
+      </td>
+    </tr>
+  );
+}
+
+const money = (n: number) => `$${n.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+const count = (n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 1 });
+
 export default function FinancialModelTab() {
   const [adSpend, setAdSpend] = useState(5000);
   const [costPerLead, setCostPerLead] = useState(50);
@@ -93,56 +143,6 @@ export default function FinancialModelTab() {
   const base = compute(0);
   const d15 = compute(0.15);
   const d30 = compute(0.3);
-
-  function Row({
-    label,
-    unit,
-    input,
-    base: baseVal,
-    d15: d15Val,
-    d30: d30Val,
-    weekly,
-    monthly,
-  }: {
-    label: string;
-    unit: string;
-    input?: React.ReactNode;
-    base: string;
-    d15: string;
-    d30: string;
-    weekly?: string;
-    monthly?: string;
-  }) {
-    return (
-      <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
-        <td className="px-4 py-2.5 text-[13px] font-semibold" style={{ color: INK }}>
-          {label}
-        </td>
-        <td className="px-3 py-2.5 text-[12px]" style={{ color: MUTED }}>
-          {unit}
-        </td>
-        <td className="px-3 py-2.5">{input}</td>
-        <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: GREEN }}>
-          {baseVal}
-        </td>
-        <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: AMBER }}>
-          {d15Val}
-        </td>
-        <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: RED }}>
-          {d30Val}
-        </td>
-        <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: INK }}>
-          {weekly ?? "—"}
-        </td>
-        <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: INK }}>
-          {monthly ?? "—"}
-        </td>
-      </tr>
-    );
-  }
-
-  const money = (n: number) => `$${n.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
-  const count = (n: number) => n.toLocaleString(undefined, { maximumFractionDigits: 1 });
 
   return (
     <div className="flex flex-col gap-6">
