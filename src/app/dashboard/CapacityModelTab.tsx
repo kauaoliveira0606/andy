@@ -10,6 +10,8 @@ const BG = "#F3EFE1";
 const GREEN = "#22c55e";
 const AMBER = "#f59e0b";
 const RED = "#ef4444";
+const RESULT_BG = "#eaf1fb";
+const RESULT_BORDER = "#2a78d6";
 
 type SliderInputProps = {
   value: number;
@@ -94,6 +96,7 @@ function Row({
   base,
   d15,
   d30,
+  highlight,
 }: {
   label: string;
   unit: string;
@@ -101,23 +104,29 @@ function Row({
   base: string;
   d15: string;
   d30: string;
+  highlight?: boolean;
 }) {
+  const rowStyle: React.CSSProperties = highlight
+    ? { background: RESULT_BG, borderTop: `2px solid ${RESULT_BORDER}`, borderBottom: `2px solid ${RESULT_BORDER}` }
+    : { borderBottom: `1px solid ${BORDER}` };
+  const textSize = highlight ? "text-[15px]" : "text-[13px]";
+
   return (
-    <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
-      <td className="px-4 py-2.5 text-[13px] font-semibold" style={{ color: INK }}>
+    <tr style={rowStyle}>
+      <td className={`px-4 py-2.5 ${textSize} font-extrabold`} style={{ color: highlight ? RESULT_BORDER : INK }}>
         {label}
       </td>
       <td className="px-3 py-2.5 text-[12px]" style={{ color: MUTED }}>
         {unit}
       </td>
       <td className="px-3 py-2.5">{input}</td>
-      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: GREEN }}>
+      <td className={`px-3 py-2.5 text-right ${textSize} font-extrabold`} style={{ color: highlight ? RESULT_BORDER : GREEN }}>
         {base}
       </td>
-      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: AMBER }}>
+      <td className={`px-3 py-2.5 text-right ${textSize} font-extrabold`} style={{ color: highlight ? RESULT_BORDER : AMBER }}>
         {d15}
       </td>
-      <td className="px-3 py-2.5 text-right text-[13px] font-semibold" style={{ color: RED }}>
+      <td className={`px-3 py-2.5 text-right ${textSize} font-extrabold`} style={{ color: highlight ? RESULT_BORDER : RED }}>
         {d30}
       </td>
     </tr>
@@ -253,13 +262,21 @@ export default function CapacityModelTab() {
               d15="—"
               d30="—"
             />
-            <Row label="Reps Needed (exact)" unit="#" base={count1(base.repsExact)} d15={count1(d15.repsExact)} d30={count1(d30.repsExact)} />
+            <Row
+              label="Reps Needed (exact)"
+              unit="#"
+              base={count1(base.repsExact)}
+              d15={count1(d15.repsExact)}
+              d30={count1(d30.repsExact)}
+              highlight
+            />
             <Row
               label="Reps Needed (round up)"
               unit="#"
               base={String(base.repsNeeded)}
               d15={String(d15.repsNeeded)}
               d30={String(d30.repsNeeded)}
+              highlight
             />
           </tbody>
         </table>
