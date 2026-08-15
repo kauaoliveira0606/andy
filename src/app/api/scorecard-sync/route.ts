@@ -4,7 +4,7 @@
 // Sheet. Triggered by an Airtable Automation webhook on every EOD submission
 // — safe to call repeatedly, it always recomputes today's totals fresh
 // rather than incrementing, so duplicate/late calls can't double-count.
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 
 export const maxDuration = 60;
@@ -135,12 +135,31 @@ async function fetchTodaysAirtableTotals(today: Date) {
   return { dials, salesLowTicket, cashCollectedLowTicket, recordCount: records.length };
 }
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   if (!AIRTABLE_TOKEN) {
     return NextResponse.json({ error: "AIRTABLE_TOKEN not set" }, { status: 500 });
   }
   if (!GOOGLE_SERVICE_ACCOUNT_KEY) {
     return NextResponse.json({ error: "GOOGLE_SERVICE_ACCOUNT_KEY not set" }, { status: 500 });
+  }
+
+  if (req.nextUrl.searchParams.get("debug") === "1") {
+    const raw = GOOGLE_SERVICE_ACCOUNT_KEY;
+    const codes = Array.from(raw.slice(0, 20)).map((c) => c.charCodeAt(0));
+    return NextResponse.json({
+      length: raw.length,
+      first30chars: JSON.stringify(raw.slice(0, 30)),
+      first20charCodes: codes,
+      startsWithBrace: raw.trimStart().startsWith("{"),
+      looksLikeValidJson: (() => {
+        try {
+          JSON.parse(raw);
+          return true;
+        } catch (e) {
+          return String(e);
+        }
+      })(),
+    });
   }
 
   try {
@@ -218,6 +237,6 @@ export async function POST() {
 }
 
 // Convenience for manual testing from a browser — same behavior as POST.
-export async function GET() {
-  return POST();
+export async function GET(req: NextRequest) {
+  return POST(req);
 }
