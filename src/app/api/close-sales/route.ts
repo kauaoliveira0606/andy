@@ -165,6 +165,26 @@ function rangeBounds(range: string): { gte?: string; lt?: string } {
   return { gte: start.toISOString(), lt: lt.toISOString() };
 }
 
+// Reps with zero calls in the selected range were silently missing from
+// the By Rep table (it was only ever seeded from calls). Fetch the full
+// org member list so every rep shows up regardless of activity, and so
+// calls can be matched by user_id (stable) rather than user_name (can
+// mismatch/be blank).
+async function fetchOrgMembers(): Promise<Record<string, string>> {
+  const me = await closeFetch<{ organizations?: { id: string }[] }>("/me/", {});
+  const orgId = me.organizations?.[0]?.id;
+  if (!orgId) return {};
+  const org = await closeFetch<{ memberships?: { user_id: string; user_full_name?: string; user_email?: string }[] }>(
+    `/organization/${orgId}/`,
+    {}
+  );
+  const map: Record<string, string> = {};
+  for (const m of org.memberships || []) {
+    map[m.user_id] = m.user_full_name || m.user_email || m.user_id;
+  }
+  return map;
+}
+
 function median(nums: number[]): number | null {
   if (!nums.length) return null;
   const sorted = [...nums].sort((a, b) => a - b);
@@ -177,6 +197,7 @@ type RepStats = {
   outboundDials: number;
   pickups: number;
   longConversations: number;
+  talkTimeMinutes: number;
 };
 
 export async function GET(req: NextRequest) {
@@ -191,7 +212,7 @@ export async function GET(req: NextRequest) {
     // Fire the Close list pulls concurrently — running them one after
     // another was blowing past Vercel's function timeout on accounts with
     // real call volume.
-    const [calls, leads, outboundCallsRaw] = await Promise.all([
+    const [calls, leads, outboundCallsRaw, orgMembers] = await Promise.all([
       fetchAllPages<CloseCall>("/activity/call/", {
         date_created__gte: bounds.gte,
         date_created__lt: bounds.lt,
@@ -203,33 +224,48 @@ export async function GET(req: NextRequest) {
         date_created__gte: bounds.gte,
         _fields: "id,lead_id,direction,date_created",
       }),
+      fetchOrgMembers(),
     ]);
     const outboundCalls = outboundCallsRaw.filter((c) => c.direction === "outbound");
 
     const repMap: Record<string, RepStats> = {};
+    // Seed every org member at zero so reps with no activity in this range
+    // still show up, instead of only ever appearing once they have a call.
+    for (const [userId, name] of Object.entries(orgMembers)) {
+      repMap[userId] = { name, outboundDials: 0, pickups: 0, longConversations: 0, talkTimeMinutes: 0 };
+    }
+
     let totalOutboundDials = 0;
     let totalPickups = 0;
     let totalLongConversations = 0;
+    let totalTalkTimeMinutes = 0;
 
     for (const call of calls) {
-      const name = call.user_name || "Unknown";
-      if (!repMap[name]) {
-        repMap[name] = { name, outboundDials: 0, pickups: 0, longConversations: 0 };
+      const key = call.user_id || call.user_name || "unknown";
+      if (!repMap[key]) {
+        repMap[key] = { name: call.user_name || "Unknown", outboundDials: 0, pickups: 0, longConversations: 0, talkTimeMinutes: 0 };
       }
       const duration = call.duration || 0;
+      const durationMinutes = duration / 60;
+
+      repMap[key].talkTimeMinutes += durationMinutes;
+      totalTalkTimeMinutes += durationMinutes;
 
       if (call.direction === "outbound") {
-        repMap[name].outboundDials += 1;
+        repMap[key].outboundDials += 1;
         totalOutboundDials += 1;
       }
       if (duration >= PICKUP_MIN_SECONDS) {
-        repMap[name].pickups += 1;
+        repMap[key].pickups += 1;
         totalPickups += 1;
       }
       if (duration >= LONG_CONVO_MIN_SECONDS) {
-        repMap[name].longConversations += 1;
+        repMap[key].longConversations += 1;
         totalLongConversations += 1;
       }
+    }
+    for (const rep of Object.values(repMap)) {
+      rep.talkTimeMinutes = Math.round(rep.talkTimeMinutes * 10) / 10;
     }
 
     // Speed to lead: for leads created in this range, find the first outbound
@@ -304,6 +340,7 @@ export async function GET(req: NextRequest) {
         outboundDials: totalOutboundDials,
         pickups: totalPickups,
         longConversations: totalLongConversations,
+        talkTimeMinutes: Math.round(totalTalkTimeMinutes * 10) / 10,
       },
       reps: Object.values(repMap).sort((a, b) => b.outboundDials - a.outboundDials),
     });

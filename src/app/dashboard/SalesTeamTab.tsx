@@ -28,6 +28,7 @@ type RepStats = {
   outboundDials: number;
   pickups: number;
   longConversations: number;
+  talkTimeMinutes: number;
 };
 
 type LeadRow = {
@@ -48,7 +49,7 @@ type CloseSalesResponse = {
     totalLeads: number;
     leadRows: LeadRow[];
   };
-  totals: { outboundDials: number; pickups: number; longConversations: number };
+  totals: { outboundDials: number; pickups: number; longConversations: number; talkTimeMinutes: number };
   reps: RepStats[];
   error?: string;
 };
@@ -213,6 +214,9 @@ function RepTable({ reps }: { reps: RepStats[] }) {
             <th className="px-4 py-2 text-right font-bold" style={{ color: MUTED }}>
               2-Min+ Conversations
             </th>
+            <th className="px-4 py-2 text-right font-bold" style={{ color: MUTED }}>
+              Total Talk Time
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -229,6 +233,9 @@ function RepTable({ reps }: { reps: RepStats[] }) {
               </td>
               <td className="px-4 py-2 text-right" style={{ color: INK }}>
                 {r.longConversations.toLocaleString()}
+              </td>
+              <td className="px-4 py-2 text-right" style={{ color: INK }}>
+                {formatMinutes(r.talkTimeMinutes)}
               </td>
             </tr>
           ))}
@@ -321,6 +328,7 @@ export default function SalesTeamTab() {
               <StatCard label="Outbound Dials" value={data.totals.outboundDials.toLocaleString()} />
               <StatCard label="Pickups" value={data.totals.pickups.toLocaleString()} />
               <StatCard label="2-Min+ Conversations" value={data.totals.longConversations.toLocaleString()} />
+              <StatCard label="Total Talk Time" value={formatMinutes(data.totals.talkTimeMinutes)} />
             </div>
           </section>
 
