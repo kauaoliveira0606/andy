@@ -472,22 +472,31 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen" style={{ background: BG }}>
       <aside
-        className="flex w-56 shrink-0 flex-col gap-1 px-3 py-6"
+        className="flex w-44 shrink-0 flex-col gap-1 px-2.5 py-5"
         style={{ background: PANEL, borderRight: `1px solid ${BORDER}` }}
       >
-        <div className="mb-6 px-2">
-          <p className="text-sm font-extrabold" style={{ color: INK }}>
-            Andy
-          </p>
-          <p className="text-[11px]" style={{ color: MUTED }}>
-            EcomSimulation Dashboard
-          </p>
+        <div className="mb-5 flex items-center gap-2 px-1">
+          <svg width="30" height="30" viewBox="0 0 64 64" className="shrink-0">
+            <rect width="64" height="64" rx="14" fill="#0a0a0a" />
+            <circle cx="32" cy="32" r="25" fill="none" stroke="#fad0dd" strokeWidth="6" />
+            <text x="32" y="39" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="21" fontWeight="800" fill="#fad0dd">
+              ES
+            </text>
+          </svg>
+          <div>
+            <p className="text-sm font-extrabold leading-tight" style={{ color: INK }}>
+              Andy
+            </p>
+            <p className="text-[10px] leading-tight" style={{ color: MUTED }}>
+              EcomSimulation
+            </p>
+          </div>
         </div>
         {PAGE_TABS.map((t) => (
           <button
             key={t.value}
             onClick={() => setPage(t.value)}
-            className="rounded-md px-3 py-2 text-left text-sm font-bold transition-colors"
+            className="rounded-md px-2.5 py-1.5 text-left text-[13px] font-bold transition-colors"
             style={{
               background: page === t.value ? INK : "transparent",
               color: page === t.value ? BG : MUTED,
