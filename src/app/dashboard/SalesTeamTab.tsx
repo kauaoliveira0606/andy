@@ -96,6 +96,11 @@ function formatMinutes(mins: number | null): string {
   return `${hours}h ${rem}m`;
 }
 
+function formatMinutesOnly(mins: number | null): string {
+  if (mins === null) return "—";
+  return `${mins.toFixed(1)}m`;
+}
+
 function formatTime(iso: string | null): string {
   if (!iso) return "—";
   return new Date(iso).toLocaleString(undefined, {
@@ -235,7 +240,7 @@ function RepTable({ reps }: { reps: RepStats[] }) {
                 {r.longConversations.toLocaleString()}
               </td>
               <td className="px-4 py-2 text-right" style={{ color: INK }}>
-                {formatMinutes(r.talkTimeMinutes)}
+                {formatMinutesOnly(r.talkTimeMinutes)}
               </td>
             </tr>
           ))}
@@ -328,7 +333,7 @@ export default function SalesTeamTab() {
               <StatCard label="Outbound Dials" value={data.totals.outboundDials.toLocaleString()} />
               <StatCard label="Pickups" value={data.totals.pickups.toLocaleString()} />
               <StatCard label="2-Min+ Conversations" value={data.totals.longConversations.toLocaleString()} />
-              <StatCard label="Total Talk Time" value={formatMinutes(data.totals.talkTimeMinutes)} />
+              <StatCard label="Total Talk Time" value={formatMinutesOnly(data.totals.talkTimeMinutes)} />
             </div>
           </section>
 
