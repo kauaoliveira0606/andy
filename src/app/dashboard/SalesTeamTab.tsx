@@ -132,14 +132,6 @@ function StatusPill({ status }: { status: LeadRow["status"] }) {
 }
 
 function LeadTable({ rows }: { rows: LeadRow[] }) {
-  if (!rows.length) {
-    return (
-      <p className="text-sm" style={{ color: MUTED }}>
-        No leads created in this range.
-      </p>
-    );
-  }
-
   return (
     <div className="overflow-x-auto rounded-lg" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
       <table className="w-full text-sm">
@@ -163,6 +155,13 @@ function LeadTable({ rows }: { rows: LeadRow[] }) {
           </tr>
         </thead>
         <tbody>
+          {!rows.length && (
+            <tr>
+              <td colSpan={5} className="px-4 py-3 text-sm" style={{ color: MUTED }}>
+                No leads created in this range.
+              </td>
+            </tr>
+          )}
           {rows.map((r, i) => (
             <tr key={i} style={{ borderBottom: `1px solid ${BORDER}` }}>
               <td className="px-4 py-2 font-semibold" style={{ color: INK }}>
@@ -240,7 +239,7 @@ function RepTable({ reps }: { reps: RepStats[] }) {
 }
 
 export default function SalesTeamTab() {
-  const [range, setRange] = useState<RangeValue>("week");
+  const [range, setRange] = useState<RangeValue>("today");
   const [data, setData] = useState<CloseSalesResponse | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [errorMsg, setErrorMsg] = useState("");
