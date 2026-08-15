@@ -16,6 +16,8 @@ export const METRIC_DEFS: MetricDef[] = [
   { key: "pitchRate", field: "derived", label: "Pitch Rate (Software Pitched / Pickups)", format: "percent" },
   { key: "cashPerOptIn", field: "derived", label: "Cash Collected per Opt-in", format: "dollar" },
   { key: "aov", field: "derived", label: "Average Order Value (AOV)", format: "dollar" },
+  { key: "htPitchRate", field: "derived", label: "High Ticket Pitch Rate (HT Pitched / Sales)", format: "percent" },
+  { key: "upsellBookingRate", field: "derived", label: "Upsell Booking Rate (HT Booked / HT Pitched)", format: "percent" },
 ];
 
 export type Totals = Record<string, number>;
@@ -33,6 +35,12 @@ function deriveValue(key: string, totals: Totals): number | null {
       return totals["Opt ins (Paid)"] ? (totals["Cash collected low ticket"] || 0) / totals["Opt ins (Paid)"] : null;
     case "aov":
       return totals["software closed"] ? (totals["Cash collected low ticket"] || 0) / totals["software closed"] : null;
+    case "htPitchRate":
+      return totals["software closed"] ? (totals["high ticket call pitched"] || 0) / totals["software closed"] : null;
+    case "upsellBookingRate":
+      return totals["high ticket call pitched"]
+        ? (totals["new high ticket calls booked"] || 0) / totals["high ticket call pitched"]
+        : null;
     default:
       return null;
   }
