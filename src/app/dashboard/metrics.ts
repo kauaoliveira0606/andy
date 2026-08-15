@@ -12,6 +12,7 @@ export type MetricDef = {
 export const METRIC_DEFS: MetricDef[] = [
   { key: "salesCount", field: "software closed", label: "Sales", format: "count" },
   { key: "cashTotal", field: "derived", label: "Total Cash Collected", format: "dollar" },
+  { key: "cashLowTicket", field: "Cash collected low ticket", label: "Cash Collected - Low Ticket", format: "dollar" },
   { key: "pickupRate", field: "derived", label: "Pickup Rate", format: "percent" },
   { key: "pickups", field: "Pick ups", label: "Pickups", format: "count" },
   { key: "softwarePitched", field: "Software pitched", label: "Software Pitched", format: "count" },
