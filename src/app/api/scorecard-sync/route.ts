@@ -19,6 +19,17 @@ const ROW_DIALS = 14;
 const ROW_SALES_LOW_TICKET = 16;
 const ROW_CASH_COLLECTED_LOW_TICKET = 17;
 
+// Several Airtable fields we read are plain text, not numbers — a rep
+// typing "$350" instead of "350" made Number() return NaN, which silently
+// fell back to 0. Strip currency/formatting characters before parsing.
+function parseNum(v: unknown): number {
+  if (typeof v === "number") return v;
+  if (typeof v !== "string") return 0;
+  const cleaned = v.replace(/[^0-9.-]/g, "");
+  const n = parseFloat(cleaned);
+  return isNaN(n) ? 0 : n;
+}
+
 async function fetchTodaysAirtableTotals(today: Date) {
   const formula = `IS_SAME({Date},"${isoDate(today)}","day")`;
   const records: Record<string, unknown>[] = [];
@@ -41,9 +52,9 @@ async function fetchTodaysAirtableTotals(today: Date) {
   let salesLowTicket = 0;
   let cashCollectedLowTicket = 0;
   for (const f of records) {
-    dials += Number(f["Outbound dials"]) || 0;
-    salesLowTicket += Number(f["software closed"]) || 0;
-    cashCollectedLowTicket += Number(f["Cash collected low ticket"]) || 0;
+    dials += parseNum(f["Outbound dials"]);
+    salesLowTicket += parseNum(f["software closed"]);
+    cashCollectedLowTicket += parseNum(f["Cash collected low ticket"]);
   }
   return { dials, salesLowTicket, cashCollectedLowTicket, recordCount: records.length };
 }

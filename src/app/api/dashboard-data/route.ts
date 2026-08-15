@@ -25,6 +25,17 @@ export const NUMERIC_FIELDS = [
   "How many yearly plans",
 ] as const;
 
+// Several Airtable fields we read are plain text, not numbers — a rep
+// typing "$350" instead of "350" made Number() return NaN, which silently
+// fell back to 0. Strip currency/formatting characters before parsing.
+function parseNum(v: unknown): number {
+  if (typeof v === "number") return v;
+  if (typeof v !== "string") return 0;
+  const cleaned = v.replace(/[^0-9.-]/g, "");
+  const n = parseFloat(cleaned);
+  return isNaN(n) ? 0 : n;
+}
+
 function nyTodayISO() {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
 }
@@ -92,8 +103,8 @@ async function fetchMarketingTotals(formula: string) {
   let optInsPaid = 0;
   let optInsOrganic = 0;
   for (const f of records) {
-    optInsPaid += Number(f["Opt ins (Paid)"]) || 0;
-    optInsOrganic += Number(f["Opt ins (Organic)"]) || 0;
+    optInsPaid += parseNum(f["Opt ins (Paid)"]);
+    optInsOrganic += parseNum(f["Opt ins (Organic)"]);
   }
   return { optInsPaid, optInsOrganic };
 }
@@ -130,7 +141,7 @@ export async function GET(req: NextRequest) {
         NUMERIC_FIELDS.forEach((field) => (repMap[name][field] = 0));
       }
       for (const field of NUMERIC_FIELDS) {
-        const v = Number(f[field]) || 0;
+        const v = parseNum(f[field]);
         totals[field] += v;
         repMap[name][field] += v;
       }
