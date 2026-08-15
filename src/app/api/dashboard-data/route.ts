@@ -33,15 +33,23 @@ function isoDate(d: Date) {
 }
 
 /** Builds an Airtable filterByFormula for the requested range. Empty string means no filter (all time). */
-function rangeFormula(range: string): string {
+function rangeFormula(range: string, customStart?: string | null, customEnd?: string | null): string {
   const [y, m, d] = nyTodayISO().split("-").map(Number);
   const today = new Date(y, m - 1, d);
 
   if (range === "today") {
     return `IS_SAME({Date},"${isoDate(today)}","day")`;
   }
+  if (range === "yesterday") {
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    return `IS_SAME({Date},"${isoDate(yesterday)}","day")`;
+  }
   if (range === "all") {
     return "";
+  }
+  if (range === "custom" && customStart && customEnd) {
+    return `AND(OR(IS_SAME({Date},"${customStart}","day"), IS_AFTER({Date},"${customStart}")), OR(IS_SAME({Date},"${customEnd}","day"), IS_BEFORE({Date},"${customEnd}")))`;
   }
 
   const start = new Date(today);
@@ -85,9 +93,11 @@ export async function GET(req: NextRequest) {
   }
 
   const range = req.nextUrl.searchParams.get("range") || "week";
+  const customStart = req.nextUrl.searchParams.get("start");
+  const customEnd = req.nextUrl.searchParams.get("end");
 
   try {
-    const records = await fetchAllRecords(rangeFormula(range));
+    const records = await fetchAllRecords(rangeFormula(range, customStart, customEnd));
 
     const totals: Record<string, number> = {};
     NUMERIC_FIELDS.forEach((f) => (totals[f] = 0));

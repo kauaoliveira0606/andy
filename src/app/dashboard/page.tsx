@@ -123,13 +123,14 @@ function Pill({ active, children, onClick }: { active: boolean; children: React.
 
 const RANGE_OPTIONS = [
   { label: "Today", value: "today" },
+  { label: "Yesterday", value: "yesterday" },
   { label: "This Week", value: "week" },
   { label: "Last 7 Days", value: "7d" },
   { label: "Last 30 Days", value: "30d" },
   { label: "All Time", value: "all" },
 ] as const;
 
-type RangeValue = (typeof RANGE_OPTIONS)[number]["value"];
+type RangeValue = (typeof RANGE_OPTIONS)[number]["value"] | "custom";
 
 /* ---------------------------------------------------------------------- */
 /* Rep breakdown                                                           */
@@ -220,14 +221,23 @@ const PAGE_TABS: { label: string; value: PageTab }[] = [
 
 export default function DashboardPage() {
   const [page, setPage] = useState<PageTab>("overview");
-  const [range, setRange] = useState<RangeValue>("week");
+  const [range, setRange] = useState<RangeValue>("yesterday");
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
   const [data, setData] = useState<DashboardResponse | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
+    if (range === "custom" && (!customStart || !customEnd)) return;
+
     let cancelled = false;
     setStatus("loading");
-    fetch(`/api/dashboard-data?range=${range}&t=${Date.now()}`)
+    const params = new URLSearchParams({ range, t: String(Date.now()) });
+    if (range === "custom") {
+      params.set("start", customStart);
+      params.set("end", customEnd);
+    }
+    fetch(`/api/dashboard-data?${params.toString()}`)
       .then((r) => r.json())
       .then((d: DashboardResponse) => {
         if (cancelled) return;
@@ -244,7 +254,7 @@ export default function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [range]);
+  }, [range, customStart, customEnd]);
 
   const metrics = data ? buildMetrics(data.totals) : [];
 
@@ -255,12 +265,36 @@ export default function DashboardPage() {
           Andy - EcomSimulation Dashboard
         </h1>
         {page === "overview" && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             {RANGE_OPTIONS.map((opt) => (
               <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
                 {opt.label}
               </Pill>
             ))}
+            <div className="mx-1 h-4 w-px" style={{ background: BORDER }} />
+            <input
+              type="date"
+              value={customStart}
+              onChange={(e) => {
+                setCustomStart(e.target.value);
+                setRange("custom");
+              }}
+              className="rounded-md px-2 py-1.5 text-xs font-bold"
+              style={{ border: `1px solid ${range === "custom" ? INK : BORDER}`, color: MUTED, background: PANEL }}
+            />
+            <span className="text-xs font-bold" style={{ color: MUTED }}>
+              to
+            </span>
+            <input
+              type="date"
+              value={customEnd}
+              onChange={(e) => {
+                setCustomEnd(e.target.value);
+                setRange("custom");
+              }}
+              className="rounded-md px-2 py-1.5 text-xs font-bold"
+              style={{ border: `1px solid ${range === "custom" ? INK : BORDER}`, color: MUTED, background: PANEL }}
+            />
           </div>
         )}
       </div>
