@@ -14,7 +14,7 @@ export const METRIC_DEFS: MetricDef[] = [
   { key: "pickups", field: "Pick ups", label: "Pickups", format: "count" },
   { key: "softwarePitched", field: "Software pitched", label: "Software Pitched", format: "count" },
   { key: "pitchRate", field: "derived", label: "Pitch Rate (Software Pitched / Pickups)", format: "percent" },
-  { key: "cashPerOptIn", field: "derived", label: "Cash Collected per Opt-in", format: "dollar" },
+  { key: "cashPerOptIn", field: "derived", label: "Cash Collected per Opt-in (PAID)", format: "dollar" },
   { key: "aov", field: "derived", label: "Average Order Value (AOV)", format: "dollar" },
   { key: "htPitchRate", field: "derived", label: "High Ticket Pitch Rate (HT Pitched / Sales)", format: "percent" },
   { key: "upsellBookingRate", field: "derived", label: "Upsell Booking Rate (HT Booked / HT Pitched)", format: "percent" },
