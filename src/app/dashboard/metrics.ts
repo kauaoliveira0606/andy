@@ -15,6 +15,7 @@ export const METRIC_DEFS: MetricDef[] = [
   { key: "softwarePitched", field: "Software pitched", label: "Software Pitched", format: "count" },
   { key: "pitchRate", field: "derived", label: "Pitch Rate (Software Pitched / Pickups)", format: "percent" },
   { key: "cashPerOptIn", field: "derived", label: "Cash Collected per Opt-in", format: "dollar" },
+  { key: "aov", field: "derived", label: "Average Order Value (AOV)", format: "dollar" },
 ];
 
 export type Totals = Record<string, number>;
@@ -30,6 +31,8 @@ function deriveValue(key: string, totals: Totals): number | null {
       return totals["Pick ups"] ? (totals["Software pitched"] || 0) / totals["Pick ups"] : null;
     case "cashPerOptIn":
       return totals["Opt ins (Paid)"] ? (totals["Cash collected low ticket"] || 0) / totals["Opt ins (Paid)"] : null;
+    case "aov":
+      return totals["software closed"] ? (totals["Cash collected low ticket"] || 0) / totals["software closed"] : null;
     default:
       return null;
   }
