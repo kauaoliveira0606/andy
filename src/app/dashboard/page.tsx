@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { buildMetrics, type Metric, type Totals } from "./metrics";
 import ScorecardMetricsSection from "./ScorecardMetricsSection";
 import SalesTeamTab from "./SalesTeamTab";
-import FinancialModelTab from "./FinancialModelTab";
+import ModelsTab from "./ModelsTab";
 
 /* ---------------------------------------------------------------------- */
 /* Theme                                                                   */
@@ -213,12 +213,12 @@ type DashboardResponse = {
   error?: string;
 };
 
-type PageTab = "overview" | "salesTeam" | "financialModel";
+type PageTab = "overview" | "salesTeam" | "models";
 
 const PAGE_TABS: { label: string; value: PageTab }[] = [
   { label: "Overview", value: "overview" },
   { label: "Sales Team", value: "salesTeam" },
-  { label: "Financial Model", value: "financialModel" },
+  { label: "Models", value: "models" },
 ];
 
 export default function DashboardPage() {
@@ -359,7 +359,7 @@ export default function DashboardPage() {
 
       {page === "salesTeam" && <SalesTeamTab />}
 
-      {page === "financialModel" && <FinancialModelTab />}
+      {page === "models" && <ModelsTab />}
     </div>
   );
 }
