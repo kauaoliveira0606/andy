@@ -5,6 +5,7 @@ import { buildMetrics, type Metric, type Totals } from "./metrics";
 import ScorecardMetricsSection from "./ScorecardMetricsSection";
 import SalesTeamTab from "./SalesTeamTab";
 import ModelsTab from "./ModelsTab";
+import AdsAnalysisTab from "./AdsAnalysisTab";
 
 /* ---------------------------------------------------------------------- */
 /* Theme                                                                   */
@@ -213,12 +214,13 @@ type DashboardResponse = {
   error?: string;
 };
 
-type PageTab = "overview" | "salesTeam" | "models";
+type PageTab = "overview" | "salesTeam" | "models" | "adsAnalysis";
 
 const PAGE_TABS: { label: string; value: PageTab }[] = [
   { label: "Overview", value: "overview" },
   { label: "Sales Team", value: "salesTeam" },
   { label: "Models", value: "models" },
+  { label: "Ads Analysis", value: "adsAnalysis" },
 ];
 
 export default function DashboardPage() {
@@ -360,6 +362,8 @@ export default function DashboardPage() {
       {page === "salesTeam" && <SalesTeamTab />}
 
       {page === "models" && <ModelsTab />}
+
+      {page === "adsAnalysis" && <AdsAnalysisTab />}
     </div>
   );
 }
