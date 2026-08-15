@@ -171,7 +171,7 @@ function rangeBounds(range: string): { gte?: string; lt?: string } {
 // calls can be matched by user_id (stable) rather than user_name (can
 // mismatch/be blank).
 async function fetchOrgMembers(): Promise<Record<string, string>> {
-  const me = await closeFetch<{ organizations?: { id: string }[] }>("/me/", {});
+  const me = await closeFetch<{ id?: string; organizations?: { id: string }[] }>("/me/", {});
   const orgId = me.organizations?.[0]?.id;
   if (!orgId) return {};
   const org = await closeFetch<{ memberships?: { user_id: string; user_full_name?: string; user_email?: string }[] }>(
@@ -180,7 +180,12 @@ async function fetchOrgMembers(): Promise<Record<string, string>> {
   );
   const map: Record<string, string> = {};
   for (const m of org.memberships || []) {
-    map[m.user_id] = m.user_full_name || m.user_email || m.user_id;
+    // Skip the API key's own account (the org owner/integration user, not
+    // a real rep) and members with no real name set (shows as a raw email
+    // otherwise, not a useful "rep" row).
+    if (m.user_id === me.id) continue;
+    if (!m.user_full_name) continue;
+    map[m.user_id] = m.user_full_name;
   }
   return map;
 }
