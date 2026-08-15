@@ -81,23 +81,44 @@ export async function GET(req: NextRequest) {
     let paid = 0;
     let organic = 0;
     let unlabeled = 0;
+    let paidCash = 0;
+    let organicCash = 0;
     for (const r of leadRecords) {
       const source = r["Source"];
-      if (source === "Paid") paid += 1;
-      else if (source === "Organic") organic += 1;
-      else unlabeled += 1;
+      const cash = parseNum(r["Cash Collected"]);
+      if (source === "Paid") {
+        paid += 1;
+        paidCash += cash;
+      } else if (source === "Organic") {
+        organic += 1;
+        organicCash += cash;
+      } else {
+        unlabeled += 1;
+      }
     }
 
     let manualPaid = 0;
     let manualOrganic = 0;
+    let adSpend = 0;
     for (const r of marketingRecords) {
       manualPaid += parseNum(r["Opt ins (Paid)"]);
       manualOrganic += parseNum(r["Opt ins (Organic)"]);
+      adSpend += parseNum(r["Ad Spend Meta"]);
     }
+
+    // Organic doesn't have ad spend behind it by definition — ROAS only
+    // makes sense for paid. Cost per lead uses the newly-accurate tracked
+    // paid count instead of the old manually-typed opt-in number.
+    const paidRoas = adSpend > 0 ? paidCash / adSpend : null;
+    const costPerPaidLead = paid > 0 ? adSpend / paid : null;
 
     return NextResponse.json({
       range,
       tracked: { paid, organic, unlabeled, total: leadRecords.length },
+      cash: { paid: paidCash, organic: organicCash, total: paidCash + organicCash },
+      adSpend,
+      paidRoas,
+      costPerPaidLead,
       manualEntry: { paid: manualPaid, organic: manualOrganic },
       mismatch: { paid: manualPaid - paid, organic: manualOrganic - organic },
     });

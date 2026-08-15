@@ -278,19 +278,23 @@ function LeaderboardSection() {
 type LeadSourceResponse = {
   range: string;
   tracked: { paid: number; organic: number; unlabeled: number; total: number };
+  cash: { paid: number; organic: number; total: number };
+  adSpend: number;
+  paidRoas: number | null;
+  costPerPaidLead: number | null;
   manualEntry: { paid: number; organic: number };
   mismatch: { paid: number; organic: number };
   error?: string;
 };
 
-function LeadSourceCard({ label, value, color, sub }: { label: string; value: number; color: string; sub?: string }) {
+function LeadSourceCard({ label, value, color, sub }: { label: string; value: string; color: string; sub?: string }) {
   return (
     <div className="rounded-lg p-4" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
       <p className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: MUTED }}>
         {label}
       </p>
       <p className="mt-1.5 text-2xl font-extrabold" style={{ color }}>
-        {value.toLocaleString()}
+        {value}
       </p>
       {sub && (
         <p className="mt-1 text-[11px]" style={{ color: MUTED }}>
@@ -357,11 +361,35 @@ function LeadSourceSection() {
       {status === "ready" && data && (
         <div className="flex flex-col gap-3">
           <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))" }}>
-            <LeadSourceCard label="Paid Leads (Tracked)" value={data.tracked.paid} color={SERIES_MONTHLY} />
-            <LeadSourceCard label="Organic Leads (Tracked)" value={data.tracked.organic} color={SERIES_YEARLY} />
+            <LeadSourceCard label="Paid Leads (Tracked)" value={data.tracked.paid.toLocaleString()} color={SERIES_MONTHLY} />
+            <LeadSourceCard label="Organic Leads (Tracked)" value={data.tracked.organic.toLocaleString()} color={SERIES_YEARLY} />
             {data.tracked.unlabeled > 0 && (
-              <LeadSourceCard label="Unlabeled" value={data.tracked.unlabeled} color={MUTED} sub="Missing/invalid Source" />
+              <LeadSourceCard label="Unlabeled" value={data.tracked.unlabeled.toLocaleString()} color={MUTED} sub="Missing/invalid Source" />
             )}
+            <LeadSourceCard
+              label="Cash Collected — Paid"
+              value={`$${data.cash.paid.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              color={SERIES_MONTHLY}
+              sub="From the Leads table's Cash Collected field"
+            />
+            <LeadSourceCard
+              label="Cash Collected — Organic"
+              value={`$${data.cash.organic.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              color={SERIES_YEARLY}
+              sub="From the Leads table's Cash Collected field"
+            />
+            <LeadSourceCard
+              label="Paid ROAS"
+              value={data.paidRoas === null ? "—" : `${data.paidRoas.toFixed(2)}x`}
+              color={INK}
+              sub={`Cash (Paid) ÷ Ad Spend ($${data.adSpend.toFixed(0)})`}
+            />
+            <LeadSourceCard
+              label="Cost Per Paid Lead"
+              value={data.costPerPaidLead === null ? "—" : `$${data.costPerPaidLead.toFixed(2)}`}
+              color={INK}
+              sub="Ad Spend ÷ tracked Paid leads"
+            />
           </div>
 
           {(paidMismatch || organicMismatch) && (
