@@ -467,108 +467,124 @@ export default function DashboardPage() {
   }, [range, customStart, customEnd]);
 
   const metrics = data ? buildMetrics(data.totals) : [];
+  const currentTabLabel = PAGE_TABS.find((t) => t.value === page)?.label ?? "";
 
   return (
-    <div className="mx-auto max-w-6xl" style={{ background: BG }}>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-extrabold" style={{ color: INK }}>
-          Andy - EcomSimulation Dashboard
-        </h1>
-        {page === "overview" && (
-          <div className="flex flex-wrap items-center gap-2">
-            {RANGE_OPTIONS.map((opt) => (
-              <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
-                {opt.label}
-              </Pill>
-            ))}
-            <div className="mx-1 h-4 w-px" style={{ background: BORDER }} />
-            <input
-              type="date"
-              value={customStart}
-              onChange={(e) => {
-                setCustomStart(e.target.value);
-                setRange("custom");
-              }}
-              className="rounded-md px-2 py-1.5 text-xs font-bold"
-              style={{ border: `1px solid ${range === "custom" ? INK : BORDER}`, color: MUTED, background: PANEL }}
-            />
-            <span className="text-xs font-bold" style={{ color: MUTED }}>
-              to
-            </span>
-            <input
-              type="date"
-              value={customEnd}
-              onChange={(e) => {
-                setCustomEnd(e.target.value);
-                setRange("custom");
-              }}
-              className="rounded-md px-2 py-1.5 text-xs font-bold"
-              style={{ border: `1px solid ${range === "custom" ? INK : BORDER}`, color: MUTED, background: PANEL }}
-            />
-          </div>
-        )}
-      </div>
-
-      <div className="mb-6 flex gap-2 border-b" style={{ borderColor: BORDER }}>
+    <div className="flex min-h-screen" style={{ background: BG }}>
+      <aside
+        className="flex w-56 shrink-0 flex-col gap-1 px-3 py-6"
+        style={{ background: PANEL, borderRight: `1px solid ${BORDER}` }}
+      >
+        <div className="mb-6 px-2">
+          <p className="text-sm font-extrabold" style={{ color: INK }}>
+            Andy
+          </p>
+          <p className="text-[11px]" style={{ color: MUTED }}>
+            EcomSimulation Dashboard
+          </p>
+        </div>
         {PAGE_TABS.map((t) => (
           <button
             key={t.value}
             onClick={() => setPage(t.value)}
-            className="px-3 py-2 text-sm font-bold transition-colors"
+            className="rounded-md px-3 py-2 text-left text-sm font-bold transition-colors"
             style={{
-              color: page === t.value ? INK : MUTED,
-              borderBottom: page === t.value ? `2px solid ${INK}` : "2px solid transparent",
+              background: page === t.value ? INK : "transparent",
+              color: page === t.value ? BG : MUTED,
             }}
           >
             {t.label}
           </button>
         ))}
-      </div>
+      </aside>
 
-      {page === "overview" && (
-        <>
-          {status === "loading" && (
-            <p className="text-sm" style={{ color: MUTED }}>
-              Loading…
-            </p>
-          )}
-
-          {status === "error" && (
-            <p className="text-sm font-semibold" style={{ color: "#ef4444" }}>
-              Couldn&apos;t load dashboard data. Check AIRTABLE_TOKEN and the base/table configuration.
-            </p>
-          )}
-
-          {status === "ready" && data && (
-            <div className="flex flex-col gap-8">
-              <section>
-                <SectionLabel>Metrics</SectionLabel>
-                <MetricGrid items={metrics} />
-              </section>
-
-              <section>
-                <SectionLabel>Yearly / Monthly Plan Split</SectionLabel>
-                <PlanSplitBar
-                  monthly={data.totals["How many monthly plans"] || 0}
-                  yearly={data.totals["How many yearly plans"] || 0}
+      <main className="min-w-0 flex-1 overflow-y-auto px-6 py-6">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <h1 className="text-xl font-extrabold" style={{ color: INK }}>
+              {currentTabLabel}
+            </h1>
+            {page === "overview" && (
+              <div className="flex flex-wrap items-center gap-2">
+                {RANGE_OPTIONS.map((opt) => (
+                  <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
+                    {opt.label}
+                  </Pill>
+                ))}
+                <div className="mx-1 h-4 w-px" style={{ background: BORDER }} />
+                <input
+                  type="date"
+                  value={customStart}
+                  onChange={(e) => {
+                    setCustomStart(e.target.value);
+                    setRange("custom");
+                  }}
+                  className="rounded-md px-2 py-1.5 text-xs font-bold"
+                  style={{ border: `1px solid ${range === "custom" ? INK : BORDER}`, color: MUTED, background: PANEL }}
                 />
-              </section>
+                <span className="text-xs font-bold" style={{ color: MUTED }}>
+                  to
+                </span>
+                <input
+                  type="date"
+                  value={customEnd}
+                  onChange={(e) => {
+                    setCustomEnd(e.target.value);
+                    setRange("custom");
+                  }}
+                  className="rounded-md px-2 py-1.5 text-xs font-bold"
+                  style={{ border: `1px solid ${range === "custom" ? INK : BORDER}`, color: MUTED, background: PANEL }}
+                />
+              </div>
+            )}
+          </div>
 
-              <LeadSourceSection />
+          {page === "overview" && (
+            <>
+              {status === "loading" && (
+                <p className="text-sm" style={{ color: MUTED }}>
+                  Loading…
+                </p>
+              )}
 
-              <LeaderboardSection />
+              {status === "error" && (
+                <p className="text-sm font-semibold" style={{ color: "#ef4444" }}>
+                  Couldn&apos;t load dashboard data. Check AIRTABLE_TOKEN and the base/table configuration.
+                </p>
+              )}
 
-              <ScorecardMetricsSection />
-            </div>
+              {status === "ready" && data && (
+                <div className="flex flex-col gap-8">
+                  <section>
+                    <SectionLabel>Metrics</SectionLabel>
+                    <MetricGrid items={metrics} />
+                  </section>
+
+                  <section>
+                    <SectionLabel>Yearly / Monthly Plan Split</SectionLabel>
+                    <PlanSplitBar
+                      monthly={data.totals["How many monthly plans"] || 0}
+                      yearly={data.totals["How many yearly plans"] || 0}
+                    />
+                  </section>
+
+                  <LeadSourceSection />
+
+                  <LeaderboardSection />
+
+                  <ScorecardMetricsSection />
+                </div>
+              )}
+            </>
           )}
-        </>
-      )}
 
-      {page === "salesTeam" && <SalesTeamTab />}
+          {page === "salesTeam" && <SalesTeamTab />}
 
-      {page === "models" && <ModelsTab />}
+          {page === "models" && <ModelsTab />}
 
-      {page === "adsAnalysis" && <AdsAnalysisTab />}
+          {page === "adsAnalysis" && <AdsAnalysisTab />}
+        </div>
+      </main>
     </div>
   );
 }
