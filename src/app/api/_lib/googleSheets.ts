@@ -114,6 +114,67 @@ export async function findTodayTabAndColumn(
   return null;
 }
 
+/** All tabs with their sheetId/title/index, plus the date range found in each one's row 2 (cols B-H). */
+export async function listTabsWithDateRanges(
+  accessToken: string
+): Promise<{ sheetId: number; title: string; index: number; dates: Date[] }[]> {
+  const meta = await sheetsFetch(accessToken, "?fields=sheets.properties");
+  const props: { sheetId: number; title: string; index: number }[] = (meta.sheets || []).map(
+    (s: { properties: { sheetId: number; title: string; index: number } }) => s.properties
+  );
+
+  const out: { sheetId: number; title: string; index: number; dates: Date[] }[] = [];
+  for (const p of props) {
+    const range = `'${p.title.replace(/'/g, "''")}'!A1:Z3`;
+    let values: string[][];
+    try {
+      const res = await sheetsFetch(accessToken, `/values/${encodeURIComponent(range)}`);
+      values = res.values || [];
+    } catch {
+      out.push({ ...p, dates: [] });
+      continue;
+    }
+    const dateRow = values[1] || [];
+    const dates: Date[] = [];
+    // A tab's dates could span a year boundary in theory; use the current
+    // year as a base guess since these are always near-term weekly tabs.
+    const refYear = new Date().getFullYear();
+    for (let c = 1; c < dateRow.length; c++) {
+      const d = parseSheetDate(dateRow[c], refYear);
+      if (d) dates.push(d);
+    }
+    out.push({ ...p, dates });
+  }
+  return out;
+}
+
+export function fmtSheetDate(d: Date): string {
+  return `${MONTHS_ARR[d.getMonth()]}-${d.getDate()}`;
+}
+
+export function fmtTabTitle(start: Date, end: Date): string {
+  return `${start.getMonth() + 1}/${start.getDate()}-${end.getMonth() + 1}/${end.getDate()}`;
+}
+
+/** Duplicates a sheet tab and renames the copy. Returns the new sheet's sheetId. */
+export async function duplicateTab(accessToken: string, sourceSheetId: number, newTitle: string): Promise<number> {
+  const res = await sheetsFetch(accessToken, ":batchUpdate", {
+    method: "POST",
+    body: JSON.stringify({
+      requests: [
+        {
+          duplicateSheet: {
+            sourceSheetId,
+            insertSheetIndex: 9999,
+            newSheetName: newTitle,
+          },
+        },
+      ],
+    }),
+  });
+  return res.replies[0].duplicateSheet.properties.sheetId;
+}
+
 export function normalizeLabel(s: string): string {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
 }
