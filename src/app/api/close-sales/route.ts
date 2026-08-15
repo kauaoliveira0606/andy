@@ -12,6 +12,9 @@ const CLOSE_BASE = "https://api.close.com/api/v1";
 const PICKUP_MIN_SECONDS = 45;
 const LONG_CONVO_MIN_SECONDS = 120;
 
+// Names to keep off the By Rep table entirely — not real active reps.
+const REP_NAME_BLOCKLIST = new Set(["jaidensuesue", "Raj Karan Tiwana", "Unknown"]);
+
 type CloseCall = {
   id: string;
   lead_id: string;
@@ -347,7 +350,9 @@ export async function GET(req: NextRequest) {
         longConversations: totalLongConversations,
         talkTimeMinutes: Math.round(totalTalkTimeMinutes * 10) / 10,
       },
-      reps: Object.values(repMap).sort((a, b) => b.outboundDials - a.outboundDials),
+      reps: Object.values(repMap)
+        .filter((r) => !REP_NAME_BLOCKLIST.has(r.name))
+        .sort((a, b) => b.outboundDials - a.outboundDials),
     });
   } catch (err) {
     return NextResponse.json({ error: "Failed to reach Close CRM", detail: String(err) }, { status: 502 });
