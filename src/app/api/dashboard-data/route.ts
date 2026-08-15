@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const AIRTABLE_BASE = "appgcEYqudlGfqBjE"; // Andy - EcomSimulation
 const AIRTABLE_TABLE = "Affiliate EOD";
+const MARKETING_TABLE_ID = "tblRdiOjEHQgth0TN"; // Marketing Daily Metrics
 
 // Airtable field names as they exist in the base today.
 export const NUMERIC_FIELDS = [
@@ -62,7 +63,7 @@ function rangeFormula(range: string, customStart?: string | null, customEnd?: st
   return `OR(IS_SAME({Date},"${startIso}","day"), IS_AFTER({Date},"${startIso}"))`;
 }
 
-async function fetchAllRecords(formula: string) {
+async function fetchAllRecords(tableIdOrName: string, formula: string) {
   const records: Record<string, unknown>[] = [];
   let offset: string | undefined;
 
@@ -72,7 +73,7 @@ async function fetchAllRecords(formula: string) {
     if (offset) params.set("offset", offset);
 
     const res = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}?${params.toString()}`,
+      `https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(tableIdOrName)}?${params.toString()}`,
       { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` }, cache: "no-store" }
     );
     const data = await res.json();
@@ -83,6 +84,18 @@ async function fetchAllRecords(formula: string) {
   } while (offset);
 
   return records;
+}
+
+/** Sums Opt-ins (Paid/Organic) from Marketing Daily Metrics for the same date range. */
+async function fetchMarketingTotals(formula: string) {
+  const records = await fetchAllRecords(MARKETING_TABLE_ID, formula);
+  let optInsPaid = 0;
+  let optInsOrganic = 0;
+  for (const f of records) {
+    optInsPaid += Number(f["Opt ins (Paid)"]) || 0;
+    optInsOrganic += Number(f["Opt ins (Organic)"]) || 0;
+  }
+  return { optInsPaid, optInsOrganic };
 }
 
 type RepRow = { name: string } & Record<string, number>;
@@ -97,10 +110,16 @@ export async function GET(req: NextRequest) {
   const customEnd = req.nextUrl.searchParams.get("end");
 
   try {
-    const records = await fetchAllRecords(rangeFormula(range, customStart, customEnd));
+    const formula = rangeFormula(range, customStart, customEnd);
+    const [records, marketingTotals] = await Promise.all([
+      fetchAllRecords(AIRTABLE_TABLE, formula),
+      fetchMarketingTotals(formula),
+    ]);
 
     const totals: Record<string, number> = {};
     NUMERIC_FIELDS.forEach((f) => (totals[f] = 0));
+    totals["Opt ins (Paid)"] = marketingTotals.optInsPaid;
+    totals["Opt ins (Organic)"] = marketingTotals.optInsOrganic;
 
     const repMap: Record<string, RepRow> = {};
 
