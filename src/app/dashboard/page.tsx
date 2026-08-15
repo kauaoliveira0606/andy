@@ -203,6 +203,75 @@ function RepTable({ reps }: { reps: RepRow[] }) {
 }
 
 /* ---------------------------------------------------------------------- */
+/* Leaderboard (own date range, independent of the rest of Overview)      */
+/* ---------------------------------------------------------------------- */
+
+const LEADERBOARD_RANGE_OPTIONS = [
+  { label: "Today", value: "today" },
+  { label: "Yesterday", value: "yesterday" },
+  { label: "Past 7 Days", value: "7d" },
+  { label: "Past 30 Days", value: "30d" },
+  { label: "All Time", value: "all" },
+] as const;
+
+type LeaderboardRangeValue = (typeof LEADERBOARD_RANGE_OPTIONS)[number]["value"];
+
+function LeaderboardSection() {
+  const [range, setRange] = useState<LeaderboardRangeValue>("today");
+  const [reps, setReps] = useState<RepRow[]>([]);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+    setStatus("loading");
+    fetch(`/api/dashboard-data?range=${range}&t=${Date.now()}`)
+      .then((r) => r.json())
+      .then((d: DashboardResponse) => {
+        if (cancelled) return;
+        if (d.error) {
+          setStatus("error");
+          return;
+        }
+        setReps(d.reps);
+        setStatus("ready");
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [range]);
+
+  return (
+    <section>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <SectionLabel>Leaderboard</SectionLabel>
+        <div className="flex flex-wrap gap-2">
+          {LEADERBOARD_RANGE_OPTIONS.map((opt) => (
+            <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
+              {opt.label}
+            </Pill>
+          ))}
+        </div>
+      </div>
+
+      {status === "loading" && (
+        <p className="text-sm" style={{ color: MUTED }}>
+          Loading…
+        </p>
+      )}
+      {status === "error" && (
+        <p className="text-sm font-semibold" style={{ color: "#ef4444" }}>
+          Couldn&apos;t load leaderboard data.
+        </p>
+      )}
+      {status === "ready" && <RepTable reps={reps} />}
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------------- */
 /* Page                                                                     */
 /* ---------------------------------------------------------------------- */
 
@@ -348,10 +417,7 @@ export default function DashboardPage() {
                 />
               </section>
 
-              <section>
-                <SectionLabel>Leaderboard</SectionLabel>
-                <RepTable reps={data.reps} />
-              </section>
+              <LeaderboardSection />
 
               <ScorecardMetricsSection />
             </div>
