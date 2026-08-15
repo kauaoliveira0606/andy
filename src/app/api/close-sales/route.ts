@@ -40,34 +40,57 @@ async function closeFetch<T = unknown>(path: string, params: Record<string, stri
   Object.entries(params).forEach(([k, v]) => {
     if (v) url.searchParams.set(k, v);
   });
-  const res = await fetch(url.toString(), { headers: { Authorization: authHeader() }, cache: "no-store" });
-  if (!res.ok) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const res = await fetch(url.toString(), { headers: { Authorization: authHeader() }, cache: "no-store" });
+    if (res.ok) return res.json();
+    if (res.status === 429 && attempt === 0) {
+      const retryAfter = Number(res.headers.get("retry-after")) || 2;
+      await new Promise((r) => setTimeout(r, retryAfter * 1000));
+      continue;
+    }
     const body = await res.text().catch(() => "");
     throw new Error(`Close API ${path} failed: ${res.status} ${body.slice(0, 200)}`);
   }
-  return res.json();
+  throw new Error(`Close API ${path} failed: exhausted retries`);
 }
 
-async function fetchAllPages<T>(
+// Close's pagination is offset-based (_skip/_limit), so pages at known
+// offsets can be fetched concurrently instead of one at a time — fetching
+// 60 pages sequentially (needed below, since Close's filtering/sort on
+// /lead/ can't be trusted) was the main reason this route was slow to load.
+async function fetchAllPagesParallel<T>(
   path: string,
   baseParams: Record<string, string | undefined>,
-  maxPages = 20
+  maxPages: number,
+  batchSize = 8
 ): Promise<T[]> {
-  const all: T[] = [];
-  let skip = 0;
   const limit = 100;
-  for (let page = 0; page < maxPages; page++) {
-    const data = await closeFetch<{ data: T[]; has_more?: boolean }>(path, {
-      ...baseParams,
-      _limit: String(limit),
-      _skip: String(skip),
-    });
-    const items = data.data || [];
-    all.push(...items);
-    if (!data.has_more || items.length === 0) break;
-    skip += items.length;
+  const all: T[] = [];
+  let done = false;
+
+  for (let batchStart = 0; batchStart < maxPages && !done; batchStart += batchSize) {
+    const pagesInBatch = Math.min(batchSize, maxPages - batchStart);
+    const results = await Promise.all(
+      Array.from({ length: pagesInBatch }, (_, i) => {
+        const page = batchStart + i;
+        return closeFetch<{ data: T[]; has_more?: boolean }>(path, {
+          ...baseParams,
+          _limit: String(limit),
+          _skip: String(page * limit),
+        });
+      })
+    );
+    for (const data of results) {
+      const items = data.data || [];
+      all.push(...items);
+      if (!data.has_more || items.length < limit) done = true;
+    }
   }
   return all;
+}
+
+async function fetchAllPages<T>(path: string, baseParams: Record<string, string | undefined>, maxPages = 20): Promise<T[]> {
+  return fetchAllPagesParallel<T>(path, baseParams, maxPages);
 }
 
 // GET /lead/ does not reliably filter by date_created via query params or
@@ -76,32 +99,23 @@ async function fetchAllPages<T>(
 // Its "-date_created" sort is ALSO unreliable — verified live: ~59% of a
 // 500-record sample was out of order — so we can't early-stop once we see
 // an old lead either (a newer one could be sitting further down the list).
-// Only safe option: scan every page up to the cap and filter client-side.
+// Only safe option: scan every page up to the cap and filter client-side —
+// done in parallel batches (see fetchAllPagesParallel) since this is the
+// single biggest cost in the whole route.
 async function fetchLeadsInRange(gte: string | undefined, lt: string | undefined): Promise<CloseLead[]> {
   const gteTime = gte ? new Date(gte).getTime() : -Infinity;
   const ltTime = lt ? new Date(lt).getTime() : Infinity;
-  const inRange: CloseLead[] = [];
-  let skip = 0;
-  const limit = 100;
-  const maxPages = 60;
 
-  for (let page = 0; page < maxPages; page++) {
-    const data = await closeFetch<{ data: CloseLead[]; has_more?: boolean }>("/lead/", {
-      _limit: String(limit),
-      _skip: String(skip),
-      _fields: "id,date_created,display_name",
-    });
-    const items = data.data || [];
-    if (!items.length) break;
+  const allLeads = await fetchAllPagesParallel<CloseLead>(
+    "/lead/",
+    { _fields: "id,date_created,display_name" },
+    60
+  );
 
-    for (const lead of items) {
-      const t = new Date(lead.date_created).getTime();
-      if (t >= gteTime && t < ltTime) inRange.push(lead);
-    }
-    if (!data.has_more) break;
-    skip += items.length;
-  }
-  return inRange;
+  return allLeads.filter((lead) => {
+    const t = new Date(lead.date_created).getTime();
+    return t >= gteTime && t < ltTime;
+  });
 }
 
 // The sales team operates on Eastern Time, so "today"/"yesterday"/"this
