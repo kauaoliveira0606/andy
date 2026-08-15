@@ -11,6 +11,7 @@ export const maxDuration = 60;
 
 const GOOGLE_SERVICE_ACCOUNT_KEY = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
 const DAY_MS = 24 * 60 * 60 * 1000;
+const WEEKDAY_NAMES = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export async function GET() {
   if (!GOOGLE_SERVICE_ACCOUNT_KEY) {
@@ -53,15 +54,21 @@ export async function GET() {
     const weekDates = Array.from({ length: 7 }, (_, i) => new Date(nextWeekStart.getTime() + i * DAY_MS));
     const dateRowValues = weekDates.map(fmtSheetDate);
 
-    // Row 2 = dates (cols B-H). Clear old day-values (cols B-H, rows 4-19)
-    // so the new week starts blank; leave I:L (goals/summary/source) and
-    // rows 20-24 (the divider + the other automation's ROAS/CPA rows) alone.
+    // Row 2 = dates, row 3 = weekday names (always Sun-Sat, B through H —
+    // written directly rather than relying on any formula/automation carried
+    // over from the duplicated tab). Clear old day-values (cols B-H, rows
+    // 4-19) so the new week starts blank; leave I:L (goals/summary/source)
+    // and rows 20-24 (the divider + the other automation's ROAS/CPA rows)
+    // alone.
     const safeTitle = newTitle.replace(/'/g, "''");
     await sheetsFetch(accessToken, "/values:batchUpdate", {
       method: "POST",
       body: JSON.stringify({
         valueInputOption: "RAW",
-        data: [{ range: `'${safeTitle}'!B2:${colLetter(dateRowValues.length)}2`, values: [dateRowValues] }],
+        data: [
+          { range: `'${safeTitle}'!B2:${colLetter(dateRowValues.length)}2`, values: [dateRowValues] },
+          { range: `'${safeTitle}'!B3:${colLetter(WEEKDAY_NAMES.length)}3`, values: [WEEKDAY_NAMES] },
+        ],
       }),
     });
     await sheetsFetch(accessToken, `/values/${encodeURIComponent(`'${safeTitle}'!B4:H19`)}:clear`, {
