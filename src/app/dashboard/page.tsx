@@ -272,6 +272,115 @@ function LeaderboardSection() {
 }
 
 /* ---------------------------------------------------------------------- */
+/* Lead Sources — Paid vs Organic, tracked from the Leads table            */
+/* ---------------------------------------------------------------------- */
+
+type LeadSourceResponse = {
+  range: string;
+  tracked: { paid: number; organic: number; unlabeled: number; total: number };
+  manualEntry: { paid: number; organic: number };
+  mismatch: { paid: number; organic: number };
+  error?: string;
+};
+
+function LeadSourceCard({ label, value, color, sub }: { label: string; value: number; color: string; sub?: string }) {
+  return (
+    <div className="rounded-lg p-4" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
+      <p className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: MUTED }}>
+        {label}
+      </p>
+      <p className="mt-1.5 text-2xl font-extrabold" style={{ color }}>
+        {value.toLocaleString()}
+      </p>
+      {sub && (
+        <p className="mt-1 text-[11px]" style={{ color: MUTED }}>
+          {sub}
+        </p>
+      )}
+    </div>
+  );
+}
+
+function LeadSourceSection() {
+  const [range, setRange] = useState<LeaderboardRangeValue>("today");
+  const [data, setData] = useState<LeadSourceResponse | null>(null);
+  const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let cancelled = false;
+    setStatus("loading");
+    fetch(`/api/leads-source?range=${range}&t=${Date.now()}`)
+      .then((r) => r.json())
+      .then((d: LeadSourceResponse) => {
+        if (cancelled) return;
+        if (d.error) {
+          setStatus("error");
+          return;
+        }
+        setData(d);
+        setStatus("ready");
+      })
+      .catch(() => {
+        if (!cancelled) setStatus("error");
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [range]);
+
+  const paidMismatch = data && data.mismatch.paid !== 0;
+  const organicMismatch = data && data.mismatch.organic !== 0;
+
+  return (
+    <section>
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <SectionLabel>Lead Sources</SectionLabel>
+        <div className="flex flex-wrap gap-2">
+          {LEADERBOARD_RANGE_OPTIONS.map((opt) => (
+            <Pill key={opt.value} active={range === opt.value} onClick={() => setRange(opt.value)}>
+              {opt.label}
+            </Pill>
+          ))}
+        </div>
+      </div>
+
+      {status === "loading" && (
+        <p className="text-sm" style={{ color: MUTED }}>
+          Loading…
+        </p>
+      )}
+      {status === "error" && (
+        <p className="text-sm font-semibold" style={{ color: "#ef4444" }}>
+          Couldn&apos;t load lead source data.
+        </p>
+      )}
+      {status === "ready" && data && (
+        <div className="flex flex-col gap-3">
+          <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(190px, 1fr))" }}>
+            <LeadSourceCard label="Paid Leads (Tracked)" value={data.tracked.paid} color={SERIES_MONTHLY} />
+            <LeadSourceCard label="Organic Leads (Tracked)" value={data.tracked.organic} color={SERIES_YEARLY} />
+            {data.tracked.unlabeled > 0 && (
+              <LeadSourceCard label="Unlabeled" value={data.tracked.unlabeled} color={MUTED} sub="Missing/invalid Source" />
+            )}
+          </div>
+
+          {(paidMismatch || organicMismatch) && (
+            <div className="rounded-lg p-3 text-[12px]" style={{ background: "#fef3c7", border: "1px solid #f59e0b", color: "#78350f" }}>
+              <strong>Cross-check mismatch:</strong> the Marketing Daily Metrics form's manually-typed opt-ins don&apos;t
+              match the tracked lead count for this range — Paid: {data.tracked.paid} tracked vs {data.manualEntry.paid}{" "}
+              manual ({data.mismatch.paid > 0 ? "+" : ""}
+              {data.mismatch.paid}); Organic: {data.tracked.organic} tracked vs {data.manualEntry.organic} manual (
+              {data.mismatch.organic > 0 ? "+" : ""}
+              {data.mismatch.organic}). Worth checking whether the zaps are firing correctly or the manual entry is stale.
+            </div>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------------- */
 /* Page                                                                     */
 /* ---------------------------------------------------------------------- */
 
@@ -416,6 +525,8 @@ export default function DashboardPage() {
                   yearly={data.totals["How many yearly plans"] || 0}
                 />
               </section>
+
+              <LeadSourceSection />
 
               <LeaderboardSection />
 
