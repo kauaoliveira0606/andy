@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { buildMetrics, type Metric, type Totals } from "./metrics";
 import ScorecardMetricsSection from "./ScorecardMetricsSection";
+import RecentChangesSection from "./RecentChangesSection";
 import SalesTeamTab from "./SalesTeamTab";
 import ModelsTab from "./ModelsTab";
 import AdsAnalysisTab from "./AdsAnalysisTab";
@@ -580,6 +581,8 @@ export default function DashboardPage() {
                   <LeadSourceSection />
 
                   <LeaderboardSection />
+
+                  <RecentChangesSection />
 
                   <ScorecardMetricsSection />
                 </div>
