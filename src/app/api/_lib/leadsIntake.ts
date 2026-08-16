@@ -7,6 +7,14 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const AIRTABLE_BASE = "appgcEYqudlGfqBjE";
 const LEADS_TABLE = "Leads";
 
+// The dashboard filters "today" by the Eastern calendar day everywhere else
+// in this app — Created At must be stamped with that same Eastern date, not
+// a raw UTC date, or leads created roughly 8pm-midnight ET get silently
+// mis-dated into the next day (UTC has already rolled over by then).
+function nyTodayISO(): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
+}
+
 function pick(body: Record<string, unknown>, keys: string[]): string {
   for (const k of keys) {
     const v = body[k];
@@ -34,13 +42,18 @@ export async function handleLeadIntake(body: Record<string, unknown>, source: "P
   const email = pick(body, ["email", "Email", "email_address"]);
   const phone = pick(body, ["phone", "Phone", "phone_number", "phoneNumber"]);
 
+  const todayNY = nyTodayISO();
+
   // De-dupe: a zap retry (or the platform double-firing) shouldn't create a
   // second record. "Created At" only stores a date, not a time, so the
   // finest-grained de-dupe window that field actually supports is same
   // email + same calendar day — good enough for catching webhook retries,
-  // which land seconds/minutes apart, not a real distinct lead.
+  // which land seconds/minutes apart, not a real distinct lead. Compare
+  // against our own Eastern-computed date, not Airtable's TODAY() (which
+  // evaluates in the base's own configured timezone — not guaranteed to be
+  // Eastern, and not something we control from here).
   if (email) {
-    const formula = `AND({Email} = "${email.replace(/"/g, '\\"')}", IS_SAME({Created At}, TODAY(), "day"))`;
+    const formula = `AND({Email} = "${email.replace(/"/g, '\\"')}", IS_SAME({Created At}, "${todayNY}", "day"))`;
     const existing = await airtableFetch(
       `/${encodeURIComponent(LEADS_TABLE)}?filterByFormula=${encodeURIComponent(formula)}&pageSize=1`
     );
@@ -57,7 +70,7 @@ export async function handleLeadIntake(body: Record<string, unknown>, source: "P
         Email: email || undefined,
         Phone: phone || undefined,
         Source: source,
-        "Created At": new Date().toISOString().slice(0, 10),
+        "Created At": todayNY,
       },
     }),
   });
