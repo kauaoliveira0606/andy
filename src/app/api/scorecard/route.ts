@@ -1,6 +1,7 @@
 // Reads Andy's "Andy Scorecard" Google Sheet directly — no Apps Script dependency.
 // New weekly tabs are picked up automatically based on date, same approach as bronson/section8.
 import { NextRequest } from "next/server";
+import { nyToday } from "../_lib/googleSheets";
 
 const SHEET_ID = "1boFzY7vi2ZMBZSjj9juJXWZwLKdtP1xH55DnnACjTJU";
 
@@ -213,8 +214,12 @@ function derive(accum: Accum) {
 
 export async function GET(req: NextRequest) {
   try {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Was raw UTC ("new Date(); setHours(0,0,0,0)" zeroes the SERVER's
+    // local clock, which on Vercel is UTC) — meant the current-week tab and
+    // the L7/L30 cutoffs flipped over 4-5 hours early relative to the
+    // Eastern business day, same bug class as the lead-dating issue. Use
+    // the Eastern calendar day everywhere else in this app uses.
+    const today = nyToday();
     const cut7 = new Date(today);
     cut7.setDate(today.getDate() - 7);
     const cut30 = new Date(today);
