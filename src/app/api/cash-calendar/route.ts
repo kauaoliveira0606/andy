@@ -1,11 +1,19 @@
 // Per-day cash collected for a given month, read from Marketing Daily
 // Metrics (the daily marketing submissions form), for the calendar view on
-// the Overview tab.
+// the Overview tab. Days with no Airtable submission (the marketing-sync
+// automation has dropped submissions before) fall back to the Andy
+// Scorecard Google Sheet, which the submission still reaches on the days
+// the sync ran — same "Cash Collected - Low ticket" row, just already
+// written into the weekly tab.
 import { NextRequest, NextResponse } from "next/server";
+import { getGoogleAccessToken, sheetsFetch, colLetter, nyToday, findTodayTabAndColumn, fetchRowLabelMap, normalizeLabel } from "../_lib/googleSheets";
+
+export const maxDuration = 60;
 
 const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const AIRTABLE_BASE = "appgcEYqudlGfqBjE"; // Andy - EcomSimulation
 const MARKETING_TABLE_ID = "tblRdiOjEHQgth0TN"; // Marketing Daily Metrics
+const CASH_ROW_LABEL = "Cash Collected - Low ticket";
 
 function parseNum(v: unknown): number {
   if (typeof v === "number") return v;
@@ -61,6 +69,37 @@ export async function GET(req: NextRequest) {
       const day = rawDate.slice(0, 10);
       const cash = parseNum(f["Cash Collected - Low ticket"]);
       byDay[day] = (byDay[day] || 0) + cash;
+    }
+
+    // Backfill only the days Airtable has no submission for at all — never
+    // overwrite a real (even zero) Airtable value, and never reach into the
+    // future.
+    const today = nyToday();
+    const lastDayToCheck = new Date(Math.min(end.getTime(), today.getTime()));
+    const missingDays: Date[] = [];
+    for (let d = new Date(start); d <= lastDayToCheck; d.setDate(d.getDate() + 1)) {
+      if (!(isoDate(d) in byDay)) missingDays.push(new Date(d));
+    }
+
+    if (missingDays.length > 0 && process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+      try {
+        const accessToken = await getGoogleAccessToken();
+        for (const day of missingDays) {
+          const target = await findTodayTabAndColumn(accessToken, day);
+          if (!target) continue;
+          const rowMap = await fetchRowLabelMap(accessToken, target.title);
+          const row = rowMap[normalizeLabel(CASH_ROW_LABEL)];
+          if (!row) continue;
+          const col = colLetter(target.col);
+          const sheetName = target.title.replace(/'/g, "''");
+          const res = await sheetsFetch(accessToken, `/values/${encodeURIComponent(`'${sheetName}'!${col}${row}`)}`);
+          const raw = res.values?.[0]?.[0];
+          if (raw === undefined) continue;
+          byDay[isoDate(day)] = parseNum(raw);
+        }
+      } catch {
+        // Sheet fallback is best-effort — missing days just stay absent (rendered as $0) if it fails.
+      }
     }
 
     return NextResponse.json({
