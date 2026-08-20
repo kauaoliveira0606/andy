@@ -102,11 +102,13 @@ async function fetchMarketingTotals(formula: string) {
   const records = await fetchAllRecords(MARKETING_TABLE_ID, formula);
   let optInsPaid = 0;
   let optInsOrganic = 0;
+  let adSpend = 0;
   for (const f of records) {
     optInsPaid += parseNum(f["Opt ins (Paid)"]);
     optInsOrganic += parseNum(f["Opt ins (Organic)"]);
+    adSpend += parseNum(f["Ad Spend Meta"]);
   }
-  return { optInsPaid, optInsOrganic };
+  return { optInsPaid, optInsOrganic, adSpend };
 }
 
 type RepRow = { name: string } & Record<string, number>;
@@ -131,6 +133,7 @@ export async function GET(req: NextRequest) {
     NUMERIC_FIELDS.forEach((f) => (totals[f] = 0));
     totals["Opt ins (Paid)"] = marketingTotals.optInsPaid;
     totals["Opt ins (Organic)"] = marketingTotals.optInsOrganic;
+    totals["Ad Spend Meta"] = marketingTotals.adSpend;
 
     const repMap: Record<string, RepRow> = {};
 

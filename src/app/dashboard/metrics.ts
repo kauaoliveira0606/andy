@@ -11,6 +11,7 @@ export type MetricDef = {
 // Edit this list to control which cards show up on the dashboard and in what order.
 export const METRIC_DEFS: MetricDef[] = [
   { key: "salesCount", field: "software closed", label: "Sales", format: "count" },
+  { key: "adSpend", field: "Ad Spend Meta", label: "Ad Spend", format: "dollar" },
   { key: "cashTotal", field: "derived", label: "Total Cash Collected", format: "dollar" },
   { key: "cashLowTicket", field: "Cash collected low ticket", label: "Cash Collected - Low Ticket", format: "dollar" },
   { key: "pickupRate", field: "derived", label: "Pickup Rate", format: "percent" },
