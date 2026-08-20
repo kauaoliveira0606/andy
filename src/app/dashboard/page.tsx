@@ -380,6 +380,12 @@ function LeadSourceSection() {
               sub="From the Leads table's Cash Collected field"
             />
             <LeadSourceCard
+              label="Ad Spend"
+              value={`$${data.adSpend.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+              color={INK}
+              sub="From Marketing Daily Metrics (Ad Spend Meta)"
+            />
+            <LeadSourceCard
               label="Paid ROAS"
               value={data.paidRoas === null ? "—" : `${data.paidRoas.toFixed(2)}x`}
               color={INK}
