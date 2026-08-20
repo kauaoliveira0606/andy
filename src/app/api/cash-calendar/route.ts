@@ -81,24 +81,37 @@ export async function GET(req: NextRequest) {
       if (!(isoDate(d) in byDay)) missingDays.push(new Date(d));
     }
 
+    const debug = req.nextUrl.searchParams.get("debug") === "1";
+    const debugInfo: Record<string, unknown>[] = [];
+
     if (missingDays.length > 0 && process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
-      try {
-        const accessToken = await getGoogleAccessToken();
-        for (const day of missingDays) {
+      const accessToken = await getGoogleAccessToken();
+      for (const day of missingDays) {
+        const dayIso = isoDate(day);
+        try {
           const target = await findTodayTabAndColumn(accessToken, day);
-          if (!target) continue;
+          if (!target) {
+            if (debug) debugInfo.push({ day: dayIso, result: "no tab found" });
+            continue;
+          }
           const rowMap = await fetchRowLabelMap(accessToken, target.title);
           const row = rowMap[normalizeLabel(CASH_ROW_LABEL)];
-          if (!row) continue;
+          if (!row) {
+            if (debug) debugInfo.push({ day: dayIso, tab: target.title, result: "no row for label", rowMapKeys: Object.keys(rowMap) });
+            continue;
+          }
           const col = colLetter(target.col);
           const sheetName = target.title.replace(/'/g, "''");
           const res = await sheetsFetch(accessToken, `/values/${encodeURIComponent(`'${sheetName}'!${col}${row}`)}`);
           const raw = res.values?.[0]?.[0];
+          if (debug) debugInfo.push({ day: dayIso, tab: target.title, col, row, raw: raw ?? null });
           if (raw === undefined) continue;
-          byDay[isoDate(day)] = parseNum(raw);
+          byDay[dayIso] = parseNum(raw);
+        } catch (e) {
+          if (debug) debugInfo.push({ day: dayIso, result: "error", detail: String(e) });
+          // Sheet fallback is best-effort per day — a failure on one day
+          // shouldn't stop the rest of the month from resolving.
         }
-      } catch {
-        // Sheet fallback is best-effort — missing days just stay absent (rendered as $0) if it fails.
       }
     }
 
@@ -108,6 +121,7 @@ export async function GET(req: NextRequest) {
       daysInMonth: end.getDate(),
       byDay,
       monthTotal: Object.values(byDay).reduce((a, b) => a + b, 0),
+      ...(debug ? { missingDays: missingDays.map(isoDate), debugInfo } : {}),
     });
   } catch (err) {
     return NextResponse.json({ error: "Failed to reach Airtable", detail: String(err) }, { status: 502 });
