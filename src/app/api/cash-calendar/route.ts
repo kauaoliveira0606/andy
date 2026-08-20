@@ -1,10 +1,11 @@
-// Per-day cash collected for a given month, read from Affiliate EOD, for
-// the calendar view on the Overview tab.
+// Per-day cash collected for a given month, read from Marketing Daily
+// Metrics (the daily marketing submissions form), for the calendar view on
+// the Overview tab.
 import { NextRequest, NextResponse } from "next/server";
 
 const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const AIRTABLE_BASE = "appgcEYqudlGfqBjE"; // Andy - EcomSimulation
-const AIRTABLE_TABLE = "Affiliate EOD";
+const MARKETING_TABLE_ID = "tblRdiOjEHQgth0TN"; // Marketing Daily Metrics
 
 function parseNum(v: unknown): number {
   if (typeof v === "number") return v;
@@ -23,7 +24,7 @@ async function fetchAllRecords(formula: string) {
   do {
     const params = new URLSearchParams({ pageSize: "100", filterByFormula: formula });
     if (offset) params.set("offset", offset);
-    const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${encodeURIComponent(AIRTABLE_TABLE)}?${params.toString()}`, {
+    const res = await fetch(`https://api.airtable.com/v0/${AIRTABLE_BASE}/${MARKETING_TABLE_ID}?${params.toString()}`, {
       headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` },
       cache: "no-store",
     });
@@ -58,7 +59,7 @@ export async function GET(req: NextRequest) {
       const rawDate = f["Date"] as string | undefined;
       if (!rawDate) continue;
       const day = rawDate.slice(0, 10);
-      const cash = parseNum(f["Cash collected high ticket"]) + parseNum(f["Cash collected low ticket"]);
+      const cash = parseNum(f["Cash Collected - Low ticket"]);
       byDay[day] = (byDay[day] || 0) + cash;
     }
 

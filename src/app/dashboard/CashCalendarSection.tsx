@@ -8,11 +8,11 @@ const INK = "#000000";
 const MUTED = "#262319";
 const BG = "#F3EFE1";
 
-// Sequential blue ramp (light -> dark), same hue as the app's existing
-// yearly-plan accent (#2a78d6) so the calendar reads as "more of the same
-// metric" rather than a new unrelated color.
-const RAMP = ["#cde2fb", "#9ec5f4", "#6da7ec", "#2a78d6", "#184f95", "#0d366b"];
-const RAMP_DARK_TEXT_FROM = 3; // steps at/after this index need white text
+// Sequential green ramp (light -> dark) — cash is a positive metric, and
+// this hue matches the app's existing "on track" green (#22c55e) used for
+// hit-goal status elsewhere on the dashboard.
+const RAMP = ["#dcfce7", "#bbf7d0", "#86efac", "#4ade80", "#22c55e", "#15803d"];
+const RAMP_DARK_TEXT_FROM = 5; // only the darkest step needs white text — keeps most cells high-contrast black-on-green
 
 function rampStep(value: number, max: number): number | null {
   if (value <= 0 || max <= 0) return null;
@@ -147,16 +147,16 @@ export default function CashCalendarSection() {
         <div className="rounded-lg p-4" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
           <div className="mb-3 flex items-center justify-between">
             <p className="text-sm" style={{ color: MUTED }}>
-              Cash collected per day, from Affiliate EOD submissions.
+              Cash collected per day, from Marketing Daily Metrics submissions.
             </p>
             <p className="text-sm font-extrabold" style={{ color: INK }}>
               Month total: {fmtDollar(data.monthTotal)}
             </p>
           </div>
 
-          <div className="grid gap-1.5" style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
+          <div className="grid gap-2" style={{ gridTemplateColumns: "repeat(7, 1fr)" }}>
             {WEEKDAY_LABELS.map((w) => (
-              <div key={w} className="pb-1 text-center text-[10px] font-bold uppercase tracking-wide" style={{ color: MUTED }}>
+              <div key={w} className="pb-1 text-center text-xs font-bold uppercase tracking-wide" style={{ color: MUTED }}>
                 {w}
               </div>
             ))}
@@ -173,17 +173,17 @@ export default function CashCalendarSection() {
               return (
                 <div
                   key={i}
-                  className="flex aspect-square flex-col justify-between rounded-md p-1.5"
+                  className="flex aspect-square flex-col justify-between rounded-md p-2"
                   style={{
                     background: bg,
                     border: isToday ? `2px solid ${INK}` : `1px solid ${BORDER}`,
                   }}
                 >
-                  <span className="text-[10px] font-bold" style={{ color: step === null ? MUTED : textColor }}>
+                  <span className="text-xs font-bold" style={{ color: step === null ? MUTED : textColor }}>
                     {day}
                   </span>
                   {cash > 0 && (
-                    <span className="text-right text-[11px] font-extrabold leading-tight" style={{ color: textColor }}>
+                    <span className="text-right text-sm font-extrabold leading-tight" style={{ color: textColor }}>
                       {fmtDollar(cash)}
                     </span>
                   )}
@@ -193,14 +193,14 @@ export default function CashCalendarSection() {
           </div>
 
           <div className="mt-3 flex items-center gap-2">
-            <span className="text-[10px] font-semibold" style={{ color: MUTED }}>
+            <span className="text-xs font-semibold" style={{ color: MUTED }}>
               Less
             </span>
-            <div className="h-2.5 w-4 rounded-sm" style={{ background: BG, border: `1px solid ${BORDER}` }} />
+            <div className="h-3 w-5 rounded-sm" style={{ background: BG, border: `1px solid ${BORDER}` }} />
             {RAMP.map((c) => (
-              <div key={c} className="h-2.5 w-4 rounded-sm" style={{ background: c }} />
+              <div key={c} className="h-3 w-5 rounded-sm" style={{ background: c, border: `1px solid ${BORDER}` }} />
             ))}
-            <span className="text-[10px] font-semibold" style={{ color: MUTED }}>
+            <span className="text-xs font-semibold" style={{ color: MUTED }}>
               More
             </span>
           </div>
