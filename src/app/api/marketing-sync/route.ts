@@ -4,7 +4,7 @@
 // by name against column A's row labels in the sheet, so adding a new
 // metric only requires adding a same-named field in Airtable and a
 // same-named row in the sheet. No code change needed either side.
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import {
   getGoogleAccessToken,
   sheetsFetch,
@@ -65,7 +65,17 @@ function formatForSheet(value: unknown, fieldType: string): string | number | nu
   return String(value);
 }
 
-export async function POST() {
+// Optional ?date=YYYY-MM-DD for backfilling a past day (e.g. when the
+// Airtable Automation webhook didn't fire on the day of submission).
+// Defaults to today, same as the automation's normal per-submission call.
+function resolveDate(req: NextRequest): Date {
+  const raw = req.nextUrl.searchParams.get("date");
+  if (!raw) return nyToday();
+  const [y, m, d] = raw.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+export async function POST(req: NextRequest) {
   if (!AIRTABLE_TOKEN) {
     return NextResponse.json({ error: "AIRTABLE_TOKEN not set" }, { status: 500 });
   }
@@ -74,7 +84,7 @@ export async function POST() {
   }
 
   try {
-    const today = nyToday();
+    const today = resolveDate(req);
 
     const [fieldMeta, record] = await Promise.all([fetchTableFieldMeta(), fetchTodaysMarketingRecord(today)]);
 
@@ -134,6 +144,6 @@ export async function POST() {
   }
 }
 
-export async function GET() {
-  return POST();
+export async function GET(req: NextRequest) {
+  return POST(req);
 }

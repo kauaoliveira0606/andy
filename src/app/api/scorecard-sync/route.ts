@@ -4,7 +4,7 @@
 // Sheet. Triggered by an Airtable Automation webhook on every EOD submission
 // — safe to call repeatedly, it always recomputes today's totals fresh
 // rather than incrementing, so duplicate/late calls can't double-count.
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getGoogleAccessToken, sheetsFetch, colLetter, nyToday, isoDate, findTodayTabAndColumn } from "../_lib/googleSheets";
 
 export const maxDuration = 60;
@@ -59,7 +59,17 @@ async function fetchTodaysAirtableTotals(today: Date) {
   return { dials, salesLowTicket, cashCollectedLowTicket, recordCount: records.length };
 }
 
-export async function POST() {
+// Optional ?date=YYYY-MM-DD for backfilling a past day (e.g. when the
+// Airtable Automation webhook didn't fire on the day of submission).
+// Defaults to today, same as the automation's normal per-submission call.
+function resolveDate(req: NextRequest): Date {
+  const raw = req.nextUrl.searchParams.get("date");
+  if (!raw) return nyToday();
+  const [y, m, d] = raw.split("-").map(Number);
+  return new Date(y, m - 1, d);
+}
+
+export async function POST(req: NextRequest) {
   if (!AIRTABLE_TOKEN) {
     return NextResponse.json({ error: "AIRTABLE_TOKEN not set" }, { status: 500 });
   }
@@ -68,7 +78,7 @@ export async function POST() {
   }
 
   try {
-    const today = nyToday();
+    const today = resolveDate(req);
     const accessToken = await getGoogleAccessToken();
     const target = await findTodayTabAndColumn(accessToken, today);
 
@@ -113,6 +123,6 @@ export async function POST() {
 }
 
 // Convenience for manual testing from a browser — same behavior as POST.
-export async function GET() {
-  return POST();
+export async function GET(req: NextRequest) {
+  return POST(req);
 }
