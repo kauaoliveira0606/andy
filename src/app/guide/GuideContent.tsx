@@ -185,11 +185,15 @@ const CSS = `
 .gp .yes-banner p{color:var(--text-dim);font-size:15.5px;max-width:760px;}
 .gp .yes-banner strong{color:var(--blue);font-weight:700;}
 
-.gp .rhythm-list{list-style:none;display:grid;gap:12px;margin-top:36px;max-width:820px;}
-.gp .rhythm-list li{display:flex;gap:16px;align-items:flex-start;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:18px 22px;}
-.gp .rhythm-list .time{flex-shrink:0;font-family:var(--mono);font-weight:800;font-size:10px;color:var(--text);background:rgba(74,158,255,.12);padding:6px 12px;border-radius:6px;letter-spacing:.1em;white-space:nowrap;margin-top:2px;text-transform:uppercase;border:1px solid var(--border);}
-.gp .rhythm-list .what strong{display:block;font-size:16px;}
-.gp .rhythm-list .what span{font-size:14px;color:var(--text-dim);}
+.gp .rhythm-list{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+@media (max-width:900px){.gp .rhythm-list{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:600px){.gp .rhythm-list{grid-template-columns:1fr;}}
+.gp .rhythm-list li{display:flex;flex-direction:column;align-items:flex-start;gap:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px 22px;transition:transform .2s,border-color .2s;}
+.gp .rhythm-list li:hover{transform:translateY(-3px);border-color:var(--blue);}
+.gp .rhythm-list li:last-child{grid-column:1 / -1;border-color:var(--border-2);background:linear-gradient(135deg,rgba(74,158,255,.06),var(--bg-card) 55%);}
+.gp .rhythm-list .time{align-self:flex-start;font-family:var(--mono);font-weight:800;font-size:10px;color:var(--blue);background:rgba(74,158,255,.1);padding:5px 11px;border-radius:9999px;letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--border);}
+.gp .rhythm-list .what strong{display:block;font-size:16px;font-weight:800;margin-bottom:5px;}
+.gp .rhythm-list .what span{font-size:14px;color:var(--text-dim);line-height:1.55;}
 
 .gp .plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;align-items:start;}
 @media (max-width:900px){.gp .plan-grid{grid-template-columns:1fr;max-width:520px;margin-left:auto;margin-right:auto;}}
