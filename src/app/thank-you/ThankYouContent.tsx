@@ -277,7 +277,7 @@ export default function ThankYouContent() {
             We&rsquo;ve put together a full library of interviews, breakdowns, and context videos so you can go deeper
             before your call. Totally optional, but they help you get the most out of the conversation.
           </p>
-          <a href={MORE_VIDEOS_URL} className="cta-bridge-btn">
+          <a href={MORE_VIDEOS_URL} target="_blank" rel="noopener noreferrer" className="cta-bridge-btn">
             Watch The Videos Here <span className="btn-arrow" aria-hidden="true">→</span>
           </a>
         </div>
