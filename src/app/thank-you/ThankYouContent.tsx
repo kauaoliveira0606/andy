@@ -14,7 +14,7 @@ const fontHead = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", 
 const fontBody = Barlow({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body" });
 const fontMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-mono" });
 
-/* "Watch The Videos Here" button on both thank-you pages -> the guide. */
+/* "Open The Guide Here" button on both thank-you pages -> the guide. */
 const MORE_VIDEOS_URL = "/guide";
 
 const CSS = `
@@ -278,7 +278,7 @@ export default function ThankYouContent() {
             before your call. Totally optional, but they help you get the most out of the conversation.
           </p>
           <a href={MORE_VIDEOS_URL} target="_blank" rel="noopener noreferrer" className="cta-bridge-btn">
-            Watch The Videos Here <span className="btn-arrow" aria-hidden="true">→</span>
+            Open The Guide Here <span className="btn-arrow" aria-hidden="true">→</span>
           </a>
         </div>
       </section>
