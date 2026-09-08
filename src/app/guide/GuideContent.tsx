@@ -154,8 +154,12 @@ const CSS = `
 .gp .video-embed .play-btn{width:66px;height:46px;border-radius:10px;background:linear-gradient(135deg,#1a3aff,#4a9eff);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(74,158,255,.45);}
 .gp .video-embed .play-btn::after{content:"";display:block;margin-left:3px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff;}
 .gp .video-embed .vlabel{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mut);}
+.gp .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
 .gp .section-video{max-width:780px;margin:44px auto 0;display:grid;gap:14px;}
 .gp .section-video .video-caption{justify-content:center;padding-left:0;}
+.gp .model-note{max-width:780px;margin:20px auto 0;padding:24px 28px;border-left:3px solid var(--blue-dim);background:var(--bg-alt);border-radius:0 10px 10px 0;color:var(--text-dim);font-size:15.5px;line-height:1.7;}
+.gp .model-note strong{color:var(--text);}
+.gp .model-note p + p{margin-top:12px;}
 .gp .quote-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;position:relative;box-shadow:0 20px 44px -22px var(--blue-glow);}
 .gp .quote-card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--cyan);z-index:2;}
 .gp .quote-card .note-body{padding:26px 30px 30px;}
@@ -301,6 +305,18 @@ const VideoPlaceholder = ({ label }: { label: string }) => (
     {/* Replace with the real video embed */}
     <span className="play-btn" aria-hidden="true" />
     <span className="vlabel">{label}</span>
+  </div>
+);
+
+const YouTubeEmbed = ({ id, start = 0, title }: { id: string; start?: number; title: string }) => (
+  <div className="video-embed">
+    <iframe
+      src={`https://www.youtube-nocookie.com/embed/${id}?start=${start}&rel=0`}
+      title={title}
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    />
   </div>
 );
 
@@ -663,7 +679,26 @@ export default function GuideContent() {
 
           <div className="section-video reveal">
             <div className="video-caption">▶ Watch: How AI Dropshipping Works</div>
-            <VideoPlaceholder label="How AI dropshipping works" />
+            <YouTubeEmbed id="1jQdxMdN7jg" start={13} title="How AI dropshipping works" />
+            <div className="model-note">
+              <p>
+                The model is simple, and honestly a little boring: <strong>you sit in the middle.</strong> You connect
+                people who make good products with a community that has a real problem those products solve. It is the
+                same position Amazon, Uber and Airbnb started from before they owned anything.
+              </p>
+              <p>
+                You are not inventing a product or fronting a warehouse. You start lean, with no inventory, and let it
+                compound. Every month you build <strong>customer data, supplier relationships and brand trust</strong> a
+                competitor cannot copy overnight. Margins improve, suppliers give you better terms, and customers come
+                back and buy again.
+              </p>
+              <p>
+                Later, once the brand is proven, you go direct to manufacturers, hold inventory and build the full
+                operation. The people who win are not chasing a new viral product every 30 days. They pick{" "}
+                <strong>one real problem</strong> and keep stacking on it until the business is an asset that runs without
+                them.
+              </p>
+            </div>
           </div>
 
           <div className="yes-banner reveal">
