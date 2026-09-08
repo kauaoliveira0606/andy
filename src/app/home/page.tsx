@@ -332,6 +332,11 @@ export default function HomePage() {
               Designed For People Who Already Have A Career And Want More
             </h2>
 
+            <p className="hero-subhead">
+              Designed for busy professionals with zero e-commerce experience. Fits your schedule, not the other way
+              around. Have a new live business running in less than 10 weeks.
+            </p>
+
             {/* VSL */}
             <div className="vsl-wrap">
               <div className="vsl-frame" aria-label="Founder overview video">
