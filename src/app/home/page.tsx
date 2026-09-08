@@ -249,12 +249,6 @@ export default function HomePage() {
       {/* ================= HERO ================= */}
       <section className="hero">
         <div className="container-wide">
-          <div className="brand-row">
-            <BrandMark />
-            <span className="brand-word">EcomSimulation</span>
-            <span className="brand-tier">Accelerator</span>
-          </div>
-
           <div className="hero-inner">
             <span className="hero-callout">
               For Six-Figure Professionals
