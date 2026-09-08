@@ -284,7 +284,7 @@ export default function HomePage() {
             <div id="apply" className="apply-under-vsl">
               <div className="apply-under-vsl-head">
                 <span className="apply-under-vsl-title">Book a call</span>
-                <span className="apply-under-vsl-sub">A 30-minute call with a senior member of our team</span>
+                <span className="apply-under-vsl-sub">A 30-45 minute call with a senior member of our team</span>
               </div>
               <div className="tf-embed">
                 <div data-tf-live="01M20RQK1S7Q7Z366NQWHVBHTA" />
