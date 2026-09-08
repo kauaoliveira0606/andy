@@ -300,14 +300,6 @@ const ESMark = (
   </svg>
 );
 
-const VideoPlaceholder = ({ label }: { label: string }) => (
-  <div className="video-embed" aria-label={label}>
-    {/* Replace with the real video embed */}
-    <span className="play-btn" aria-hidden="true" />
-    <span className="vlabel">{label}</span>
-  </div>
-);
-
 const YouTubeEmbed = ({ id, start = 0, title }: { id: string; start?: number; title: string }) => (
   <div className="video-embed">
     <iframe
@@ -629,11 +621,7 @@ export default function GuideContent() {
               </div>
             </div>
             <div className="story-side">
-              <div className="video-caption reveal">▶ Watch: Andy&rsquo;s Story</div>
-              <div className="reveal d1">
-                <VideoPlaceholder label="Andy's story video" />
-              </div>
-              <div className="quote-card reveal d2">
+              <div className="quote-card reveal">
                 <div className="note-body">
                   <span className="note-label">A Note From Andy</span>
                   <p className="note-text">
