@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Plus_Jakarta_Sans, Barlow, JetBrains_Mono } from "next/font/google";
 
 /* ------------------------------------------------------------------ */
@@ -8,8 +9,8 @@ const fontHead = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", 
 const fontBody = Barlow({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body" });
 const fontMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 
-/* Wire this up to the real booking / application link. */
-const BOOK_CALL_URL = "#book";
+/* CTA buttons scroll up to the embedded Typeform application in the hero. */
+const BOOK_CALL_URL = "#apply";
 
 export const metadata: Metadata = {
   title: "EcomSimulation — Book a call",
@@ -161,6 +162,10 @@ const CSS = `
 .cs-home .apply-under-vsl-head{margin-bottom:20px;}
 .cs-home .apply-under-vsl-title{display:block;font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.02em;color:var(--text);margin-bottom:6px;}
 .cs-home .apply-under-vsl-sub{display:block;font-size:clamp(15px,1.2vw,17px);color:var(--text-mute);line-height:1.5;}
+.cs-home .tf-embed{width:100%;max-width:640px;margin:0 auto;}
+.cs-home .tf-embed [data-tf-live]{min-height:520px;border-radius:14px;overflow:hidden;}
+.cs-home .tf-embed iframe{border-radius:14px;}
+html{scroll-behavior:smooth;}
 
 /* ---------- testimonials ---------- */
 .cs-home .testimonials{background:var(--bg-pure);padding:24px 0 56px;}
@@ -273,16 +278,15 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Apply under VSL */}
+            {/* Apply under VSL — embedded Typeform application */}
             <div id="apply" className="apply-under-vsl">
               <div className="apply-under-vsl-head">
                 <span className="apply-under-vsl-title">Book a call</span>
                 <span className="apply-under-vsl-sub">A 30-minute call with a senior member of our team</span>
               </div>
-              <a href={BOOK_CALL_URL} className="btn btn-gold btn-xl">
-                <span>Book a call</span>
-                <span className="btn-arrow" aria-hidden="true">→</span>
-              </a>
+              <div className="tf-embed">
+                <div data-tf-live="01M20RQK1S7Q7Z366NQWHVBHTA" />
+              </div>
             </div>
           </div>
         </div>
@@ -348,6 +352,8 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+      <Script src="https://embed.typeform.com/next/embed.js" strategy="afterInteractive" />
     </div>
   );
 }
