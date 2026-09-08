@@ -40,15 +40,6 @@ const PROOF = [
   "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016d27504ee74dd464ec2.png",
 ];
 
-const TEAM = [
-  { name: "[Team member]", role: "Founder", bio: "Placeholder bio — one line on what they do and why they're credible." },
-  { name: "[Team member]", role: "Head of Coaching", bio: "Placeholder bio — runs the coaching desk and portfolio reviews." },
-  { name: "[Team member]", role: "Growth Lead", bio: "Placeholder bio — owns paid acquisition and creative testing." },
-  { name: "[Team member]", role: "Store Build Lead", bio: "Placeholder bio — CRO, page builds and offer structure." },
-  { name: "[Team member]", role: "Client Success", bio: "Placeholder bio — your direct line into the team, 1:1 sessions." },
-  { name: "[Team member]", role: "Onboarding", bio: "Placeholder bio — application review, qualification and onboarding." },
-];
-
 /* ------------------------------------------------------------------ */
 /* Styles ported from the source page, orange (#FC5C03) -> blue         */
 /* ------------------------------------------------------------------ */
@@ -180,36 +171,7 @@ const CSS = `
 .cs-home .proof-card:hover{transform:translateY(-3px);border-color:rgba(42,120,214,0.35);box-shadow:0 24px 50px -28px rgba(42,120,214,0.25);}
 .cs-home .proof-card img{display:block;width:100%;height:auto;}
 
-/* ---------- compliance banner ---------- */
-.cs-home .compliance-banner{
-  margin:32px auto 0;max-width:880px;padding:18px 22px;background:rgba(255,255,255,0.03);
-  border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;
-  display:flex;align-items:flex-start;gap:14px;font-size:13px;line-height:1.5;color:var(--text-mute);
-}
-.cs-home .compliance-banner b{color:var(--text);font-weight:700;}
-.cs-home .cb-icon{width:26px;height:26px;flex-shrink:0;border-radius:50%;background:rgba(42,120,214,0.15);color:var(--accent-bright);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
-
 /* ---------- team marquee ---------- */
-.cs-home .team-section{padding:28px 0 72px;background:var(--bg-pure);border-top:1px solid var(--line-soft);}
-.cs-home .team-head{text-align:center;max-width:720px;margin:0 auto 28px;}
-.cs-home .team-head h3{font-size:clamp(24px,2.6vw,32px);letter-spacing:-0.02em;margin-top:14px;}
-.cs-home .team-head p{color:var(--text-mute);font-size:15.5px;line-height:1.5;margin-top:12px;}
-.cs-home .team-marquee{position:relative;overflow:hidden;width:100%;
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,black 4%,black 96%,transparent 100%);
-  mask-image:linear-gradient(90deg,transparent 0,black 4%,black 96%,transparent 100%);}
-.cs-home .team-marquee-track{display:inline-flex;gap:14px;align-items:stretch;white-space:nowrap;padding-left:14px;animation:cs-team-scroll 60s linear infinite;}
-.cs-home .team-marquee:hover .team-marquee-track{animation-play-state:paused;}
-@keyframes cs-team-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-.cs-home .team-card{display:inline-flex;flex-direction:column;width:260px;flex:0 0 260px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s,background .2s;white-space:normal;}
-.cs-home .team-card:hover{transform:translateY(-3px);background:rgba(255,255,255,0.06);border-color:rgba(42,120,214,0.35);}
-.cs-home .team-photo{position:relative;aspect-ratio:4/5;background:linear-gradient(160deg,#2A2833,#1B1925);overflow:hidden;}
-.cs-home .team-photo::before{content:attr(data-letter);font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:64px;color:rgba(255,255,255,0.18);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
-.cs-home .team-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,0.55) 100%);pointer-events:none;}
-.cs-home .team-meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px;}
-.cs-home .team-meta .tname{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.012em;color:var(--text);}
-.cs-home .team-meta .trole{font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent-bright);}
-.cs-home .team-meta .tbio{font-size:13px;color:var(--text-mute);line-height:1.5;margin-top:4px;}
-
 /* ---------- closing cta ---------- */
 .cs-home .close-cta{background:var(--bg-pure);border-top:1px solid var(--line-soft);padding:48px 0 80px;position:relative;overflow:hidden;}
 .cs-home .close-cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 600px 320px at 50% 100%,rgba(42,120,214,0.12),transparent 60%);}
@@ -273,8 +235,6 @@ function ProofCard({ src, i }: { src: string; i: number }) {
 /* ------------------------------------------------------------------ */
 
 export default function HomePage() {
-  const teamLoop = [...TEAM, ...TEAM];
-
   return (
     <div className={`cs-home ${fontHead.variable} ${fontBody.variable} ${fontMono.variable}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
@@ -345,40 +305,6 @@ export default function HomePage() {
               <ProofCard key={i} src={src} i={i} />
             ))}
           </div>
-
-          <div className="compliance-banner">
-            <span className="cb-icon" aria-hidden="true">!</span>
-            <span>
-              <b>Income disclaimer:</b> results are not typical and are not a guarantee of earnings. Figures and student
-              results are for illustration only. Building a business takes consistent work over time. This is educational
-              and not financial, legal, or tax advice.
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= TEAM ================= */}
-      <section className="team-section">
-        <div className="container-wide">
-          <div className="team-head">
-            <span className="eyebrow center no-rule">Meet the Team</span>
-            <h3>The coaches and operators on the line with you</h3>
-            <p>Placeholder line about the team&rsquo;s experience — swap in real credentials before launch.</p>
-          </div>
-        </div>
-        <div className="team-marquee">
-          <div className="team-marquee-track">
-            {teamLoop.map((m, i) => (
-              <div className="team-card" key={i}>
-                <div className="team-photo" data-letter={m.name.charAt(1) || "?"} />
-                <div className="team-meta">
-                  <span className="tname">{m.name}</span>
-                  <span className="trole">{m.role}</span>
-                  <span className="tbio">{m.bio}</span>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -414,10 +340,9 @@ export default function HomePage() {
               frameworks, and direct access to the team.]
             </p>
             <p className="foot-disclaimer">
-              EcomSimulation provides general information and educational content only. We do not provide personal
-              financial, tax, or legal advice. Past performance is not indicative of future returns. Results vary. Consult
-              a licensed adviser before acting on any information. [Replace this block with your reviewed legal disclaimer
-              before launch.]
+              INCOME DISCLAIMER: Results mentioned are not typical. Individual results will vary based on effort,
+              experience, background, and market conditions. This is an educational program. We make no guarantees of
+              income or business outcomes.
             </p>
             <p className="foot-copy">© {new Date().getFullYear()} EcomSimulation · [company / domain]</p>
           </div>
