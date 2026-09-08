@@ -189,7 +189,9 @@ html{scroll-behavior:smooth;}
 /* ---------- footer ---------- */
 .cs-home .site-footer{background:var(--bg-pure);padding:64px 0 48px;border-top:1px solid var(--line-soft);color:var(--text-mute);}
 .cs-home .foot-inner{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;}
-.cs-home .foot-tagline{max-width:60ch;font-size:14px;color:var(--text-mute);line-height:1.55;}
+.cs-home .foot-links{display:flex;gap:28px;flex-wrap:wrap;justify-content:center;}
+.cs-home .foot-links a{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-mute);text-decoration:none;transition:color .2s;}
+.cs-home .foot-links a:hover{color:var(--accent-text);}
 .cs-home .foot-disclaimer{max-width:80ch;font-size:11.5px;line-height:1.6;color:var(--text-faint);}
 .cs-home .foot-copy{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-faint);}
 
@@ -339,16 +341,16 @@ export default function HomePage() {
               <span className="brand-word">EcomSimulation</span>
               <span className="brand-tier">Accelerator</span>
             </div>
-            <p className="foot-tagline">
-              [One-paragraph summary of what EcomSimulation is: who it&rsquo;s for and what members get — training,
-              frameworks, and direct access to the team.]
-            </p>
+            <nav className="foot-links">
+              <a href="/privacy">Privacy Policy</a>
+              <a href="/terms">Terms &amp; Conditions</a>
+            </nav>
             <p className="foot-disclaimer">
               INCOME DISCLAIMER: Results mentioned are not typical. Individual results will vary based on effort,
               experience, background, and market conditions. This is an educational program. We make no guarantees of
               income or business outcomes.
             </p>
-            <p className="foot-copy">© {new Date().getFullYear()} EcomSimulation · [company / domain]</p>
+            <p className="foot-copy">© {new Date().getFullYear()} EcomSimulation</p>
           </div>
         </div>
       </footer>
