@@ -129,9 +129,9 @@ const CSS = `
 .cs-home .hero-inner{position:relative;z-index:2;text-align:center;max-width:920px;margin:0 auto;}
 .cs-home .hero-callout{
   display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:100px;
-  background:linear-gradient(180deg,rgba(42,120,214,0.14),rgba(42,120,214,0.06));border:1px solid rgba(42,120,214,0.45);
-  font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
-  color:#AED2F7;margin-bottom:22px;box-shadow:0 8px 24px -10px rgba(42,120,214,0.4);max-width:calc(100% - 24px);
+  background:rgba(42,120,214,0.22);border:1px solid rgba(140,198,255,0.55);
+  font-family:var(--font-mono),ui-monospace,monospace;font-size:12.5px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
+  color:#F2F8FF;margin-bottom:22px;box-shadow:0 8px 24px -10px rgba(42,120,214,0.4);max-width:calc(100% - 24px);
 }
 .cs-home .hero-callout::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(42,120,214,0.18);flex-shrink:0;}
 .cs-home .hero-callout b{color:#fff;font-weight:700;letter-spacing:0.04em;}
