@@ -323,7 +323,6 @@ const YouTubeEmbed = ({ id, start = 0, title }: { id: string; start?: number; ti
 const NAV = [
   ["#story", "The Story"],
   ["#method", "The Method"],
-  ["#roadmap", "Roadmap"],
   ["#goal", "Our Goal"],
   ["#proof", "Proof"],
   ["#results", "Results"],
@@ -716,55 +715,6 @@ export default function GuideContent() {
             ))}
           </ul>
 
-          <h2 className="reveal" style={{ marginTop: 64 }}>
-            How We Work Together
-          </h2>
-          <p className="lead reveal d1">
-            Three tracks, same framework. Which one fits depends on where you are starting and how much 1-on-1 time you
-            want. Your call is where we work that out.
-          </p>
-          <div className="plan-grid">
-            <div className="plan-card reveal">
-              <div className="plan-name">6-Week Program</div>
-              <div className="plan-sub">Focused Sprint</div>
-              <ul className="plan-list">
-                <li>Personalized Roadmap through the Strategy Dashboard</li>
-                <li>Text support with your mentor + Loom video feedback (6 weeks)</li>
-                <li>6x 1:1 coaching calls</li>
-                <li>Potential to join the Angel Investment Program</li>
-                <li>4x group calls per week (10 weeks)</li>
-                <li>Exclusive Ecom Community and Network (10 weeks)</li>
-                <li>Lifetime access to the Branded Dropshipping Course</li>
-              </ul>
-            </div>
-            <div className="plan-card feature reveal d1">
-              <span className="plan-badge">Most Complete</span>
-              <div className="plan-name">10-Week Program</div>
-              <div className="plan-sub">Full Build</div>
-              <ul className="plan-list">
-                <li>Personalized Roadmap through the Strategy Dashboard</li>
-                <li>Text support with your mentor + Loom video feedback (10 weeks)</li>
-                <li>10x 1:1 coaching calls</li>
-                <li>Potential to join the Angel Investment Program</li>
-                <li>4x group calls per week (10 weeks)</li>
-                <li>Exclusive Ecom Community and Network (10 weeks)</li>
-                <li>Lifetime access to the Branded Dropshipping Course</li>
-              </ul>
-            </div>
-            <div className="plan-card reveal d2">
-              <div className="plan-name">Resource Pack</div>
-              <div className="plan-sub">Self-Paced + Group</div>
-              <ul className="plan-list">
-                <li>Personalized Roadmap through the Strategy Dashboard</li>
-                <li>4x group calls per week (10 weeks)</li>
-                <li>Exclusive Ecom Community and Network (10 weeks)</li>
-                <li>Lifetime access to the Branded Dropshipping Course</li>
-              </ul>
-            </div>
-          </div>
-          <p className="plan-note reveal">
-            <strong>Pricing is covered on your call</strong>, once we know which track actually fits your situation.
-          </p>
         </div>
       </section>
 
@@ -863,50 +813,11 @@ export default function GuideContent() {
               </li>
             ))}
           </ol>
-          <div className="roadmap-note reveal">
-            By roughly day 14 you have a live store, a scored product, and ads running. <strong>The 10-week roadmap below
-            is where you turn that launch into consistency.</strong>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== ROADMAP ===== */}
-      <section id="roadmap" className="alt">
-        <div className="wrap">
-          <span className="eyebrow reveal">Your Next 10 Weeks</span>
-          <h2 className="reveal">
-            The <span className="accent">Scaling Roadmap</span>
-          </h2>
-          <p className="lead reveal d1">
-            Once the store is live, the game changes from launching to scaling. This is the path from your first sale to a
-            consistent $1K day.
-          </p>
-          <ol className="play-list">
-            {[
-              ["Weeks 1–2 · Product research & validation", "Run candidates through the five rules and lock one in."],
-              ["Week 3 · Store setup & branding", "AI builds the branded store; you make it yours."],
-              ["Week 4 · Supplier outreach", "Lock a supplier who can brand, ship fast, and take a low minimum."],
-              ["Week 5 · Content creation & ad angles", "Organic content and AI-made ads, taught by people who do it daily."],
-              ["Week 6 · Pre-launch & launch", "First creatives live at a controlled budget with clear kill and scale rules."],
-              ["Weeks 7–10 · Track, optimize & scale", "Cut the losers, feed the winners, and build a content system toward $1,000+ days."],
-            ].map(([s, d]) => (
-              <li className="reveal" key={s}>
-                <span>
-                  <strong>{s}</strong>
-                  <span>{d}</span>
-                </span>
-              </li>
-            ))}
-          </ol>
-          <div className="roadmap-note reveal">
-            The goal of the first 10 weeks is <strong>consistency, not one huge month</strong>. A live store, a proven
-            product, and a content system that keeps the ads fed. The whole roadmap is built around a $1,000 revenue day.
-          </div>
         </div>
       </section>
 
       {/* ===== OUR GOAL ===== */}
-      <section id="goal">
+      <section id="goal" className="alt">
         <div className="wrap">
           <span className="eyebrow reveal">Our Goal</span>
           <h2 className="reveal">
