@@ -17,7 +17,7 @@ const CSS = `
 .ty-page{
   --bg:#0A0A0C; --bg-pure:#000000; --bg-card:#131316;
   --accent:#2A78D6; --accent-bright:#8FC7FF; --accent-deep:#1B5FB0;
-  --accent-text:#8CC6FF;
+  --accent-text:#AAD4FF;
   --text:rgba(255,255,255,0.98); --text-mute:rgba(255,255,255,0.96);
   --text-dim:rgba(255,255,255,0.82); --text-faint:rgba(255,255,255,0.62);
   --line:rgba(255,255,255,0.08); --line-soft:rgba(255,255,255,0.05); --line-strong:rgba(255,255,255,0.18);
@@ -37,7 +37,7 @@ const CSS = `
 
 .ty-page .container-wide{max-width:1320px;margin:0 auto;padding:0 32px;}
 
-.ty-page .eyebrow{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;font-weight:500;letter-spacing:0.22em;text-transform:uppercase;color:var(--accent-text);display:inline-flex;align-items:center;gap:12px;}
+.ty-page .eyebrow{font-family:var(--font-mono),ui-monospace,monospace;font-size:12.5px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-text);display:inline-flex;align-items:center;gap:12px;}
 .ty-page .eyebrow.center{justify-content:center;}
 
 /* ---------- status pulse ---------- */
@@ -61,7 +61,8 @@ const CSS = `
 
 /* ---------- stepper ---------- */
 .ty-page .stepper{display:flex;align-items:flex-start;gap:0;max-width:560px;margin:8px auto 36px;padding:0 8px;width:100%;}
-.ty-page .step-node{display:flex;flex-direction:column;align-items:center;gap:10px;width:90px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-faint);text-align:center;line-height:1.3;}
+.ty-page .step-node{display:flex;flex-direction:column;align-items:center;gap:10px;width:90px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);text-align:center;line-height:1.3;}
+.ty-page .step-node.future{color:var(--text-mute);}
 .ty-page .step-node .node-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head),system-ui,sans-serif;font-size:18px;font-weight:700;border:2px solid var(--line);background:var(--bg-card);color:var(--text-faint);transition:all .3s ease;}
 .ty-page .step-node.done .node-circle{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(42,120,214,0.2);}
 .ty-page .step-node.done{color:var(--text-mute);}
@@ -72,8 +73,8 @@ const CSS = `
 .ty-page .step-bar.pending{background:linear-gradient(90deg,var(--accent),rgba(42,120,214,0.2));}
 
 /* ---------- start-here ---------- */
-.ty-page .start-here{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono),ui-monospace,monospace;font-weight:500;font-size:11px;letter-spacing:0.24em;text-transform:uppercase;color:var(--accent-text);margin-bottom:28px;}
-.ty-page .start-here::before,.ty-page .start-here::after{content:"";display:inline-block;width:22px;height:1px;background:var(--accent-text);opacity:0.45;}
+.ty-page .start-here{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono),ui-monospace,monospace;font-weight:700;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent-text);margin-bottom:28px;}
+.ty-page .start-here::before,.ty-page .start-here::after{content:"";display:inline-block;width:22px;height:1px;background:var(--accent-text);opacity:0.7;}
 
 /* ---------- vsl ---------- */
 .ty-page .vsl-wrap{position:relative;margin:0 auto;max-width:920px;width:100%;}
