@@ -261,7 +261,8 @@ const CSS = `
 .gp .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
 @media (max-width:880px){.gp .summary-grid{grid-template-columns:repeat(2,1fr);}}
 @media (max-width:560px){.gp .summary-grid{grid-template-columns:1fr;}}
-.gp .sum-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px 22px;font-size:14.5px;color:var(--text-dim);line-height:1.6;transition:transform .2s,border-color .2s;}
+.gp .sum-card{display:block;text-decoration:none;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px 22px;font-size:14.5px;color:var(--text-dim);line-height:1.6;transition:transform .2s,border-color .2s;}
+a.gp .sum-card,.gp a.sum-card{color:var(--text-dim);}
 .gp .sum-card:hover{transform:translateY(-3px);border-color:var(--blue);}
 .gp .sum-card .k{font-weight:900;font-size:17px;color:var(--text);display:block;margin-bottom:6px;}
 .gp .sum-card strong{color:var(--blue);}
@@ -319,6 +320,7 @@ const YouTubeEmbed = ({ id, start = 0, title }: { id: string; start?: number; ti
 const NAV = [
   ["#story", "The Story"],
   ["#method", "The Method"],
+  ["#coaches", "Coaches"],
   ["#goal", "Our Goal"],
   ["#proof", "Proof"],
   ["#results", "Results"],
@@ -710,6 +712,34 @@ export default function GuideContent() {
         </div>
       </section>
 
+      {/* ===== COACHES ===== */}
+      <section id="coaches">
+        <div className="wrap">
+          <span className="eyebrow reveal">Who You Work With</span>
+          <h2 className="reveal">
+            Your <span className="accent">Coaches</span>
+          </h2>
+          <p className="lead reveal d1">
+            Active operators scaling their own brands right now, not retired gurus teaching from memory.
+          </p>
+          <div className="pillars">
+            {[
+              ["Andy Stauring", "Founder", "Multiple seven-figure e-commerce brands by 27. Documents his brands publicly and puts his own capital into member brands."],
+              ["Steven Guo", "Coach", "Runs a multi-brand e-commerce portfolio and the venture studio Manifest Five. Operates Medjool Days publicly."],
+              ["Justin Zhao", "Coach", "From broke college student to a multi-million dollar brand portfolio by 24, building in passionate niches."],
+              ["Grant Batista", "Coach", "E-commerce operator and coach on the EcomSimulation program."],
+            ].map(([n, r, p]) => (
+              <div className="pillar-card reveal" key={n}>
+                <div className="pillar-num">{r}</div>
+                <h3>{n}</h3>
+                <p>{p}</p>
+              </div>
+            ))}
+          </div>
+          <p className="students-disclaim">Additional program mentors: Steven Fields and Victor.</p>
+        </div>
+      </section>
+
       {/* ===== WHY BEGINNERS FAIL ===== */}
       <section className="alt">
         <div className="wrap">
@@ -846,14 +876,14 @@ export default function GuideContent() {
           </p>
           <div className="summary-grid">
             {[
-              ["Private Paradise Co.", "Built through the system and taken on with our own capital. Over $4M in revenue."],
-              ["Based Supplements", "Built through the system and backed with our own capital. Over $4M in revenue."],
-              ["Medjool Days", "Built through the system and backed with our own capital. Over $4M in revenue."],
-            ].map(([k, v], i) => (
-              <div className="sum-card reveal" key={i}>
+              ["Private Paradise Co.", "https://privateparadiseco.com/", "K-pop fan jewellery and merch. Built through the system and backed with our own capital. Over $4M in revenue."],
+              ["Based Supplements", "https://basedsupplements.co/", "Wild-harvested natural supplements, 100,000+ units sold. Backed with our own capital. Over $4M in revenue."],
+              ["Medjool Days", "https://www.medjooldays.com/", "Premium fresh Medjool dates, family grown. Steven Guo's brand, built and scaled publicly on the same framework."],
+            ].map(([k, href, v], i) => (
+              <a className="sum-card reveal" href={href} target="_blank" rel="noopener noreferrer" key={i}>
                 <span className="k">{k}</span>
                 {v}
-              </div>
+              </a>
             ))}
           </div>
           <p className="students-disclaim">
