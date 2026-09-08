@@ -258,9 +258,8 @@ export default function ThankYouPage() {
               <div className="step-content">
                 <h3>Reply To Our Email To Confirm.</h3>
                 <p>
-                  Check your inbox now. We&rsquo;re sending you a confirmation email &mdash;{" "}
-                  <b>your spot is not locked in until you reply.</b> If you don&rsquo;t see it within a few minutes, check
-                  your spam folder. <b>Our team</b> will also reach out to confirm your time.
+                  Check your inbox now. We&rsquo;re sending you a confirmation email - If you don&rsquo;t see it within a
+                  few minutes, check your spam folder.
                 </p>
                 <div className="step-arrow">
                   <span className="arrow-glyph">!</span>Do This Now
