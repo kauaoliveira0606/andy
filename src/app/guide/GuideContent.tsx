@@ -176,6 +176,21 @@ const CSS = `
 .gp .rhythm-list .what strong{display:block;font-size:16px;}
 .gp .rhythm-list .what span{font-size:14px;color:var(--text-dim);}
 
+.gp .plan-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;align-items:start;}
+@media (max-width:900px){.gp .plan-grid{grid-template-columns:1fr;max-width:520px;margin-left:auto;margin-right:auto;}}
+.gp .plan-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:28px 26px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+.gp .plan-card:hover{transform:translateY(-3px);border-color:var(--blue);}
+.gp .plan-card.feature{border-color:var(--border-2);box-shadow:0 24px 60px -34px var(--blue-glow);}
+.gp .plan-card.feature::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#1a3aff,#4a9eff);}
+.gp .plan-badge{position:absolute;top:14px;right:14px;font-family:var(--mono);font-size:9px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--blue);border:1px solid var(--border-2);padding:4px 9px;border-radius:9999px;}
+.gp .plan-name{font-size:19px;font-weight:900;margin-bottom:4px;}
+.gp .plan-sub{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mut);margin-bottom:18px;}
+.gp .plan-list{list-style:none;display:grid;gap:11px;}
+.gp .plan-list li{display:flex;gap:11px;font-size:14px;color:var(--text-dim);line-height:1.5;}
+.gp .plan-list li::before{content:"✓";color:var(--blue);font-weight:900;flex-shrink:0;}
+.gp .plan-note{margin-top:24px;font-size:14.5px;color:var(--text-mut);max-width:760px;}
+.gp .plan-note strong{color:var(--text-dim);}
+
 .gp .split-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px;}
 @media (max-width:820px){.gp .split-cards{grid-template-columns:1fr;}}
 .gp .fail-card,.gp .win-card{border-radius:14px;padding:32px;background:var(--bg-card);border:1px solid var(--border);position:relative;overflow:hidden;}
@@ -652,22 +667,25 @@ export default function GuideContent() {
           <div className="yes-banner reveal">
             <div className="big-check">✓</div>
             <div>
-              <h3>Not A Course. A Guided Build.</h3>
+              <h3>Not A Course. A Mentored Build.</h3>
               <p>
                 If you have bought an ecom course before, you know how it goes: a video library, a Discord link, and a
-                dead chat. This is the opposite. You get <strong>coaching calls with 7-figure operators</strong>, the AI
-                store builder with winning products loaded, the supplier access we use for our own brands, and your store,
-                ads and product audited by people scaling seven-figure brands right now.
+                dead chat. This is the opposite. You get <strong>1:1 coaching calls</strong>, text support with your
+                mentor plus Loom video feedback, four group calls a week, and a personalized roadmap tracked in the
+                Strategy Dashboard.
               </p>
             </div>
           </div>
 
           <ul className="rhythm-list">
             {[
-              ["Weekly", "Coaching Calls With 7-Figure Coaches", "Andy, Hassan, Steven and Justin — live Q&A and real-time feedback pulled straight from brands they run today."],
-              ["Always On", "The AI Store Builder + Winning Products", "Your branded store built by AI in about ten minutes, loaded with vetted products, done with you on your call."],
-              ["Always On", "Curriculum, Supplier & Tools", "The full EcomSimulation blueprint, discounted software and AI, and the supplier access we use for our own brands."],
-              ["Ongoing", "Founder Community", "An active group at every stage, all running the same framework. Trade what is working, get unstuck fast, stay accountable."],
+              ["1:1", "Coaching Calls With Your Mentor", "Private calls that audit your product, store, ads and numbers against what is working right now."],
+              ["Ongoing", "Text Support + Loom Video Feedback", "Message your mentor when you are stuck on a product, a supplier, a page or an ad. Feedback comes back as text and screen-recorded Loom walkthroughs."],
+              ["4x / Week", "Group Coaching Calls (10 Weeks)", "Four live calls every week for ten weeks: Q&A, teardowns and real-time feedback with the coaches and other members."],
+              ["Dashboard", "Personalized Roadmap", "Your exact next steps tracked in the Strategy Dashboard, so you always know the one thing to do next."],
+              ["10 Weeks", "Exclusive Ecom Community & Network", "An active room of members at every stage, all running the same framework."],
+              ["Lifetime", "The Branded Dropshipping Course", "Lifetime access to the full curriculum behind the one-product brand framework."],
+              ["Invite", "Angel Investment Program", "Members who build real traction get the potential to join our Angel Investment Program."],
             ].map(([t, s, d]) => (
               <li className="reveal" key={s}>
                 <span className="time">{t}</span>
@@ -680,22 +698,54 @@ export default function GuideContent() {
           </ul>
 
           <h2 className="reveal" style={{ marginTop: 64 }}>
-            More Inside The Program
+            How We Work Together
           </h2>
-          <div className="pillars">
-            {[
-              ["AI", "EcomSimulation AI", "An AI trained on how we operate. Instant feedback on your product, page or ad, a scaling roadmap, and a store-launch playbook, on demand."],
-              ["★", "In-Person Events", "Get in the room with the coaches and other members. Work on your brand together and leave with a plan instead of a feed of screenshots."],
-              ["◍", "Monthly Brand Audits", "Every month your store, funnel, ads and product get a full review against what is working right now, so you always know the one thing to fix next."],
-              ["●", "The Community", "Members at every stage running the same framework. Trade what is working, get unstuck fast, and stay accountable to people doing the same thing."],
-            ].map(([n, h, p]) => (
-              <div className="pillar-card reveal" key={h}>
-                <div className="pillar-num">{n}</div>
-                <h3>{h}</h3>
-                <p>{p}</p>
-              </div>
-            ))}
+          <p className="lead reveal d1">
+            Three tracks, same framework. Which one fits depends on where you are starting and how much 1-on-1 time you
+            want. Your call is where we work that out.
+          </p>
+          <div className="plan-grid">
+            <div className="plan-card reveal">
+              <div className="plan-name">6-Week Program</div>
+              <div className="plan-sub">Focused Sprint</div>
+              <ul className="plan-list">
+                <li>Personalized Roadmap through the Strategy Dashboard</li>
+                <li>Text support with your mentor + Loom video feedback (6 weeks)</li>
+                <li>6x 1:1 coaching calls</li>
+                <li>Potential to join the Angel Investment Program</li>
+                <li>4x group calls per week (10 weeks)</li>
+                <li>Exclusive Ecom Community and Network (10 weeks)</li>
+                <li>Lifetime access to the Branded Dropshipping Course</li>
+              </ul>
+            </div>
+            <div className="plan-card feature reveal d1">
+              <span className="plan-badge">Most Complete</span>
+              <div className="plan-name">10-Week Program</div>
+              <div className="plan-sub">Full Build</div>
+              <ul className="plan-list">
+                <li>Personalized Roadmap through the Strategy Dashboard</li>
+                <li>Text support with your mentor + Loom video feedback (10 weeks)</li>
+                <li>10x 1:1 coaching calls</li>
+                <li>Potential to join the Angel Investment Program</li>
+                <li>4x group calls per week (10 weeks)</li>
+                <li>Exclusive Ecom Community and Network (10 weeks)</li>
+                <li>Lifetime access to the Branded Dropshipping Course</li>
+              </ul>
+            </div>
+            <div className="plan-card reveal d2">
+              <div className="plan-name">Resource Pack</div>
+              <div className="plan-sub">Self-Paced + Group</div>
+              <ul className="plan-list">
+                <li>Personalized Roadmap through the Strategy Dashboard</li>
+                <li>4x group calls per week (10 weeks)</li>
+                <li>Exclusive Ecom Community and Network (10 weeks)</li>
+                <li>Lifetime access to the Branded Dropshipping Course</li>
+              </ul>
+            </div>
           </div>
+          <p className="plan-note reveal">
+            <strong>Pricing is covered on your call</strong>, once we know which track actually fits your situation.
+          </p>
         </div>
       </section>
 
@@ -953,7 +1003,7 @@ export default function GuideContent() {
               ],
               [
                 "What makes this different from everything else out there?",
-                "The access and how current it is. You get coaching calls with 7-figure operators, the AI store builder, supplier access, and real audits of your store, funnel, ads and product. The coaches are active operators scaling brands right now, not retired gurus teaching from memory. The strategies, platforms and tools are what is working this year.",
+                "The access and how current it is. You get 1:1 coaching calls, text and Loom feedback from your mentor, four group calls a week, and a personalized roadmap tracked in the Strategy Dashboard. The coaches are active operators scaling brands right now, not retired gurus teaching from memory. The strategies, platforms and tools are what is working this year.",
               ],
               [
                 "How long will it take to see results?",
@@ -989,7 +1039,7 @@ export default function GuideContent() {
             {[
               ["One Product", "Picked on numbers, data and facts, not gut feeling or trends. It passes five rules once, then you commit and never test another."],
               ["Multiple 7-Figure Brands", "What Andy built on proven products with a brand on them from day one, documented publicly to 120K+ subscribers."],
-              ["Guided, Not A Course", "Coaching calls with 7-figure operators, the AI store builder, supplier access, and your store, ads and product audited by real operators."],
+              ["Mentored, Not A Course", "1:1 coaching calls, text and Loom feedback from your mentor, four group calls a week, and lifetime access to the Branded Dropshipping Course."],
               ["Built To Be Sold", "White label to private label to exit. A real brand you own, not a store you rent from a supplier."],
               ["A Structured Path", "A launch playbook to get the store live, then a 10-week scaling roadmap from first sale to a consistent $1K day."],
               ["Accountability Built In", "Weekly number reviews, monthly audits on your site, ads and product, and direct access when you are stuck."],
