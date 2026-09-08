@@ -114,10 +114,10 @@ const SECTIONS: Section[] = [
     title: "Data Retention",
     blocks: [
       {
-        p: `We keep personal information only as long as needed for the purposes described in this Policy or as required by law. As a general guide: lead data is kept for [retention period, e.g. 3 years] from your last engagement or until you unsubscribe; customer data is kept for the length of our relationship plus [retention period, e.g. 7 years] for legal and accounting purposes; email-engagement and support records are kept for [retention period, e.g. 2 years]; and website analytics are kept for [retention period, e.g. 26 months].`,
+        p: `We keep personal information only as long as needed for the purposes described in this Policy or as required by law. As a general guide: lead data is kept for 3 years from your last engagement or until you unsubscribe; customer data is kept for the length of our relationship plus 7 years for legal and accounting purposes; email-engagement and support records are kept for 2 years; and website analytics are kept for 26 months.`,
       },
       {
-        p: `You may ask us to delete your personal information at any time, and we will do so within [response window, e.g. 30 days] except where the law requires us to keep it.`,
+        p: `You may ask us to delete your personal information at any time, and we will do so within 30 days except where the law requires us to keep it.`,
       },
     ],
   },
@@ -171,7 +171,7 @@ const SECTIONS: Section[] = [
           "Essential: session management, security and core site functionality",
           "Performance: analytics, optimisation and error tracking",
           "Marketing: retargeting, audience building and conversion tracking",
-          "Third-party: [list the tools you actually use, e.g. Google Analytics, Meta Pixel, TikTok Pixel]",
+          "Third-party: the Meta Pixel (Facebook/Instagram) for conversion tracking and advertising",
         ],
       },
       {
