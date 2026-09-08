@@ -319,7 +319,7 @@ export default function HomePage() {
 
           <div className="hero-inner">
             <span className="hero-callout">
-              For operators doing <b>$10k+/mo</b> who want a real store, not another course
+              For six-figure professionals
             </span>
 
             <h2>
