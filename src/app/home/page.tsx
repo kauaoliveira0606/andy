@@ -342,8 +342,8 @@ export default function HomePage() {
               <span className="brand-tier">Accelerator</span>
             </div>
             <nav className="foot-links">
-              <a href="/privacy">Privacy Policy</a>
-              <a href="/terms">Terms &amp; Conditions</a>
+              <a href="/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+              <a href="/terms" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
             </nav>
             <p className="foot-disclaimer">
               INCOME DISCLAIMER: Results mentioned are not typical. Individual results will vary based on effort,
