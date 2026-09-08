@@ -20,13 +20,24 @@ export const metadata: Metadata = {
 /* Placeholder content — replace copy before launch                    */
 /* ------------------------------------------------------------------ */
 
-const STORIES = [
-  { name: "[First name]", quote: "First month after we rebuilt the store, we did more revenue than the previous quarter combined." },
-  { name: "[First name]", quote: "I stopped buying courses. The simulation showed me exactly where my funnel was leaking." },
-  { name: "[First name]", quote: "Went from breaking even on ads to a 2.4x blended return in about six weeks." },
-  { name: "[First name]", quote: "The team caught a pricing mistake on our hero product that was costing us thousands a month." },
-  { name: "[First name]", quote: "Had to hire my first VA just to keep up with the order volume." },
-  { name: "[First name]", quote: "First time I've had a store that runs without me watching it every hour." },
+/* Student result screenshots pulled from ecomsimulation.io (GHL CDN). */
+const PROOF = [
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68401724ce15dfb404e29823.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68401769ce15df3d78e29884.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b632ac070d197d70522c5c.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b63294dfd955fcaac40f61.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b632453006308be375afd3.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b632510dd810fbd4f675be.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b6308d0dd810274af673b5.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b630fce2e8e6afc23d8db5.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400f0e972192c15d06f409.jpeg",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400c6828def020dc9333ef.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400d269721921c2e06f123.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684010d6972192167706f5ea.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/6840161bd77c6200e23bcd98.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684015f3d77c625f653bcd14.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016c028def06165933f44.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016d27504ee74dd464ec2.png",
 ];
 
 const TEAM = [
@@ -164,22 +175,10 @@ const CSS = `
 .cs-home .testimonials{background:var(--bg-pure);padding:24px 0 56px;}
 .cs-home .section-header{max-width:880px;margin:0 auto 32px;text-align:center;}
 .cs-home .section-header h2{margin-top:16px;font-size:clamp(36px,5vw,58px);letter-spacing:-0.028em;}
-.cs-home .vid-section{margin-bottom:48px;}
-.cs-home .vid-section-head{display:flex;align-items:center;gap:14px;margin-bottom:26px;}
-.cs-home .vid-section-head .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(42,120,214,0.3),transparent);}
-.cs-home .vid-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1080px;margin:0 auto;}
-.cs-home .vid-card{background:var(--bg-card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;}
-.cs-home .vid-card:hover{transform:translateY(-3px);border-color:rgba(42,120,214,0.35);box-shadow:0 24px 50px -28px rgba(42,120,214,0.25);}
-.cs-home .vid-frame{position:relative;padding-bottom:56.25%;background:linear-gradient(160deg,#1a2740,#0d1220);}
-.cs-home .vid-frame .vid-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;opacity:0.85;}
-.cs-home .vid-meta{padding:20px 20px 22px;}
-.cs-home .vid-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-.cs-home .vid-name{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.01em;color:var(--text);}
-.cs-home .vid-stars{color:#FFB020;font-size:14px;letter-spacing:3px;}
-.cs-home .vid-quote{font-size:15px;line-height:1.5;color:var(--text-mute);font-style:italic;}
-.cs-home .vid-result{margin-top:14px;font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-text);display:inline-flex;align-items:center;gap:8px;}
-.cs-home .vid-result .dot{width:5px;height:5px;border-radius:50%;background:var(--accent-text);}
-.cs-home .vid-disclaimer{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08);font-family:var(--font-mono),ui-monospace,monospace;font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);line-height:1.4;}
+.cs-home .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1160px;margin:0 auto;}
+.cs-home .proof-card{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;}
+.cs-home .proof-card:hover{transform:translateY(-3px);border-color:rgba(42,120,214,0.35);box-shadow:0 24px 50px -28px rgba(42,120,214,0.25);}
+.cs-home .proof-card img{display:block;width:100%;height:auto;}
 
 /* ---------- compliance banner ---------- */
 .cs-home .compliance-banner{
@@ -229,7 +228,7 @@ const CSS = `
 
 @media (max-width:768px){
   .cs-home .container,.cs-home .container-narrow,.cs-home .container-wide{padding:0 20px;}
-  .cs-home .vid-grid{grid-template-columns:1fr;}
+  .cs-home .proof-grid{grid-template-columns:1fr 1fr;gap:14px;}
   .cs-home .marquee-track{gap:44px;}
 }
 `;
@@ -260,25 +259,11 @@ function BrandMark() {
   );
 }
 
-function StoryCard({ name, quote }: { name: string; quote: string }) {
+function ProofCard({ src, i }: { src: string; i: number }) {
   return (
-    <article className="vid-card">
-      <div className="vid-frame">
-        {/* Replace with the real member-story video embed (Vimeo/YouTube/Wistia) */}
-        <span className="vid-play" aria-hidden="true">&#9654;</span>
-      </div>
-      <div className="vid-meta">
-        <div className="vid-top">
-          <span className="vid-name">{name}</span>
-          <span className="vid-stars" aria-label="5 out of 5 stars">★★★★★</span>
-        </div>
-        <p className="vid-quote">&ldquo;{quote}&rdquo;</p>
-        <div className="vid-result">
-          <span className="dot" />
-          {name} · member experience
-        </div>
-        <div className="vid-disclaimer">Individual experience. Not typical results. Past performance is not indicative.</div>
-      </div>
+    <article className="proof-card">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt={`Member dashboard result #${i + 1}`} loading="lazy" />
     </article>
   );
 }
@@ -347,28 +332,26 @@ export default function HomePage() {
       <section className="testimonials">
         <div className="container-wide">
           <div className="section-header">
-            <span className="eyebrow center no-rule">In their own words</span>
-            <h2>What Members Say.</h2>
+            <span className="eyebrow center no-rule">Live · new wins posted this week</span>
+            <h2>See How Our Members Are Doing</h2>
+            <p className="lede center">
+              Real dashboards from real members. No edits, no cherry picking, just what happens when you actually run the
+              process.
+            </p>
           </div>
 
-          <div className="vid-section">
-            <div className="vid-section-head">
-              <span className="mono">Watch their stories</span>
-              <span className="line" />
-            </div>
-            <div className="vid-grid">
-              {STORIES.map((s, i) => (
-                <StoryCard key={i} name={s.name} quote={s.quote} />
-              ))}
-            </div>
+          <div className="proof-grid">
+            {PROOF.map((src, i) => (
+              <ProofCard key={i} src={src} i={i} />
+            ))}
           </div>
 
           <div className="compliance-banner">
             <span className="cb-icon" aria-hidden="true">!</span>
             <span>
-              <b>Individual experiences. Not typical results.</b> The members featured above describe their own
-              experiences. Results vary significantly and depend on personal circumstances, market conditions, product,
-              and individual decisions. [Add your offer-specific disclaimer here before launch.]
+              <b>Income disclaimer:</b> results are not typical and are not a guarantee of earnings. Figures and student
+              results are for illustration only. Building a business takes consistent work over time. This is educational
+              and not financial, legal, or tax advice.
             </span>
           </div>
         </div>
