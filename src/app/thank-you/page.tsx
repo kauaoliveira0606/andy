@@ -206,9 +206,9 @@ export default function ThankYouPage() {
                 </svg>
               </span>
               <span className="node-label">
-                Call
+                Gameplan
                 <br />
-                Confirmed
+                Call
               </span>
             </div>
           </div>
