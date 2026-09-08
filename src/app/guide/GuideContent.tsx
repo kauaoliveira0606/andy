@@ -23,6 +23,17 @@ const WINS = [
   "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400d269721921c2e06f123.png",
   "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684010d6972192167706f5ea.png",
   "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/6840161bd77c6200e23bcd98.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684015f3d77c625f653bcd14.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016c028def06165933f44.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016d27504ee74dd464ec2.png",
+  "https://ecomsimulation.io/__l5e/assets-v1/51754f44-121b-444f-baa8-a14ca19078f6/proof-1.jpg",
+  "https://ecomsimulation.io/__l5e/assets-v1/a8098d90-3911-439a-8be1-3a154671ed25/proof-2.png",
+  "https://ecomsimulation.io/__l5e/assets-v1/2e6e3bc6-0b24-4d12-bbad-ff0afbc8af5c/proof-3.png",
+  "https://ecomsimulation.io/__l5e/assets-v1/5c09b4ef-d27a-4763-a363-15b18b2f3af2/proof-4.jpg",
+  "https://ecomsimulation.io/__l5e/assets-v1/ecdb97e2-70ac-4a42-bdfe-0e0c09d8081c/proof-5.jpg",
+  "https://ecomsimulation.io/__l5e/assets-v1/4ffda646-284b-4dcc-9152-3927c73aab2f/proof-6.png",
+  "https://ecomsimulation.io/__l5e/assets-v1/2cc8ea97-6406-4916-a798-620e95bf7426/proof-7.jpg",
+  "https://ecomsimulation.io/__l5e/assets-v1/0b48ac41-4da6-48d6-afac-f69f7f325b7a/proof-8.png",
 ];
 
 const CSS = `
@@ -223,15 +234,6 @@ const CSS = `
 .gp .payout-shot img{display:block;width:100%;height:auto;}
 .gp .payout-disclaim,.gp .students-disclaim{margin-top:22px;font-size:12.5px;color:var(--text-mut);max-width:760px;}
 
-.gp .interviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px;}
-@media (max-width:900px){.gp .interviews-grid{grid-template-columns:1fr;max-width:520px;}}
-.gp .interview-card{background:var(--bg-card);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
-.gp .interview-card .video-embed{border:0;border-radius:0;border-bottom:1px solid var(--border);box-shadow:none;}
-.gp .interview-info{padding:18px 20px;}
-.gp .interview-info h3{font-size:15.5px;font-weight:800;margin-bottom:6px;}
-.gp .interview-info h3 .accent{color:var(--blue);}
-.gp .interview-info p{font-size:13px;color:var(--text-dim);line-height:1.6;}
-
 .gp .testimonials{column-count:3;column-gap:16px;margin-top:40px;}
 @media (max-width:820px){.gp .testimonials{column-count:2;}}
 @media (max-width:520px){.gp .testimonials{column-count:1;}}
@@ -306,8 +308,8 @@ const NAV = [
   ["#story", "The Story"],
   ["#method", "The Method"],
   ["#roadmap", "Roadmap"],
+  ["#goal", "Our Goal"],
   ["#proof", "Proof"],
-  ["#interviews", "Interviews"],
   ["#results", "Results"],
   ["#faq", "FAQ"],
 ];
@@ -886,6 +888,63 @@ export default function GuideContent() {
         </div>
       </section>
 
+      {/* ===== OUR GOAL ===== */}
+      <section id="goal">
+        <div className="wrap">
+          <span className="eyebrow reveal">Our Goal</span>
+          <h2 className="reveal">
+            We Want To <span className="accent">Invest In Your Brand</span>
+          </h2>
+          <p className="lead reveal d1">
+            The 10 weeks are the start, not the finish line. The whole point of the framework is to get you to a brand
+            that is a real, growing asset, one we would want equity in. When a member gets there, the{" "}
+            <strong style={{ color: "var(--text)" }}>Angel Investment Program</strong> is where we put our own capital and
+            operators behind the brand and scale it alongside you.
+          </p>
+
+          <ol className="play-list">
+            {[
+              ["Get to a consistent $1K day", "First a live store and a proven product, then a content system that keeps the ads fed until $1,000 days are normal, not a spike."],
+              ["Prove it is not a fluke", "Repeatable acquisition, healthy margins, and returning customers. The brand holds up when we pull the numbers apart."],
+              ["Systemize it off your back", "Creative pipeline, fulfilment, and reporting running without you glued to the dashboard. A business, not a job."],
+              ["Open the Angel Investment Program", "Once the brand is proven, we can back it with capital and hands-on operators. We only win if you do, so the incentives are aligned from day one."],
+            ].map(([s, d]) => (
+              <li className="reveal" key={s}>
+                <span>
+                  <strong>{s}</strong>
+                  <span>{d}</span>
+                </span>
+              </li>
+            ))}
+          </ol>
+
+          <h2 className="reveal" style={{ marginTop: 56 }}>
+            Brands We&rsquo;ve Backed
+          </h2>
+          <p className="lead reveal d1">
+            Members we took through the framework and then invested in through the Angel Investment Program.
+          </p>
+          {/* TODO: replace the three placeholders below with real backed brands
+              (brand name, the stage we invested at, what we put in, where it is now). */}
+          <div className="summary-grid">
+            {[
+              ["[Brand name]", "[Stage when we invested, what we put in (capital / operators / ad budget), and where the brand is now.]"],
+              ["[Brand name]", "[Stage when we invested, what we put in, and where the brand is now.]"],
+              ["[Brand name]", "[Stage when we invested, what we put in, and where the brand is now.]"],
+            ].map(([k, v], i) => (
+              <div className="sum-card reveal" key={i}>
+                <span className="k">{k}</span>
+                {v}
+              </div>
+            ))}
+          </div>
+          <p className="students-disclaim">
+            Investment is by invitation only and is never guaranteed. It depends on the brand&rsquo;s performance, the
+            category, and fit. Most members do not reach this stage.
+          </p>
+        </div>
+      </section>
+
       {/* ===== PROOF ===== */}
       <section id="proof">
         <div className="wrap">
@@ -912,38 +971,8 @@ export default function GuideContent() {
         </div>
       </section>
 
-      {/* ===== INTERVIEWS ===== */}
-      <section id="interviews" className="alt">
-        <div className="wrap">
-          <span className="eyebrow reveal">In Their Own Words</span>
-          <h2 className="reveal">
-            Student <span className="accent">Interviews</span>
-          </h2>
-          <p className="lead reveal d1">
-            Members who ran the same framework and built a real brand. Hear it from them.
-          </p>
-          <div className="interviews-grid">
-            {[
-              ["Interview 1", "From a 9-to-5 to one branded product doing real monthly numbers with no e-commerce background."],
-              ["Interview 2", "Picked one product on data, put a brand on it from day one, and stopped chasing trends."],
-              ["Interview 3", "First profitable month after committing to the roadmap instead of testing endlessly."],
-            ].map(([label, blurb]) => (
-              <div className="interview-card reveal" key={label}>
-                <VideoPlaceholder label={label} />
-                <div className="interview-info">
-                  <h3>
-                    <span className="accent">▶</span> {label}
-                  </h3>
-                  <p>{blurb}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ===== RESULTS ===== */}
-      <section id="results">
+      <section id="results" className="alt">
         <div className="wrap">
           <span className="eyebrow reveal">Real Results</span>
           <h2 className="reveal">
@@ -1074,9 +1103,6 @@ export default function GuideContent() {
               <>Read through this guide (you are doing it right now)</>,
               <>
                 Look through the <a href="#results">student wins</a> and find a result that sounds like the one you want
-              </>,
-              <>
-                Watch the <a href="#interviews">student interviews</a> to see how members actually built their brand
               </>,
               <>Write down 3 questions you want answered on the call</>,
               <>Come ready to talk about your budget, your timeline, and your goals</>,
