@@ -323,13 +323,13 @@ export default function HomePage() {
 
           <div className="hero-inner">
             <span className="hero-callout">
-              For six-figure professionals
+              For Six-Figure Professionals
             </span>
 
             <h2>
-              How six-figure professionals are using <span className="h2-highlight">AI dropshipping</span> to build{" "}
-              <span className="h2-highlight">real e-commerce brands</span>, without quitting their job, with a system
-              designed for people who already have a career and want more
+              How Six-Figure Professionals Are Using <span className="h2-highlight">AI Dropshipping</span> To Build{" "}
+              <span className="h2-highlight">Real E-Commerce Brands</span>, Without Quitting Their Job, With A System
+              Designed For People Who Already Have A Career And Want More
             </h2>
 
             {/* VSL */}
