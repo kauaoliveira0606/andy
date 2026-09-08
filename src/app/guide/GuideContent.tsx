@@ -844,13 +844,11 @@ export default function GuideContent() {
           <p className="lead reveal d1">
             Members we took through the framework and then invested in through the Angel Investment Program.
           </p>
-          {/* TODO: replace the three placeholders below with real backed brands
-              (brand name, the stage we invested at, what we put in, where it is now). */}
           <div className="summary-grid">
             {[
-              ["[Brand name]", "[Stage when we invested, what we put in (capital / operators / ad budget), and where the brand is now.]"],
-              ["[Brand name]", "[Stage when we invested, what we put in, and where the brand is now.]"],
-              ["[Brand name]", "[Stage when we invested, what we put in, and where the brand is now.]"],
+              ["Private Paradise Co.", "Built through the system and taken on with our own capital. Over $4M in revenue."],
+              ["Based Supplements", "Built through the system and backed with our own capital. Over $4M in revenue."],
+              ["Medjool Days", "Built through the system and backed with our own capital. Over $4M in revenue."],
             ].map(([k, v], i) => (
               <div className="sum-card reveal" key={i}>
                 <span className="k">{k}</span>
