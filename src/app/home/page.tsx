@@ -20,8 +20,6 @@ export const metadata: Metadata = {
 /* Placeholder content — replace copy before launch                    */
 /* ------------------------------------------------------------------ */
 
-const PRESS = ["[Logo One]", "[Logo Two]", "[Logo Three]", "[Logo Four]", "[Logo Five]", "[Logo Six]"];
-
 const STORIES = [
   { name: "[First name]", quote: "First month after we rebuilt the store, we did more revenue than the previous quarter combined." },
   { name: "[First name]", quote: "I stopped buying courses. The simulation showed me exactly where my funnel was leaking." },
@@ -162,25 +160,10 @@ const CSS = `
 .cs-home .apply-under-vsl-title{display:block;font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.02em;color:var(--text);margin-bottom:6px;}
 .cs-home .apply-under-vsl-sub{display:block;font-size:clamp(15px,1.2vw,17px);color:var(--text-mute);line-height:1.5;}
 
-/* ---------- trust / press marquee ---------- */
-.cs-home .trust-section{background:var(--bg-pure);padding:14px 0 40px;}
-.cs-home .press-row{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px;}
-.cs-home .press-label{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-faint);text-align:center;}
-.cs-home .marquee{width:100%;overflow:hidden;
-  -webkit-mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent);
-  mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent);}
-.cs-home .marquee-track{display:flex;gap:64px;align-items:center;white-space:nowrap;animation:cs-marquee 32s linear infinite;}
-.cs-home .marquee-track .ml-text{flex-shrink:0;font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.01em;color:#fff;opacity:0.6;}
-@keyframes cs-marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
-
 /* ---------- testimonials ---------- */
 .cs-home .testimonials{background:var(--bg-pure);padding:24px 0 56px;}
 .cs-home .section-header{max-width:880px;margin:0 auto 32px;text-align:center;}
 .cs-home .section-header h2{margin-top:16px;font-size:clamp(36px,5vw,58px);letter-spacing:-0.028em;}
-.cs-home .tp-inline{display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid var(--line);color:var(--text);margin-top:22px;}
-.cs-home .tp-inline .tp-stars{font-size:14px;letter-spacing:2px;color:#00B67A;}
-.cs-home .tp-inline .tp-word{font-size:13px;font-weight:700;}
-.cs-home .tp-inline::after{content:"Verified reviews";font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-mute);padding-left:8px;border-left:1px solid var(--line);}
 .cs-home .vid-section{margin-bottom:48px;}
 .cs-home .vid-section-head{display:flex;align-items:center;gap:14px;margin-bottom:26px;}
 .cs-home .vid-section-head .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(42,120,214,0.3),transparent);}
@@ -192,12 +175,11 @@ const CSS = `
 .cs-home .vid-meta{padding:20px 20px 22px;}
 .cs-home .vid-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .cs-home .vid-name{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.01em;color:var(--text);}
-.cs-home .vid-stars{color:#00B67A;font-size:14px;letter-spacing:3px;}
+.cs-home .vid-stars{color:#FFB020;font-size:14px;letter-spacing:3px;}
 .cs-home .vid-quote{font-size:15px;line-height:1.5;color:var(--text-mute);font-style:italic;}
 .cs-home .vid-result{margin-top:14px;font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-text);display:inline-flex;align-items:center;gap:8px;}
 .cs-home .vid-result .dot{width:5px;height:5px;border-radius:50%;background:var(--accent-text);}
 .cs-home .vid-disclaimer{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08);font-family:var(--font-mono),ui-monospace,monospace;font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);line-height:1.4;}
-.cs-home .reviews-cta{text-align:center;margin-top:28px;}
 
 /* ---------- compliance banner ---------- */
 .cs-home .compliance-banner{
@@ -361,37 +343,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ================= TRUST / PRESS ================= */}
-      <section className="trust-section">
-        <div className="container-wide">
-          <div className="press-row">
-            <div className="press-label">As featured in · Trusted by operators</div>
-            <div className="marquee" aria-label="Press and industry logos">
-              <div className="marquee-track">
-                {[...PRESS, ...PRESS].map((logo, i) => (
-                  <span className="ml-text" key={i} aria-hidden={i >= PRESS.length}>
-                    {logo}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ================= TESTIMONIALS ================= */}
       <section className="testimonials">
         <div className="container-wide">
           <div className="section-header">
             <span className="eyebrow center no-rule">In their own words</span>
             <h2>What Members Say.</h2>
-            <p className="lede center">
-              Verified, public reviews · not testimonials we curated for a landing page.
-            </p>
-            <div className="tp-inline" aria-label="Excellent — verified reviews">
-              <span className="tp-stars" aria-hidden="true">★★★★★</span>
-              <span className="tp-word">Excellent</span>
-            </div>
           </div>
 
           <div className="vid-section">
@@ -404,13 +361,6 @@ export default function HomePage() {
                 <StoryCard key={i} name={s.name} quote={s.quote} />
               ))}
             </div>
-          </div>
-
-          <div className="reviews-cta">
-            <a href={BOOK_CALL_URL} className="btn btn-gold">
-              <span>Read the public reviews</span>
-              <span className="btn-arrow" aria-hidden="true">→</span>
-            </a>
           </div>
 
           <div className="compliance-banner">
