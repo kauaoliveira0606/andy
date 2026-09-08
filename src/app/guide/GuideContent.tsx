@@ -948,14 +948,18 @@ export default function GuideContent() {
       {/* ===== FAQ ===== */}
       <section id="faq" className="alt">
         <div className="wrap">
-          <span className="eyebrow reveal">Before You Ask</span>
-          <h2 className="reveal">
-            Frequently Asked <span className="accent">Questions</span>
-          </h2>
-          <p className="lead reveal d1">
-            The questions that come up on almost every call. Bring anything not covered here and we will go through it
-            together.
-          </p>
+          <div className="reveal" style={{ textAlign: "center", maxWidth: 760, margin: "0 auto" }}>
+            <span className="eyebrow" style={{ display: "inline-block" }}>
+              Before You Ask
+            </span>
+            <h2>
+              Frequently Asked <span className="accent">Questions</span>
+            </h2>
+            <p className="lead" style={{ marginLeft: "auto", marginRight: "auto" }}>
+              The questions that come up on almost every call. Bring anything not covered here and we will go through it
+              together.
+            </p>
+          </div>
           <div className="faq-list">
             {[
               [
