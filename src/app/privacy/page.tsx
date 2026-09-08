@@ -148,7 +148,7 @@ const SECTIONS: Section[] = [
       },
       {
         h: "6.5 How to Exercise Your Rights",
-        p: `Contact us at [support email] to make any of these requests. We may need to verify your identity before we act.`,
+        p: `Contact us at info@ecomsimulation.io to make any of these requests. We may need to verify your identity before we act.`,
       },
     ],
   },
@@ -220,7 +220,7 @@ const SECTIONS: Section[] = [
     title: "Contact",
     blocks: [
       {
-        p: `Questions or requests about this Policy or your personal information can be sent to [support email] or [company mailing address].`,
+        p: `Questions or requests about this Policy or your personal information can be sent to info@ecomsimulation.io or [company mailing address].`,
       },
     ],
   },

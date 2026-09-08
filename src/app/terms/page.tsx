@@ -183,7 +183,7 @@ const SECTIONS: Section[] = [
         p: `We may send SMS messages as part of our coaching and program communications. If you opt in, message and data rates may apply and message frequency varies with your activity and program stage.`,
       },
       {
-        p: `You can stop messages at any time by replying STOP; we will send one confirmation message and then stop. Reply HELP for assistance, or contact us at [support email]. Carriers are not liable for delayed or undelivered messages.`,
+        p: `You can stop messages at any time by replying STOP; we will send one confirmation message and then stop. Reply HELP for assistance, or contact us at info@ecomsimulation.io. Carriers are not liable for delayed or undelivered messages.`,
       },
       {
         p: `Consent to receive SMS is not a condition of any purchase or enrolment. SMS opt-in data and consent are not shared with third parties or affiliates for their marketing.`,
@@ -258,7 +258,7 @@ const SECTIONS: Section[] = [
     title: "Contact",
     blocks: [
       {
-        p: `Questions about these Terms can be sent to [support email] or [company mailing address].`,
+        p: `Questions about these Terms can be sent to info@ecomsimulation.io or [company mailing address].`,
       },
     ],
   },
