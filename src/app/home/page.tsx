@@ -255,9 +255,8 @@ export default function HomePage() {
             </span>
 
             <h2>
-              How Six-Figure Professionals Are Using <span className="h2-highlight">AI Dropshipping</span> To Build{" "}
-              <span className="h2-highlight">Real E-Commerce Brands</span>, Without Quitting Their Job, With A System
-              Designed For People Who Already Have A Career And Want More
+              See how six-figure professionals are using <span className="h2-highlight">AI dropshipping</span> to claim
+              ownership over their <span className="h2-highlight">time, money, and potential</span>.
             </h2>
 
             <p className="hero-subhead">
