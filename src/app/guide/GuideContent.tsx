@@ -654,30 +654,12 @@ export default function GuideContent() {
       {/* ===== METHOD ===== */}
       <section id="method">
         <div className="wrap">
-          <span className="eyebrow reveal">The Framework</span>
+          <span className="eyebrow reveal">The Method</span>
           <h2 className="reveal">
-            The Framework Behind <span className="accent">Multiple 7-Figure Brands</span>
+            The Model Behind <span className="accent">A Real Brand</span>
           </h2>
-          <p className="lead reveal d1">
-            It is different from most things you have tried, because it kills the testing loop entirely. You run a product
-            through five rules once. If it passes all five, you commit and never test another.
-          </p>
-          <div className="pillars">
-            {[
-              ["01", "Proven Demand, Not A Guess", "You are not an inventor. You pick a product with hard data: real revenue, real sales, units bought last month. If the demand is already proven, that variable is gone."],
-              ["02", "A Visual Hook", "Can you show it working in a 10 to 30 second video? Before-and-after is the highest converting format there is. Existing creator content proves the angles already work."],
-              ["03", "The Right Supplier", "Three non-negotiables: they can brand the product and packaging, they ship in two weeks or less, and the minimum order is low or zero. Generic or slow are dealbreakers."],
-              ["04", "One Clear Edge", "Proven demand means proven competition. You need one thing you can do better than the biggest player: a stronger offer, a platform they ignore, tighter branding."],
-            ].map(([n, h, p]) => (
-              <div className="pillar-card reveal" key={n}>
-                <div className="pillar-num">{n}</div>
-                <h3>{h}</h3>
-                <p>{p}</p>
-              </div>
-            ))}
-          </div>
 
-          <div className="section-video reveal">
+          <div className="section-video reveal" style={{ marginTop: 28 }}>
             <div className="video-caption">▶ Watch: How AI Dropshipping Works</div>
             <YouTubeEmbed id="1jQdxMdN7jg" start={13} title="How AI dropshipping works" />
             <div className="model-note">
