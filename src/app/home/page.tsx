@@ -323,8 +323,9 @@ export default function HomePage() {
             </span>
 
             <h2>
-              How Ecommerce Operators <span className="h2-highlight">Build a Store That Actually Sells</span> Without
-              Guesswork, Wasted Ad Spend Or <span className="h2-highlight">Another Shelf of Courses</span>
+              How six-figure professionals are using <span className="h2-highlight">AI dropshipping</span> to build{" "}
+              <span className="h2-highlight">real e-commerce brands</span>, without quitting their job, with a system
+              designed for people who already have a career and want more
             </h2>
 
             {/* VSL */}
