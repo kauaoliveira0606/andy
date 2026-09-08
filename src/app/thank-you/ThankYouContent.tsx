@@ -14,8 +14,8 @@ const fontHead = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", 
 const fontBody = Barlow({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body" });
 const fontMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "700"], variable: "--font-mono" });
 
-/* Optional: point this at a real "watch more" resource before launch. */
-const MORE_VIDEOS_URL = "#";
+/* "Watch The Videos Here" button on both thank-you pages -> the guide. */
+const MORE_VIDEOS_URL = "/guide";
 
 const CSS = `
 .ty-page{
