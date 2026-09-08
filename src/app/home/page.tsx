@@ -1,267 +1,483 @@
 import type { Metadata } from "next";
+import { Plus_Jakarta_Sans, Barlow, JetBrains_Mono } from "next/font/google";
 
-/* ---------------------------------------------------------------------- */
-/* Theme                                                                   */
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* Fonts (matches the source page: Plus Jakarta Sans / Barlow / mono)  */
+/* ------------------------------------------------------------------ */
+const fontHead = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-head" });
+const fontBody = Barlow({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-body" });
+const fontMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
 
-const BG = "#F3EFE1";
-const PANEL = "#FFFFFF";
-const BORDER = "#E3DAC0";
-const INK = "#000000";
-const MUTED = "#262319";
-const ACCENT = "#2a78d6"; // blue (replaces the source page's orange)
-
-/* Placeholder — wire this up to the real booking/application URL later. */
+/* Wire this up to the real booking / application link. */
 const BOOK_CALL_URL = "#book";
 
 export const metadata: Metadata = {
-  title: "EcomSimulation — Apply",
-  description: "[Placeholder meta description for the EcomSimulation landing page.]",
+  title: "EcomSimulation — Book a call",
+  description: "Placeholder meta description for the EcomSimulation landing page.",
 };
 
-/* ---------------------------------------------------------------------- */
-/* Content (placeholder copy — replace before launch)                     */
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* Placeholder content — replace copy before launch                    */
+/* ------------------------------------------------------------------ */
 
-const FEATURED_IN = ["[Logo One]", "[Logo Two]", "[Logo Three]", "[Logo Four]", "[Logo Five]", "[Logo Six]"];
+const PRESS = ["[Logo One]", "[Logo Two]", "[Logo Three]", "[Logo Four]", "[Logo Five]", "[Logo Six]"];
 
-const TESTIMONIALS = [
-  { name: "[Member Name]", quote: "[Short verbatim quote about the result they got.]" },
-  { name: "[Member Name]", quote: "[Short verbatim quote about the result they got.]" },
-  { name: "[Member Name]", quote: "[Short verbatim quote about the result they got.]" },
-  { name: "[Member Name]", quote: "[Short verbatim quote about the result they got.]" },
-  { name: "[Member Name]", quote: "[Short verbatim quote about the result they got.]" },
-  { name: "[Member Name]", quote: "[Short verbatim quote about the result they got.]" },
+const STORIES = [
+  { name: "[First name]", quote: "First month after we rebuilt the store, we did more revenue than the previous quarter combined." },
+  { name: "[First name]", quote: "I stopped buying courses. The simulation showed me exactly where my funnel was leaking." },
+  { name: "[First name]", quote: "Went from breaking even on ads to a 2.4x blended return in about six weeks." },
+  { name: "[First name]", quote: "The team caught a pricing mistake on our hero product that was costing us thousands a month." },
+  { name: "[First name]", quote: "Had to hire my first VA just to keep up with the order volume." },
+  { name: "[First name]", quote: "First time I've had a store that runs without me watching it every hour." },
 ];
 
 const TEAM = [
-  { name: "[Team Member]", title: "[Founder / CEO]", bio: "[One line on what they do and why they're credible.]" },
-  { name: "[Team Member]", title: "[Head of Coaching]", bio: "[One line on what they do and why they're credible.]" },
-  { name: "[Team Member]", title: "[Lead Strategist]", bio: "[One line on what they do and why they're credible.]" },
-  { name: "[Team Member]", title: "[Success Coach]", bio: "[One line on what they do and why they're credible.]" },
-  { name: "[Team Member]", title: "[Success Coach]", bio: "[One line on what they do and why they're credible.]" },
-  { name: "[Team Member]", title: "[Onboarding]", bio: "[One line on what they do and why they're credible.]" },
+  { name: "[Team member]", role: "Founder", bio: "Placeholder bio — one line on what they do and why they're credible." },
+  { name: "[Team member]", role: "Head of Coaching", bio: "Placeholder bio — runs the coaching desk and portfolio reviews." },
+  { name: "[Team member]", role: "Growth Lead", bio: "Placeholder bio — owns paid acquisition and creative testing." },
+  { name: "[Team member]", role: "Store Build Lead", bio: "Placeholder bio — CRO, page builds and offer structure." },
+  { name: "[Team member]", role: "Client Success", bio: "Placeholder bio — your direct line into the team, 1:1 sessions." },
+  { name: "[Team member]", role: "Onboarding", bio: "Placeholder bio — application review, qualification and onboarding." },
 ];
 
-/* ---------------------------------------------------------------------- */
-/* Building blocks                                                         */
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* Styles ported from the source page, orange (#FC5C03) -> blue         */
+/* ------------------------------------------------------------------ */
+const CSS = `
+.cs-home{
+  --bg:#0A0A0C; --bg-pure:#000000; --bg-card:#131316;
+  --accent:#2A78D6; --accent-bright:#57A5F5; --accent-deep:#1B5FB0;
+  --text:rgba(255,255,255,0.94); --text-mute:rgba(255,255,255,0.7);
+  --text-dim:rgba(255,255,255,0.5); --text-faint:rgba(255,255,255,0.32);
+  --line:rgba(255,255,255,0.08); --line-soft:rgba(255,255,255,0.05);
+  background:var(--bg-pure); color:var(--text);
+  font-family:var(--font-body), system-ui, sans-serif;
+  font-size:17px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+.cs-home *{box-sizing:border-box;}
+.cs-home h1,.cs-home h2,.cs-home h3,.cs-home h4{
+  font-family:var(--font-head), system-ui, sans-serif; font-weight:700;
+  letter-spacing:-0.022em; margin:0; line-height:1.1; color:var(--text);
+}
+.cs-home h2{font-size:clamp(28px,3.4vw,44px);}
+.cs-home a{color:inherit;}
 
-function CtaButton({ children, href = BOOK_CALL_URL }: { children: React.ReactNode; href?: string }) {
+.cs-home .container{max-width:1240px;margin:0 auto;padding:0 32px;}
+.cs-home .container-narrow{max-width:880px;margin:0 auto;padding:0 32px;}
+.cs-home .container-wide{max-width:1320px;margin:0 auto;padding:0 32px;}
+
+.cs-home .eyebrow{
+  font-family:var(--font-mono),ui-monospace,monospace; font-size:11px; font-weight:500;
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--accent);
+  display:inline-flex; align-items:center; gap:12px;
+}
+.cs-home .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent);}
+.cs-home .eyebrow.center{justify-content:center;}
+.cs-home .eyebrow.no-rule::before{display:none;}
+.cs-home .mono{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-mute);}
+.cs-home .lede{font-size:clamp(17px,1.4vw,19px);line-height:1.6;color:var(--text-mute);max-width:64ch;}
+.cs-home .lede.center{margin-left:auto;margin-right:auto;}
+
+/* ---------- buttons ---------- */
+.cs-home .btn{
+  display:inline-flex;align-items:center;gap:10px;padding:16px 28px;border-radius:100px;
+  font-family:var(--font-body),system-ui,sans-serif;font-weight:600;font-size:16px;text-decoration:none;
+  cursor:pointer;border:1px solid transparent;transition:transform .15s,background .2s,border-color .2s,color .2s;
+  white-space:nowrap;letter-spacing:0.01em;
+}
+.cs-home .btn:active{transform:translateY(1px);}
+.cs-home .btn-gold{
+  background:rgba(255,255,255,0.04);color:var(--text);border:1px solid rgba(42,120,214,0.5);
+  font-weight:600;letter-spacing:0.02em;position:relative;overflow:hidden;
+}
+.cs-home .btn-gold::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(42,120,214,0.18),rgba(42,120,214,0) 60%);opacity:0;transition:opacity .25s ease;}
+.cs-home .btn-gold span{position:relative;z-index:1;}
+.cs-home .btn-gold:hover{border-color:var(--accent);background:rgba(42,120,214,0.06);color:#fff;}
+.cs-home .btn-gold:hover::before{opacity:1;}
+.cs-home .btn-gold:hover .btn-arrow{transform:translateX(3px);background:var(--accent-bright);}
+.cs-home .btn-arrow{
+  display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;
+  background:var(--accent);color:#fff;font-size:12px;margin-left:4px;transition:transform .25s ease,background .25s ease;
+}
+.cs-home .btn-xl{padding:22px 38px;font-size:17px;}
+
+/* ---------- hero ---------- */
+.cs-home .hero{position:relative;background:var(--bg-pure);overflow:hidden;padding:28px 0 40px;}
+.cs-home .hero::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse 700px 380px at 50% -10%,rgba(42,120,214,0.16),transparent 60%),
+             radial-gradient(ellipse 800px 480px at 50% 0%,rgba(42,120,214,0.06),transparent 70%);
+}
+.cs-home .hero::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+  background-size:80px 80px;
+  -webkit-mask-image:radial-gradient(ellipse 600px 400px at 50% 30%,black,transparent 70%);
+  mask-image:radial-gradient(ellipse 600px 400px at 50% 30%,black,transparent 70%);
+}
+.cs-home .brand-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;padding-bottom:28px;flex-wrap:wrap;}
+.cs-home .brand-mark svg{width:26px;height:36px;display:block;}
+.cs-home .brand-word{font-family:var(--font-head),system-ui,sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.02em;color:var(--text);}
+.cs-home .brand-tier{
+  font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;
+  color:var(--accent);padding:6px 11px;border:1px solid rgba(42,120,214,0.32);border-radius:100px;
+  background:rgba(42,120,214,0.06);margin-left:4px;white-space:nowrap;
+}
+.cs-home .hero-inner{position:relative;z-index:2;text-align:center;max-width:920px;margin:0 auto;}
+.cs-home .hero-callout{
+  display:inline-flex;align-items:center;gap:10px;padding:10px 18px;border-radius:100px;
+  background:linear-gradient(180deg,rgba(42,120,214,0.14),rgba(42,120,214,0.06));border:1px solid rgba(42,120,214,0.45);
+  font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;
+  color:#AED2F7;margin-bottom:22px;box-shadow:0 8px 24px -10px rgba(42,120,214,0.4);max-width:calc(100% - 24px);
+}
+.cs-home .hero-callout::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(42,120,214,0.18);flex-shrink:0;}
+.cs-home .hero-callout b{color:#fff;font-weight:700;letter-spacing:0.04em;}
+.cs-home .hero h2{font-size:clamp(26px,3.2vw,42px);line-height:1.18;letter-spacing:-0.022em;margin:0 0 28px;text-wrap:balance;}
+.cs-home .hero h2 .h2-highlight{color:var(--accent);}
+.cs-home .hero-subhead{color:var(--text-mute);font-size:clamp(16px,1.3vw,18px);line-height:1.55;max-width:720px;margin:0 auto 28px;}
+
+/* ---------- vsl ---------- */
+.cs-home .vsl-wrap{position:relative;margin:0 auto;max-width:920px;}
+.cs-home .vsl-frame{
+  position:relative;border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000;
+  box-shadow:0 0 0 1px rgba(42,120,214,0.18),0 40px 80px -30px rgba(42,120,214,0.25),0 50px 100px -30px rgba(0,0,0,0.6);
+  aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+}
+.cs-home .vsl-frame::before{
+  content:"";position:absolute;inset:-2px;border-radius:20px;z-index:-1;pointer-events:none;
+  background:linear-gradient(135deg,rgba(42,120,214,0.4),transparent 30%,transparent 70%,rgba(42,120,214,0.2));
+}
+.cs-home .vsl-play{
+  width:76px;height:76px;border-radius:50%;background:var(--accent);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:26px;padding-left:5px;
+  box-shadow:0 12px 40px -8px rgba(42,120,214,0.7);
+}
+.cs-home .vsl-note{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-faint);}
+
+/* ---------- apply under vsl ---------- */
+.cs-home .apply-under-vsl{margin-top:28px;text-align:center;}
+.cs-home .apply-under-vsl-head{margin-bottom:20px;}
+.cs-home .apply-under-vsl-title{display:block;font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.02em;color:var(--text);margin-bottom:6px;}
+.cs-home .apply-under-vsl-sub{display:block;font-size:clamp(15px,1.2vw,17px);color:var(--text-mute);line-height:1.5;}
+
+/* ---------- trust / press marquee ---------- */
+.cs-home .trust-section{background:var(--bg-pure);padding:14px 0 40px;}
+.cs-home .press-row{width:100%;display:flex;flex-direction:column;align-items:center;gap:22px;}
+.cs-home .press-label{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:var(--text-faint);text-align:center;}
+.cs-home .marquee{width:100%;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent);
+  mask-image:linear-gradient(90deg,transparent,black 12%,black 88%,transparent);}
+.cs-home .marquee-track{display:flex;gap:64px;align-items:center;white-space:nowrap;animation:cs-marquee 32s linear infinite;}
+.cs-home .marquee-track .ml-text{flex-shrink:0;font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.01em;color:#fff;opacity:0.6;}
+@keyframes cs-marquee{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+
+/* ---------- testimonials ---------- */
+.cs-home .testimonials{background:var(--bg-pure);padding:24px 0 56px;}
+.cs-home .section-header{max-width:880px;margin:0 auto 32px;text-align:center;}
+.cs-home .section-header h2{margin-top:16px;font-size:clamp(36px,5vw,58px);letter-spacing:-0.028em;}
+.cs-home .tp-inline{display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border-radius:100px;background:rgba(255,255,255,0.04);border:1px solid var(--line);color:var(--text);margin-top:22px;}
+.cs-home .tp-inline .tp-stars{font-size:14px;letter-spacing:2px;color:#00B67A;}
+.cs-home .tp-inline .tp-word{font-size:13px;font-weight:700;}
+.cs-home .tp-inline::after{content:"Verified reviews";font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-mute);padding-left:8px;border-left:1px solid var(--line);}
+.cs-home .vid-section{margin-bottom:48px;}
+.cs-home .vid-section-head{display:flex;align-items:center;gap:14px;margin-bottom:26px;}
+.cs-home .vid-section-head .line{flex:1;height:1px;background:linear-gradient(90deg,rgba(42,120,214,0.3),transparent);}
+.cs-home .vid-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;max-width:1080px;margin:0 auto;}
+.cs-home .vid-card{background:var(--bg-card);border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;}
+.cs-home .vid-card:hover{transform:translateY(-3px);border-color:rgba(42,120,214,0.35);box-shadow:0 24px 50px -28px rgba(42,120,214,0.25);}
+.cs-home .vid-frame{position:relative;padding-bottom:56.25%;background:linear-gradient(160deg,#1a2740,#0d1220);}
+.cs-home .vid-frame .vid-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:34px;opacity:0.85;}
+.cs-home .vid-meta{padding:20px 20px 22px;}
+.cs-home .vid-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.cs-home .vid-name{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.01em;color:var(--text);}
+.cs-home .vid-stars{color:#00B67A;font-size:14px;letter-spacing:3px;}
+.cs-home .vid-quote{font-size:15px;line-height:1.5;color:var(--text-mute);font-style:italic;}
+.cs-home .vid-result{margin-top:14px;font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:8px;}
+.cs-home .vid-result .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);}
+.cs-home .vid-disclaimer{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08);font-family:var(--font-mono),ui-monospace,monospace;font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);line-height:1.4;}
+.cs-home .reviews-cta{text-align:center;margin-top:28px;}
+
+/* ---------- compliance banner ---------- */
+.cs-home .compliance-banner{
+  margin:32px auto 0;max-width:880px;padding:18px 22px;background:rgba(255,255,255,0.03);
+  border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;
+  display:flex;align-items:flex-start;gap:14px;font-size:13px;line-height:1.5;color:var(--text-mute);
+}
+.cs-home .compliance-banner b{color:var(--text);font-weight:700;}
+.cs-home .cb-icon{width:26px;height:26px;flex-shrink:0;border-radius:50%;background:rgba(42,120,214,0.15);color:var(--accent-bright);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;}
+
+/* ---------- team marquee ---------- */
+.cs-home .team-section{padding:28px 0 72px;background:var(--bg-pure);border-top:1px solid var(--line-soft);}
+.cs-home .team-head{text-align:center;max-width:720px;margin:0 auto 28px;}
+.cs-home .team-head h3{font-size:clamp(24px,2.6vw,32px);letter-spacing:-0.02em;margin-top:14px;}
+.cs-home .team-head p{color:var(--text-mute);font-size:15.5px;line-height:1.5;margin-top:12px;}
+.cs-home .team-marquee{position:relative;overflow:hidden;width:100%;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,black 4%,black 96%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,black 4%,black 96%,transparent 100%);}
+.cs-home .team-marquee-track{display:inline-flex;gap:14px;align-items:stretch;white-space:nowrap;padding-left:14px;animation:cs-team-scroll 60s linear infinite;}
+.cs-home .team-marquee:hover .team-marquee-track{animation-play-state:paused;}
+@keyframes cs-team-scroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.cs-home .team-card{display:inline-flex;flex-direction:column;width:260px;flex:0 0 260px;background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:transform .2s,border-color .2s,background .2s;white-space:normal;}
+.cs-home .team-card:hover{transform:translateY(-3px);background:rgba(255,255,255,0.06);border-color:rgba(42,120,214,0.35);}
+.cs-home .team-photo{position:relative;aspect-ratio:4/5;background:linear-gradient(160deg,#2A2833,#1B1925);overflow:hidden;}
+.cs-home .team-photo::before{content:attr(data-letter);font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:64px;color:rgba(255,255,255,0.18);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.cs-home .team-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(0,0,0,0.55) 100%);pointer-events:none;}
+.cs-home .team-meta{padding:14px 16px 16px;display:flex;flex-direction:column;gap:4px;}
+.cs-home .team-meta .tname{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.012em;color:var(--text);}
+.cs-home .team-meta .trole{font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent-bright);}
+.cs-home .team-meta .tbio{font-size:13px;color:var(--text-mute);line-height:1.5;margin-top:4px;}
+
+/* ---------- closing cta ---------- */
+.cs-home .close-cta{background:var(--bg-pure);border-top:1px solid var(--line-soft);padding:48px 0 80px;position:relative;overflow:hidden;}
+.cs-home .close-cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 600px 320px at 50% 100%,rgba(42,120,214,0.12),transparent 60%);}
+.cs-home .close-cta-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto;}
+.cs-home .close-cta h2{font-size:clamp(36px,5vw,58px);letter-spacing:-0.028em;}
+.cs-home .close-cta h2 em{color:var(--accent);font-style:normal;}
+.cs-home .close-cta .lede{margin:18px auto 32px;}
+.cs-home .close-fineline{margin-top:18px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-faint);}
+
+/* ---------- footer ---------- */
+.cs-home .site-footer{background:var(--bg-pure);padding:64px 0 48px;border-top:1px solid var(--line-soft);color:var(--text-mute);}
+.cs-home .foot-inner{display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center;}
+.cs-home .foot-tagline{max-width:60ch;font-size:14px;color:var(--text-mute);line-height:1.55;}
+.cs-home .foot-disclaimer{max-width:80ch;font-size:11.5px;line-height:1.6;color:var(--text-faint);}
+.cs-home .foot-copy{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-faint);}
+
+@media (max-width:768px){
+  .cs-home .container,.cs-home .container-narrow,.cs-home .container-wide{padding:0 20px;}
+  .cs-home .vid-grid{grid-template-columns:1fr;}
+  .cs-home .marquee-track{gap:44px;}
+}
+`;
+
+/* ------------------------------------------------------------------ */
+/* Small pieces                                                        */
+/* ------------------------------------------------------------------ */
+
+function BrandMark() {
   return (
-    <a
-      href={href}
-      className="inline-flex items-center gap-2 rounded-lg px-6 py-3 text-sm font-extrabold transition-opacity hover:opacity-90"
-      style={{ background: ACCENT, color: "#ffffff" }}
-    >
-      {children}
-      <span aria-hidden>&rarr;</span>
-    </a>
+    <span className="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 31.22 43.09" fill="url(#csgrad)">
+        <defs>
+          <linearGradient id="csgrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#2A78D6" />
+            <stop offset="100%" stopColor="#57A5F5" />
+          </linearGradient>
+        </defs>
+        <path
+          d="M 24.976 0 L 24.976 12.312 L 12.49 18.467 L 12.488 18.467 L 12.488 30.777 L 0 24.623 L 0 12.309 L 24.976 0 Z M 12.49 30.779 L 12.488 30.779 L 12.488 43.09 L 12.49 43.09 L 31.22 33.858 L 31.22 21.544 L 12.49 30.779 Z"
+          fillRule="evenodd"
+        />
+      </svg>
+    </span>
   );
 }
 
-function SectionHeader({ title, sub }: { title: string; sub?: string }) {
+function StoryCard({ name, quote }: { name: string; quote: string }) {
   return (
-    <div className="mb-8 text-center">
-      <h2 className="text-2xl font-extrabold sm:text-3xl" style={{ color: INK }}>
-        {title}
-      </h2>
-      {sub && (
-        <p className="mx-auto mt-2 max-w-2xl text-sm" style={{ color: MUTED }}>
-          {sub}
-        </p>
-      )}
-    </div>
+    <article className="vid-card">
+      <div className="vid-frame">
+        {/* Replace with the real member-story video embed (Vimeo/YouTube/Wistia) */}
+        <span className="vid-play" aria-hidden="true">&#9654;</span>
+      </div>
+      <div className="vid-meta">
+        <div className="vid-top">
+          <span className="vid-name">{name}</span>
+          <span className="vid-stars" aria-label="5 out of 5 stars">★★★★★</span>
+        </div>
+        <p className="vid-quote">&ldquo;{quote}&rdquo;</p>
+        <div className="vid-result">
+          <span className="dot" />
+          {name} · member experience
+        </div>
+        <div className="vid-disclaimer">Individual experience. Not typical results. Past performance is not indicative.</div>
+      </div>
+    </article>
   );
 }
 
-function Disclaimer({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="mx-auto mt-8 max-w-3xl text-center text-[11px] leading-relaxed" style={{ color: MUTED, opacity: 0.75 }}>
-      {children}
-    </p>
-  );
-}
-
-/* ---------------------------------------------------------------------- */
-/* Page                                                                     */
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* Page                                                                */
+/* ------------------------------------------------------------------ */
 
 export default function HomePage() {
+  const teamLoop = [...TEAM, ...TEAM];
+
   return (
-    <div style={{ background: BG, color: INK }}>
-      {/* ---------------------------------------------------------------- */}
-      {/* Hero                                                             */}
-      {/* ---------------------------------------------------------------- */}
-      <header className="px-6 py-16 sm:py-24">
-        <div className="mx-auto max-w-4xl text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: ACCENT }}>
-            EcomSimulation — [Program / Tier Name]
-          </p>
-          <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-5xl" style={{ color: INK }}>
-            [Big outcome headline — who this is for and the result they get]
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base sm:text-lg" style={{ color: MUTED }}>
-            [Subheadline expanding on the mechanism — how members achieve the outcome above, in one sentence.]
-          </p>
+    <div className={`cs-home ${fontHead.variable} ${fontBody.variable} ${fontMono.variable}`}>
+      <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
-          <div className="mt-8 flex flex-col items-center gap-3">
-            <CtaButton>Book a call</CtaButton>
-            <p className="text-xs" style={{ color: MUTED }}>
-              [A 30-minute call with a senior member of our team]
+      {/* ================= HERO ================= */}
+      <section className="hero">
+        <div className="container-wide">
+          <div className="brand-row">
+            <BrandMark />
+            <span className="brand-word">EcomSimulation</span>
+            <span className="brand-tier">Accelerator</span>
+          </div>
+
+          <div className="hero-inner">
+            <span className="hero-callout">
+              For operators doing <b>$10k+/mo</b> who want a real store, not another course
+            </span>
+
+            <h2>
+              How Ecommerce Operators <span className="h2-highlight">Build a Store That Actually Sells</span> Without
+              Guesswork, Wasted Ad Spend Or <span className="h2-highlight">Another Shelf of Courses</span>
+            </h2>
+
+            {/* VSL */}
+            <div className="vsl-wrap">
+              <div className="vsl-frame" aria-label="Founder overview video">
+                {/* Replace with your VSL embed */}
+                <span className="vsl-play" aria-hidden="true">&#9654;</span>
+                <span className="vsl-note">[ VSL embed goes here ]</span>
+              </div>
+            </div>
+
+            {/* Apply under VSL */}
+            <div id="apply" className="apply-under-vsl">
+              <div className="apply-under-vsl-head">
+                <span className="apply-under-vsl-title">Book a call</span>
+                <span className="apply-under-vsl-sub">A 30-minute call with a senior member of our team</span>
+              </div>
+              <a href={BOOK_CALL_URL} className="btn btn-gold btn-xl">
+                <span>Book a call</span>
+                <span className="btn-arrow" aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= TRUST / PRESS ================= */}
+      <section className="trust-section">
+        <div className="container-wide">
+          <div className="press-row">
+            <div className="press-label">As featured in · Trusted by operators</div>
+            <div className="marquee" aria-label="Press and industry logos">
+              <div className="marquee-track">
+                {[...PRESS, ...PRESS].map((logo, i) => (
+                  <span className="ml-text" key={i} aria-hidden={i >= PRESS.length}>
+                    {logo}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================= TESTIMONIALS ================= */}
+      <section className="testimonials">
+        <div className="container-wide">
+          <div className="section-header">
+            <span className="eyebrow center no-rule">In their own words</span>
+            <h2>What Members Say.</h2>
+            <p className="lede center">
+              Verified, public reviews · not testimonials we curated for a landing page.
             </p>
+            <div className="tp-inline" aria-label="Excellent — verified reviews">
+              <span className="tp-stars" aria-hidden="true">★★★★★</span>
+              <span className="tp-word">Excellent</span>
+            </div>
           </div>
 
-          {/* VSL / video area */}
-          <div
-            className="mx-auto mt-12 flex aspect-video w-full max-w-3xl items-center justify-center rounded-xl"
-            style={{ background: PANEL, border: `1px solid ${BORDER}` }}
-          >
-            <span className="text-sm font-bold" style={{ color: MUTED }}>
-              [ VSL video embed goes here ]
+          <div className="vid-section">
+            <div className="vid-section-head">
+              <span className="mono">Watch their stories</span>
+              <span className="line" />
+            </div>
+            <div className="vid-grid">
+              {STORIES.map((s, i) => (
+                <StoryCard key={i} name={s.name} quote={s.quote} />
+              ))}
+            </div>
+          </div>
+
+          <div className="reviews-cta">
+            <a href={BOOK_CALL_URL} className="btn btn-gold">
+              <span>Read the public reviews</span>
+              <span className="btn-arrow" aria-hidden="true">→</span>
+            </a>
+          </div>
+
+          <div className="compliance-banner">
+            <span className="cb-icon" aria-hidden="true">!</span>
+            <span>
+              <b>Individual experiences. Not typical results.</b> The members featured above describe their own
+              experiences. Results vary significantly and depend on personal circumstances, market conditions, product,
+              and individual decisions. [Add your offer-specific disclaimer here before launch.]
             </span>
           </div>
-        </div>
-      </header>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Social proof — featured in                                       */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="px-6 py-12" style={{ borderTop: `1px solid ${BORDER}`, borderBottom: `1px solid ${BORDER}` }}>
-        <p className="text-center text-xs font-bold uppercase tracking-[0.2em]" style={{ color: MUTED }}>
-          As featured in · Trusted by the industry
-        </p>
-        <div className="mx-auto mt-6 flex max-w-4xl flex-wrap items-center justify-center gap-x-10 gap-y-4">
-          {FEATURED_IN.map((logo, i) => (
-            <span key={i} className="text-sm font-bold" style={{ color: MUTED, opacity: 0.7 }}>
-              {logo}
-            </span>
-          ))}
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Testimonials                                                     */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="px-6 py-16">
-        <div className="mx-auto max-w-5xl">
-          <SectionHeader
-            title="What Members Say"
-            sub="Verified, public reviews · not testimonials we curated for a landing page"
-          />
-
-          <div className="mx-auto mb-8 w-fit rounded-full px-4 py-1.5 text-xs font-bold" style={{ background: PANEL, border: `1px solid ${BORDER}`, color: MUTED }}>
-            ★★★★★ Excellent · Verified reviews
+      {/* ================= TEAM ================= */}
+      <section className="team-section">
+        <div className="container-wide">
+          <div className="team-head">
+            <span className="eyebrow center no-rule">Meet the Team</span>
+            <h3>The coaches and operators on the line with you</h3>
+            <p>Placeholder line about the team&rsquo;s experience — swap in real credentials before launch.</p>
           </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {TESTIMONIALS.map((t, i) => (
-              <figure key={i} className="rounded-lg p-5" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
-                <div className="text-sm" style={{ color: ACCENT }}>
-                  ★★★★★
+        </div>
+        <div className="team-marquee">
+          <div className="team-marquee-track">
+            {teamLoop.map((m, i) => (
+              <div className="team-card" key={i}>
+                <div className="team-photo" data-letter={m.name.charAt(1) || "?"} />
+                <div className="team-meta">
+                  <span className="tname">{m.name}</span>
+                  <span className="trole">{m.role}</span>
+                  <span className="tbio">{m.bio}</span>
                 </div>
-                <blockquote className="mt-2 text-sm leading-relaxed" style={{ color: INK }}>
-                  &ldquo;{t.quote}&rdquo;
-                </blockquote>
-                <figcaption className="mt-3 text-xs font-bold" style={{ color: MUTED }}>
-                  {t.name}
-                </figcaption>
-                <p className="mt-2 text-[10px]" style={{ color: MUTED, opacity: 0.7 }}>
-                  Individual experience. Not typical results. Past performance is not indicative.
-                </p>
-              </figure>
-            ))}
-          </div>
-
-          <Disclaimer>
-            Individual experiences. Not typical results. The members featured above describe their own experiences.
-            Individual results vary significantly and depend on personal circumstances, market conditions, and individual
-            decisions. [Add offer-specific risk language here before launch.]
-          </Disclaimer>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Meet the team                                                    */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="px-6 py-16" style={{ borderTop: `1px solid ${BORDER}` }}>
-        <div className="mx-auto max-w-5xl">
-          <SectionHeader
-            title="Meet the Team"
-            sub="The coaches, strategists and operators on the line with you when you join"
-          />
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {TEAM.map((m, i) => (
-              <div key={i} className="rounded-lg p-5" style={{ background: PANEL, border: `1px solid ${BORDER}` }}>
-                <div className="h-14 w-14 rounded-full" style={{ background: BG, border: `1px solid ${BORDER}` }} />
-                <p className="mt-3 text-sm font-extrabold" style={{ color: INK }}>
-                  {m.name}
-                </p>
-                <p className="text-xs font-bold" style={{ color: ACCENT }}>
-                  {m.title}
-                </p>
-                <p className="mt-2 text-xs leading-relaxed" style={{ color: MUTED }}>
-                  {m.bio}
-                </p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Next step CTA                                                    */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="px-6 py-16" style={{ borderTop: `1px solid ${BORDER}` }}>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: ACCENT }}>
-            Next Step
-          </p>
-          <h2 className="mt-3 text-2xl font-extrabold sm:text-3xl" style={{ color: INK }}>
-            Book your call
-          </h2>
-          <p className="mx-auto mt-3 max-w-lg text-sm" style={{ color: MUTED }}>
-            [By application only. Cohorts are capped. We typically respond within one business day.]
-          </p>
-          <div className="mt-6">
-            <CtaButton>Book a call</CtaButton>
+      {/* ================= CLOSING CTA ================= */}
+      <section className="close-cta">
+        <div className="container-narrow">
+          <div className="close-cta-inner">
+            <span className="eyebrow center no-rule">Next Step</span>
+            <h2>
+              Book your <em>strategy call.</em>
+            </h2>
+            <p className="lede center">By application only. Limited slots each week. We typically respond within one business day.</p>
+            <a href={BOOK_CALL_URL} className="btn btn-gold btn-xl">
+              <span>Book a call</span>
+              <span className="btn-arrow" aria-hidden="true">→</span>
+            </a>
+            <div className="close-fineline">Application-based · Limited weekly slots</div>
           </div>
         </div>
       </section>
 
-      {/* ---------------------------------------------------------------- */}
-      {/* Final CTA                                                        */}
-      {/* ---------------------------------------------------------------- */}
-      <section className="px-6 py-16" style={{ background: INK }}>
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="text-sm leading-relaxed" style={{ color: "#ffffff", opacity: 0.85 }}>
-            [One-paragraph summary of what EcomSimulation is: who it&rsquo;s for, what members get — training, frameworks,
-            and direct access to the team.]
-          </p>
-          <div className="mt-6">
-            <CtaButton>Book a call</CtaButton>
+      {/* ================= FOOTER ================= */}
+      <footer className="site-footer">
+        <div className="container-wide">
+          <div className="foot-inner">
+            <div className="brand-row" style={{ padding: 0 }}>
+              <BrandMark />
+              <span className="brand-word">EcomSimulation</span>
+              <span className="brand-tier">Accelerator</span>
+            </div>
+            <p className="foot-tagline">
+              [One-paragraph summary of what EcomSimulation is: who it&rsquo;s for and what members get — training,
+              frameworks, and direct access to the team.]
+            </p>
+            <p className="foot-disclaimer">
+              EcomSimulation provides general information and educational content only. We do not provide personal
+              financial, tax, or legal advice. Past performance is not indicative of future returns. Results vary. Consult
+              a licensed adviser before acting on any information. [Replace this block with your reviewed legal disclaimer
+              before launch.]
+            </p>
+            <p className="foot-copy">© {new Date().getFullYear()} EcomSimulation · [company / domain]</p>
           </div>
-          <p className="mt-4 text-[11px]" style={{ color: "#ffffff", opacity: 0.55 }}>
-            [Application-based · Cohorts capped · Add any audit/verification line here]
-          </p>
-        </div>
-      </section>
-
-      {/* ---------------------------------------------------------------- */}
-      {/* Footer                                                           */}
-      {/* ---------------------------------------------------------------- */}
-      <footer className="px-6 py-10" style={{ background: INK }}>
-        <div className="mx-auto max-w-3xl">
-          <p className="text-center text-[11px] leading-relaxed" style={{ color: "#ffffff", opacity: 0.5 }}>
-            [EcomSimulation provides general information and educational content only. We do not provide personal
-            financial, tax, or legal advice. Past performance is not indicative of future returns. Results vary. Consult a
-            licensed adviser before acting on any information. Replace this entire block with your reviewed legal
-            disclaimer before launch.]
-          </p>
-          <p className="mt-4 text-center text-[11px]" style={{ color: "#ffffff", opacity: 0.4 }}>
-            © {new Date().getFullYear()} EcomSimulation · [company / domain]
-          </p>
         </div>
       </footer>
     </div>
