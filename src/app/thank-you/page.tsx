@@ -171,14 +171,8 @@ export default function ThankYouPage() {
           </div>
 
           <h1>
-            Almost There. <em>Reply To Our Email</em>
-            <br />
-            To Confirm Your Call.
+            You <em>Booked Your Call!</em>
           </h1>
-
-          <p className="hero-subhead">
-            Check Your Inbox <b>&mdash; your spot isn&rsquo;t locked in until you reply.</b>
-          </p>
 
           <div className="stepper" aria-label="Booking progress">
             <div className="step-node done">
