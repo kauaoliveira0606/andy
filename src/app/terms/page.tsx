@@ -278,7 +278,6 @@ const CSS = `
 .legal-page .lg-eyebrow{font-size:11px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--blue);}
 .legal-page h1{font-size:clamp(30px,5vw,42px);font-weight:900;letter-spacing:-.02em;color:#fff;margin:14px 0 10px;}
 .legal-page .lg-updated{font-size:12.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-mut);}
-.legal-page .lg-note{margin:26px 0 8px;padding:16px 20px;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;background:rgba(74,158,255,.05);font-size:13.5px;color:var(--text-mut);line-height:1.6;}
 .legal-page section{margin-top:40px;}
 .legal-page section h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#fff;margin-bottom:14px;}
 .legal-page section h2 .n{color:var(--blue);font-family:var(--lg-font);margin-right:8px;}
@@ -300,11 +299,6 @@ export default function TermsPage() {
         <span className="lg-eyebrow">EcomSimulation</span>
         <h1>Terms of Service</h1>
         <div className="lg-updated">Last Updated: {LAST_UPDATED}</div>
-
-        <div className="lg-note">
-          Draft template. Replace every [bracketed] placeholder with EcomSimulation&rsquo;s real legal entity,
-          jurisdiction, refund terms and contact details, and have it reviewed by counsel before publishing.
-        </div>
 
         {SECTIONS.map((s) => (
           <section key={s.n}>
