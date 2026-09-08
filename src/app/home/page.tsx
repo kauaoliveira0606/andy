@@ -162,9 +162,9 @@ const CSS = `
 .cs-home .apply-under-vsl-head{margin-bottom:20px;}
 .cs-home .apply-under-vsl-title{display:block;font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:clamp(22px,2.4vw,30px);letter-spacing:-0.02em;color:var(--text);margin-bottom:6px;}
 .cs-home .apply-under-vsl-sub{display:block;font-size:clamp(15px,1.2vw,17px);color:var(--text-mute);line-height:1.5;}
-.cs-home .tf-embed{width:100%;max-width:640px;margin:0 auto;}
-.cs-home .tf-embed [data-tf-live]{min-height:520px;border-radius:14px;overflow:hidden;}
-.cs-home .tf-embed iframe{border-radius:14px;}
+.cs-home .tf-embed{width:100%;max-width:1000px;margin:0 auto;}
+.cs-home .tf-embed [data-tf-live]{height:80vh;min-height:640px;border-radius:14px;overflow:hidden;}
+.cs-home .tf-embed [data-tf-live] iframe{width:100%;height:100%;border:0;border-radius:14px;}
 html{scroll-behavior:smooth;}
 
 /* ---------- testimonials ---------- */
