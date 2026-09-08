@@ -193,9 +193,9 @@ export default function ThankYouPage() {
             <div className="step-node pending">
               <span className="node-circle">!</span>
               <span className="node-label">
-                Reply To
+                Education
                 <br />
-                Confirm
+                Phase
               </span>
             </div>
             <div className="step-bar future" />
