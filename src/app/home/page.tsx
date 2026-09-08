@@ -48,8 +48,8 @@ const CSS = `
   --bg:#0A0A0C; --bg-pure:#000000; --bg-card:#131316;
   --accent:#2A78D6; --accent-bright:#8FC7FF; --accent-deep:#1B5FB0;
   --accent-text:#8CC6FF;
-  --text:rgba(255,255,255,0.94); --text-mute:rgba(255,255,255,0.7);
-  --text-dim:rgba(255,255,255,0.5); --text-faint:rgba(255,255,255,0.32);
+  --text:rgba(255,255,255,0.98); --text-mute:rgba(255,255,255,0.96);
+  --text-dim:rgba(255,255,255,0.82); --text-faint:rgba(255,255,255,0.62);
   --line:rgba(255,255,255,0.08); --line-soft:rgba(255,255,255,0.05);
   background:var(--bg-pure); color:var(--text);
   font-family:var(--font-body), system-ui, sans-serif;
@@ -136,7 +136,7 @@ const CSS = `
 .cs-home .hero-callout b{color:#fff;font-weight:700;letter-spacing:0.04em;}
 .cs-home .hero h2{font-size:clamp(26px,3.2vw,42px);line-height:1.18;letter-spacing:-0.022em;margin:0 0 28px;text-wrap:balance;}
 .cs-home .hero h2 .h2-highlight{color:var(--accent-text);}
-.cs-home .hero-subhead{color:var(--text-mute);font-size:clamp(16px,1.3vw,18px);line-height:1.55;max-width:720px;margin:0 auto 28px;}
+.cs-home .hero-subhead{color:var(--text-mute);font-size:clamp(18px,1.7vw,21px);line-height:1.55;max-width:720px;margin:0 auto 28px;}
 
 /* ---------- vsl ---------- */
 .cs-home .vsl-wrap{position:relative;margin:0 auto;max-width:920px;}
