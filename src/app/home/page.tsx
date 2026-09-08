@@ -172,9 +172,9 @@ html{scroll-behavior:smooth;}
 .cs-home .section-header{max-width:880px;margin:0 auto 32px;text-align:center;}
 .cs-home .section-header h2{margin-top:16px;font-size:clamp(36px,5vw,58px);letter-spacing:-0.028em;}
 .cs-home .proof-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1160px;margin:0 auto;}
-.cs-home .proof-card{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;}
+.cs-home .proof-card{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;overflow:hidden;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease;aspect-ratio:4/3;}
 .cs-home .proof-card:hover{transform:translateY(-3px);border-color:rgba(42,120,214,0.35);box-shadow:0 24px 50px -28px rgba(42,120,214,0.25);}
-.cs-home .proof-card img{display:block;width:100%;height:auto;}
+.cs-home .proof-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:top center;}
 
 /* ---------- team marquee ---------- */
 /* ---------- closing cta ---------- */
@@ -320,7 +320,7 @@ export default function HomePage() {
             <h2>
               Book your <em>strategy call.</em>
             </h2>
-            <p className="lede center">By application only. Limited slots each week. We typically respond within one business day.</p>
+            <p className="lede center">By application only. Limited slots each week.</p>
             <a href={BOOK_CALL_URL} className="btn btn-gold btn-xl">
               <span>Book a call</span>
               <span className="btn-arrow" aria-hidden="true">→</span>
