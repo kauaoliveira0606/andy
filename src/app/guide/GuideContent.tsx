@@ -558,9 +558,7 @@ export default function GuideContent() {
                   <circle cx="430" cy="40" r="4" />
                 </g>
               </svg>
-              <div className="chart-note">
-                From product pick to a live store in about two weeks, then scale the winner toward a $1K day.
-              </div>
+              <div className="chart-note">Live store in less than 10 weeks, and scale towards $1k a day.</div>
             </div>
           </div>
         </div>
