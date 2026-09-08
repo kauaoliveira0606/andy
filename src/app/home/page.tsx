@@ -46,7 +46,8 @@ const TEAM = [
 const CSS = `
 .cs-home{
   --bg:#0A0A0C; --bg-pure:#000000; --bg-card:#131316;
-  --accent:#2A78D6; --accent-bright:#57A5F5; --accent-deep:#1B5FB0;
+  --accent:#2A78D6; --accent-bright:#8FC7FF; --accent-deep:#1B5FB0;
+  --accent-text:#8CC6FF;
   --text:rgba(255,255,255,0.94); --text-mute:rgba(255,255,255,0.7);
   --text-dim:rgba(255,255,255,0.5); --text-faint:rgba(255,255,255,0.32);
   --line:rgba(255,255,255,0.08); --line-soft:rgba(255,255,255,0.05);
@@ -69,10 +70,10 @@ const CSS = `
 
 .cs-home .eyebrow{
   font-family:var(--font-mono),ui-monospace,monospace; font-size:11px; font-weight:500;
-  letter-spacing:0.22em; text-transform:uppercase; color:var(--accent);
+  letter-spacing:0.22em; text-transform:uppercase; color:var(--accent-text);
   display:inline-flex; align-items:center; gap:12px;
 }
-.cs-home .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent);}
+.cs-home .eyebrow::before{content:"";width:22px;height:1px;background:var(--accent-text);}
 .cs-home .eyebrow.center{justify-content:center;}
 .cs-home .eyebrow.no-rule::before{display:none;}
 .cs-home .mono{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-mute);}
@@ -117,12 +118,12 @@ const CSS = `
   mask-image:radial-gradient(ellipse 600px 400px at 50% 30%,black,transparent 70%);
 }
 .cs-home .brand-row{position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;padding-bottom:28px;flex-wrap:wrap;}
-.cs-home .brand-mark svg{width:26px;height:36px;display:block;}
+.cs-home .brand-mark svg{width:34px;height:34px;display:block;border-radius:9px;}
 .cs-home .brand-word{font-family:var(--font-head),system-ui,sans-serif;font-weight:600;font-size:17px;letter-spacing:-0.02em;color:var(--text);}
 .cs-home .brand-tier{
   font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.32em;text-transform:uppercase;
-  color:var(--accent);padding:6px 11px;border:1px solid rgba(42,120,214,0.32);border-radius:100px;
-  background:rgba(42,120,214,0.06);margin-left:4px;white-space:nowrap;
+  color:var(--accent-text);padding:6px 11px;border:1px solid rgba(140,198,255,0.35);border-radius:100px;
+  background:rgba(140,198,255,0.06);margin-left:4px;white-space:nowrap;
 }
 .cs-home .hero-inner{position:relative;z-index:2;text-align:center;max-width:920px;margin:0 auto;}
 .cs-home .hero-callout{
@@ -134,7 +135,7 @@ const CSS = `
 .cs-home .hero-callout::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(42,120,214,0.18);flex-shrink:0;}
 .cs-home .hero-callout b{color:#fff;font-weight:700;letter-spacing:0.04em;}
 .cs-home .hero h2{font-size:clamp(26px,3.2vw,42px);line-height:1.18;letter-spacing:-0.022em;margin:0 0 28px;text-wrap:balance;}
-.cs-home .hero h2 .h2-highlight{color:var(--accent);}
+.cs-home .hero h2 .h2-highlight{color:var(--accent-text);}
 .cs-home .hero-subhead{color:var(--text-mute);font-size:clamp(16px,1.3vw,18px);line-height:1.55;max-width:720px;margin:0 auto 28px;}
 
 /* ---------- vsl ---------- */
@@ -193,8 +194,8 @@ const CSS = `
 .cs-home .vid-name{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:16px;letter-spacing:-0.01em;color:var(--text);}
 .cs-home .vid-stars{color:#00B67A;font-size:14px;letter-spacing:3px;}
 .cs-home .vid-quote{font-size:15px;line-height:1.5;color:var(--text-mute);font-style:italic;}
-.cs-home .vid-result{margin-top:14px;font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:8px;}
-.cs-home .vid-result .dot{width:5px;height:5px;border-radius:50%;background:var(--accent);}
+.cs-home .vid-result{margin-top:14px;font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-text);display:inline-flex;align-items:center;gap:8px;}
+.cs-home .vid-result .dot{width:5px;height:5px;border-radius:50%;background:var(--accent-text);}
 .cs-home .vid-disclaimer{margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,0.08);font-family:var(--font-mono),ui-monospace,monospace;font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-faint);line-height:1.4;}
 .cs-home .reviews-cta{text-align:center;margin-top:28px;}
 
@@ -233,7 +234,7 @@ const CSS = `
 .cs-home .close-cta::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 600px 320px at 50% 100%,rgba(42,120,214,0.12),transparent 60%);}
 .cs-home .close-cta-inner{position:relative;z-index:1;text-align:center;max-width:720px;margin:0 auto;}
 .cs-home .close-cta h2{font-size:clamp(36px,5vw,58px);letter-spacing:-0.028em;}
-.cs-home .close-cta h2 em{color:var(--accent);font-style:normal;}
+.cs-home .close-cta h2 em{color:var(--accent-text);font-style:normal;}
 .cs-home .close-cta .lede{margin:18px auto 32px;}
 .cs-home .close-fineline{margin-top:18px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-faint);}
 
@@ -258,17 +259,20 @@ const CSS = `
 function BrandMark() {
   return (
     <span className="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 31.22 43.09" fill="url(#csgrad)">
-        <defs>
-          <linearGradient id="csgrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#2A78D6" />
-            <stop offset="100%" stopColor="#57A5F5" />
-          </linearGradient>
-        </defs>
-        <path
-          d="M 24.976 0 L 24.976 12.312 L 12.49 18.467 L 12.488 18.467 L 12.488 30.777 L 0 24.623 L 0 12.309 L 24.976 0 Z M 12.49 30.779 L 12.488 30.779 L 12.488 43.09 L 12.49 43.09 L 31.22 33.858 L 31.22 21.544 L 12.49 30.779 Z"
-          fillRule="evenodd"
-        />
+      <svg viewBox="0 0 64 64">
+        <rect width="64" height="64" rx="14" fill="#0F1115" stroke="rgba(140,198,255,0.25)" strokeWidth="1" />
+        <circle cx="32" cy="32" r="25" fill="none" stroke="#8CC6FF" strokeWidth="6" />
+        <text
+          x="32"
+          y="38"
+          textAnchor="middle"
+          fontFamily="Arial, Helvetica, sans-serif"
+          fontSize="21"
+          fontWeight="800"
+          fill="#8CC6FF"
+        >
+          ES
+        </text>
       </svg>
     </span>
   );
