@@ -39,7 +39,7 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '${META_PIXEL_ID}');
-fbq('track', 'PageView');
+if (location.pathname !== '/thank-you-nq') { fbq('track', 'PageView'); }
 `}
         </Script>
         <noscript>

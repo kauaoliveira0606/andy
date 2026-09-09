@@ -163,15 +163,19 @@ const CHECK = (
   </svg>
 );
 
-export default function ThankYouContent() {
+/* firePixel=false is used only by /thank-you-nq, which must fire no Meta Pixel
+   events at all (the root layout also skips PageView for that path). */
+export default function ThankYouContent({ firePixel = true }: { firePixel?: boolean }) {
   return (
     <div className={`ty-page ${fontHead.variable} ${fontBody.variable} ${fontMono.variable}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
-      {/* Meta Pixel: fire Schedule on the confirmation page (PageView still fires site-wide from the root layout) */}
-      <Script id="meta-pixel-schedule" strategy="afterInteractive">
-        {`(function w(){ if (window.fbq) { fbq('track','Schedule'); } else { setTimeout(w, 250); } })();`}
-      </Script>
+      {firePixel && (
+        /* Meta Pixel: fire Schedule on the confirmation page (PageView also fires site-wide from the root layout) */
+        <Script id="meta-pixel-schedule" strategy="afterInteractive">
+          {`(function w(){ if (window.fbq) { fbq('track','Schedule'); } else { setTimeout(w, 250); } })();`}
+        </Script>
+      )}
 
 
       {/* ================= HERO ================= */}
