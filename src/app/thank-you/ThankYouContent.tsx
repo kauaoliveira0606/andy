@@ -8,6 +8,7 @@
  * Edit this file only. Any change here updates both pages at once.
  * The per-route page.tsx files hold nothing but <metadata> + <ThankYouContent />.
  */
+import Script from "next/script";
 import { Plus_Jakarta_Sans, Barlow, JetBrains_Mono } from "next/font/google";
 
 const fontHead = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["500", "600", "700", "800"], variable: "--font-head" });
@@ -166,6 +167,12 @@ export default function ThankYouContent() {
   return (
     <div className={`ty-page ${fontHead.variable} ${fontBody.variable} ${fontMono.variable}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
+
+      {/* Meta Pixel: fire Schedule on the confirmation page (PageView still fires site-wide from the root layout) */}
+      <Script id="meta-pixel-schedule" strategy="afterInteractive">
+        {`(function w(){ if (window.fbq) { fbq('track','Schedule'); } else { setTimeout(w, 250); } })();`}
+      </Script>
+
 
       {/* ================= HERO ================= */}
       <section className="hero">
