@@ -8,15 +8,11 @@ export const metadata: Metadata = {
   description: "The terms that govern your use of the EcomSimulation website and services.",
 };
 
-const LAST_UPDATED = "February 9, 2026";
+const LAST_UPDATED = "September 8, 2026";
 
-/*
- * NOTE: This is a structural template, not legal advice. Before publishing:
- *  - replace every [bracketed] placeholder with EcomSimulation's real details
- *  - confirm the refund policy, governing law and SMS terms with counsel
- */
+/* NOTE: [company mailing address] in §20 still to be filled in before publishing. */
 
-type Block = { h?: string; p?: string; ul?: string[] };
+type Block = { h?: string; sub?: string; p?: string; ul?: string[] };
 type Section = { n: number; title: string; blocks: Block[] };
 
 const SECTIONS: Section[] = [
@@ -25,60 +21,89 @@ const SECTIONS: Section[] = [
     title: "Agreement to Terms",
     blocks: [
       {
-        p: `By accessing or using this website, its landing pages and related digital properties (together, the "Site"), and by purchasing or using our information products, memberships, coaching, workshops, courses and related services (together, the "Services"), you agree to be bound by these Terms of Service (the "Terms"). If you do not agree, do not use the Site or the Services.`,
+        p: `By accessing and using this website, landing pages, and related digital properties (collectively, the "Site"), and by purchasing or using our information products, webinars, workshops, courses, and services (collectively, the "Services"), you agree to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use the Site or Services.`,
       },
       {
-        p: `EcomSimulation ([legal entity name] — "Company," "we," "us," or "our") may update these Terms at any time. Changes take effect when posted. Your continued use of the Site or Services after a change means you accept the updated Terms.`,
+        p: `EcomSimulation ("Company," "we," "us," or "our") reserves the right to modify these Terms at any time. Changes become effective immediately upon posting. Your continued use of the Site and Services constitutes acceptance of modified Terms.`,
       },
-      {
-        p: `By joining a program, you agree that we may reference your participation and results as a testimonial in our marketing.`,
-      },
+      { p: `By joining our program, you agree for us to utilize you as a testimonial for our marketing.` },
     ],
   },
   {
     n: 2,
-    title: "Licence & Restrictions",
+    title: "Use License & Restrictions",
     blocks: [
       {
-        h: "2.1 Limited Licence",
-        p: `We grant you a limited, non-exclusive, non-transferable, revocable licence to access and use the Site and Services for your own personal, non-commercial use, subject to these Terms.`,
+        h: "2.1 Limited License",
+        p: `We grant you a limited, non-exclusive, non-transferable, revocable license to access and use the Site and Services for personal, non-commercial purposes, subject to these Terms.`,
+      },
+      { h: "2.2 Prohibited Uses", p: "You agree NOT to:" },
+      {
+        sub: "Illegal Activity",
+        ul: [
+          "Use the Site or Services for any illegal purpose or in violation of any applicable laws",
+          "Engage in fraud, misrepresentation, or deceptive practices",
+          "Violate intellectual property rights, privacy rights, or other third-party rights",
+        ],
       },
       {
-        h: "2.2 Prohibited Uses",
-        p: "You agree not to:",
+        sub: "Unauthorized Access",
         ul: [
-          "Use the Site or Services for any unlawful purpose or in breach of any applicable law, or engage in fraud, misrepresentation or deceptive conduct",
-          "Infringe the intellectual property, privacy or other rights of any person",
-          "Attempt to gain unauthorised access to the Site, the Services or any related systems, or bypass security or authentication measures",
-          "Transmit viruses or harmful code, attempt to disrupt or overload the Services, or scrape or automatically extract data without our permission",
-          "Spam, harass, threaten or abuse others, or post obscene, defamatory or abusive content",
-          "Resell, redistribute, sub-licence or commercially exploit the Services, or create derivative works, without our prior written permission",
-          "Share your login credentials or account access with anyone else",
-          "Use the Services to build or assist a competing offering",
-          "Reproduce, distribute or publicly display our Content, or remove or alter any copyright notice, trademark or proprietary marking",
+          "Attempt to gain unauthorized access to the Site, Services, or systems",
+          "Use hacking, phishing, or other malicious techniques",
+          "Bypass security measures or authentication protocols",
+          "Access accounts that are not your own",
+        ],
+      },
+      {
+        sub: "Disruption & Abuse",
+        ul: [
+          "Transmit viruses, malware, or harmful code",
+          "Engage in denial-of-service attacks or system overload attempts",
+          "Spam, harass, threaten, or abuse other users",
+          "Post obscene, defamatory, or abusive content",
+          "Scrape, crawl, or automatically extract data without permission",
+        ],
+      },
+      {
+        sub: "Commercial Misuse",
+        ul: [
+          "Resell, redistribute, or commercially exploit the Services",
+          "Create derivative works or modifications without permission",
+          "Use the Services to compete with our business",
+          "Share login credentials or access with unauthorized parties",
+          "Use the Services for commercial purposes without a commercial license",
+        ],
+      },
+      {
+        sub: "Intellectual Property Violations",
+        ul: [
+          "Reproduce, distribute, or publicly display copyrighted content",
+          "Remove or alter copyright notices, trademarks, or proprietary markings",
+          "Use our trademarks, logos, or branding without permission",
         ],
       },
     ],
   },
   {
     n: 3,
-    title: "Intellectual Property",
+    title: "Intellectual Property Rights",
     blocks: [
       {
-        h: "3.1 Our Ownership",
-        p: `All material on the Site and within the Services — including text, graphics, logos, images, video, audio, code and design (the "Content") — is owned by the Company or its licensors and is protected by copyright, trademark and other laws.`,
+        h: "3.1 Company Ownership",
+        p: `All content on the Site and within the Services, including but not limited to text, graphics, logos, images, videos, audio, code, and design elements (collectively, "Content"), is the exclusive property of EcomSimulation or its content suppliers and is protected by copyright, trademark, and other intellectual property laws.`,
       },
       {
-        h: "3.2 Your Rights",
-        p: `You may view, download and print Content solely for your own personal, non-commercial use. You may not modify, reproduce, distribute, transmit, display or perform the Content without our prior written permission.`,
+        h: "3.2 Limited User Rights",
+        p: `You may view, download, and print Content solely for personal, non-commercial use. You may not modify, reproduce, distribute, transmit, display, or perform the Content without our prior written permission.`,
       },
       {
-        h: "3.3 Content You Submit",
-        p: `If you submit testimonials, reviews, feedback or other material ("User Content"), you grant us a worldwide, royalty-free, perpetual and irrevocable licence to use, reproduce, modify, distribute and display it in any medium. You confirm that you own or have the right to grant that licence and that your User Content does not infringe anyone's rights.`,
+        h: "3.3 User-Generated Content",
+        p: `If you submit testimonials, reviews, feedback, or other content ("User Content"), you grant us a worldwide, royalty-free, perpetual, irrevocable license to use, reproduce, modify, distribute, and display your User Content in any medium. You represent that you own or have the right to grant this license and that your User Content does not infringe third-party rights.`,
       },
       {
         h: "3.4 Third-Party Content",
-        p: `The Site and Services may include material from third parties. We do not endorse it and are not responsible for it; its use is governed by the relevant third party's own terms.`,
+        p: `The Site and Services may contain content from third parties. We do not endorse or assume responsibility for third-party content. Use of third-party content is subject to their terms and licenses.`,
       },
     ],
   },
@@ -87,16 +112,39 @@ const SECTIONS: Section[] = [
     title: "Information Products & Services",
     blocks: [
       {
-        h: "4.1 Descriptions",
-        p: `We aim to describe our products and services accurately, but we do not warrant that descriptions, pricing or availability are error-free, and we may correct errors and update information without notice.`,
+        h: "4.1 Product Descriptions",
+        p: `We strive to provide accurate descriptions of our information products and services. However, we do not warrant that descriptions, pricing, or availability are error-free. We reserve the right to correct errors and update information without notice.`,
+      },
+      { h: "4.2 Access & Delivery" },
+      {
+        sub: "Digital Products",
+        ul: [
+          "Access is provided via login credentials, download links, or platform access",
+          "Access is personal and non-transferable",
+          "We are not responsible for technical issues on your end (internet connection, device compatibility, etc.)",
+          "We will make reasonable efforts to maintain service availability but do not guarantee uninterrupted access",
+        ],
       },
       {
-        h: "4.2 Access & Delivery",
-        p: `Digital products are delivered through login credentials, download links or platform access, and that access is personal and non-transferable. Live calls, workshops and events are delivered by links and materials sent to the email address you provide; recordings may be made available afterwards, and we may reschedule or cancel an event on reasonable notice. Course and program access runs for the period stated at purchase. Materials are provided "as is."`,
+        sub: "Webinars & Live Events",
+        ul: [
+          "Attendance links and materials are provided via email",
+          "Recordings may be made available after the event",
+          "Attendance is not guaranteed if you fail to register or provide incorrect contact information",
+          "We reserve the right to cancel or reschedule events with notice",
+        ],
       },
       {
-        h: "4.3 Your Responsibilities",
-        p: `You are responsible for maintaining a compatible device and software, a stable internet connection, an active and monitored email address, and the security of your login credentials. We are not responsible for issues on your side of the connection.`,
+        sub: "Courses & Training",
+        ul: [
+          "Access is provided for the duration specified in your purchase",
+          `Course materials are provided "as-is" without warranty`,
+          "Completion certificates (if offered) are issued upon meeting specified requirements",
+        ],
+      },
+      {
+        h: "4.3 Technical Requirements",
+        p: `You are responsible for maintaining compatible devices and software, a stable internet connection, an active and monitored email address, and protecting your login credentials.`,
       },
     ],
   },
@@ -105,34 +153,37 @@ const SECTIONS: Section[] = [
     title: "Earnings Disclaimer",
     blocks: [
       {
-        h: "5.1 No Income Guarantee",
-        p: `Our products, courses, coaching and services are educational. They do not guarantee any specific result, income or financial outcome. Your results depend on factors including your prior experience, the time and effort you put in, how you implement what you learn, market conditions, and your individual circumstances.`,
+        h: "5.1 No Income Guarantees",
+        p: `IMPORTANT: Our information products, courses, webinars, and services are educational in nature and do not guarantee any specific results, income, or financial outcomes.`,
       },
       {
-        h: "5.2 Results Shown Are Not Typical",
-        p: `Any case studies, testimonials, figures or examples of results are not typical and do not represent average results. Past performance does not indicate future results, and individual results vary widely.`,
+        p: `Your results depend on many factors including your prior knowledge and experience, the time and effort you invest, your implementation of strategies and tactics, market conditions and external factors, and your individual circumstances and capabilities.`,
       },
       {
-        h: "5.3 No Liability for Your Results",
-        p: `We are not responsible for your financial results or lack of them, for business decisions you make based on our Content, for market or economic changes, for your failure to implement, or for any loss or damage arising from your use of the Services.`,
+        h: "5.2 Past Performance",
+        p: `Any case studies, testimonials, or examples of results are not typical and do not represent average results. Past performance does not guarantee future results. Individual results vary widely.`,
+      },
+      {
+        h: "5.3 No Liability for Results",
+        p: `We are not responsible for your financial results or lack thereof, business decisions you make based on our content, market changes or economic conditions, your failure to implement strategies, or any losses or damages resulting from your use of our Services.`,
       },
       {
         h: "5.4 Responsible Use",
-        p: `The Services are for educational purposes only. You should do your own research and due diligence, understand that any business activity carries risk, and consult qualified professionals before making significant decisions.`,
+        p: `Our Services are intended for educational purposes only. We recommend consulting with qualified professionals before making major decisions, conducting your own research and due diligence, and understanding the risks involved in any business activity.`,
       },
     ],
   },
   {
     n: 6,
-    title: "Disclaimer of Warranties & Limitation of Liability",
+    title: "Limitation of Liability",
     blocks: [
       {
         h: "6.1 Disclaimer of Warranties",
-        p: `THE SITE AND SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY LAW WE DISCLAIM ALL WARRANTIES, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY AND UNINTERRUPTED ACCESS.`,
+        p: `THE SITE AND SERVICES ARE PROVIDED "AS-IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED. WE DISCLAIM ALL WARRANTIES INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, ACCURACY, AND UNINTERRUPTED SERVICE.`,
       },
       {
-        h: "6.2 Limitation of Liability",
-        p: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE COMPANY WILL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR PUNITIVE DAMAGES, OR LOST PROFITS, AND OUR TOTAL LIABILITY FOR ANY CLAIM WILL NOT EXCEED THE AMOUNT YOU PAID US FOR THE SERVICES GIVING RISE TO THE CLAIM.`,
+        h: "6.2 Limitation of Damages",
+        p: `TO THE MAXIMUM EXTENT PERMITTED BY LAW, ECOMSIMULATION SHALL NOT BE LIABLE FOR INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, LOST PROFITS, OR ANY DAMAGES EXCEEDING THE AMOUNT YOU PAID FOR THE SERVICES.`,
       },
     ],
   },
@@ -141,16 +192,16 @@ const SECTIONS: Section[] = [
     title: "Indemnification",
     blocks: [
       {
-        p: `You agree to indemnify, defend and hold harmless the Company and its officers, directors, employees, agents and affiliates from any claim, damage, loss, liability or expense (including reasonable legal fees) arising from your use of the Site or Services, your breach of these Terms, your breach of any law or third-party right, or your User Content.`,
+        p: `You agree to indemnify, defend, and hold harmless EcomSimulation, its officers, directors, employees, agents, and affiliates from any claims, damages, losses, liabilities, and expenses (including attorney's fees) arising from your use of the Site or Services, your violation of these Terms, your violation of any applicable laws or third-party rights, or your User Content.`,
       },
     ],
   },
   {
     n: 8,
-    title: "Accounts & Security",
+    title: "User Accounts & Security",
     blocks: [
       {
-        p: `If you create an account, you agree to provide accurate information, keep your password confidential, take responsibility for all activity under your account, and tell us promptly of any unauthorised use. We may suspend or terminate any account that breaches these Terms.`,
+        p: `If you create an account, you agree to provide accurate information, maintain the confidentiality of your password, accept responsibility for all activities under your account, and notify us immediately of unauthorized access. We reserve the right to suspend or terminate accounts that violate these Terms.`,
       },
     ],
   },
@@ -159,7 +210,7 @@ const SECTIONS: Section[] = [
     title: "Payment Terms",
     blocks: [
       {
-        p: `Unless stated otherwise, all prices are in USD. We accept the payment methods shown at checkout. If you buy a subscription or recurring plan, you authorise us to charge your payment method on a recurring basis until you cancel. You are responsible for keeping your payment details current and for any applicable taxes.`,
+        p: `All prices are in USD. We accept major credit cards and other payment methods as indicated. If you purchase a subscription or recurring service, you authorize us to charge your payment method on a recurring basis. You are responsible for keeping your payment information current and for any applicable taxes.`,
       },
     ],
   },
@@ -167,26 +218,27 @@ const SECTIONS: Section[] = [
     n: 10,
     title: "Refund Policy",
     blocks: [
+      { p: `All products and services provided are digital and access is delivered immediately upon enrollment. ALL SALES ARE FINAL.` },
       {
-        p: `Our products and services are digital and access is delivered on enrolment. [Insert EcomSimulation's actual refund terms here — for example whether all sales are final, or whether a limited refund window or guarantee applies. Do not publish this page until this section reflects your real, counsel-approved policy.]`,
+        p: `There are no refunds, chargebacks, reversals, or credits for any reason, including but not limited to: lack of results, failure to participate, scheduling conflicts, personal circumstances, change of mind, or perceived dissatisfaction.`,
       },
-      {
-        p: `By enrolling, you acknowledge and accept the refund policy stated in this section.`,
-      },
+      { p: `By accessing the program, you explicitly acknowledge and accept this policy.` },
     ],
   },
   {
     n: 11,
-    title: "SMS & Text Messaging",
+    title: "SMS & Text Messaging Terms",
     blocks: [
+      { p: `EcomSimulation offers SMS messaging as part of our 1-on-1 e-commerce training to build a store designed to exit.` },
+      { p: `By opting in to receive SMS messages from us, you agree to the following terms:` },
       {
-        p: `We may send SMS messages as part of our coaching and program communications. If you opt in, message and data rates may apply and message frequency varies with your activity and program stage.`,
-      },
-      {
-        p: `You can stop messages at any time by replying STOP; we will send one confirmation message and then stop. Reply HELP for assistance, or contact us at info@ecomsimulation.io. Carriers are not liable for delayed or undelivered messages.`,
-      },
-      {
-        p: `Consent to receive SMS is not a condition of any purchase or enrolment. SMS opt-in data and consent are not shared with third parties or affiliates for their marketing.`,
+        ul: [
+          `You can cancel the SMS service at any time. Just text STOP to the short code. After you send the SMS message "STOP" to us, we will send you an SMS message to confirm that you have been unsubscribed. After this, you will no longer receive SMS messages from us. If you want to join again, just sign up as you did the first time and we will start sending SMS messages to you again.`,
+          "If you are experiencing issues with the messaging program you can reply with the keyword HELP for more assistance, or you can get help directly at info@ecomsimulation.io.",
+          "Carriers are not liable for delayed or undelivered messages.",
+          "Message and data rates may apply for any messages sent to you from us and to us from you. Message frequency varies. If you have any questions about your text plan or data plan, it is best to contact your wireless provider.",
+          "If you have any questions regarding privacy, please read our Privacy Policy.",
+        ],
       },
     ],
   },
@@ -195,7 +247,7 @@ const SECTIONS: Section[] = [
     title: "Third-Party Links & Services",
     blocks: [
       {
-        p: `The Site may link to third-party websites, apps and services. We do not control or endorse them and are not responsible for their content or for any loss arising from your use of them.`,
+        p: `The Site may contain links to third-party websites, apps, and services. We do not endorse, control, or assume responsibility for third-party content or services. We are not liable for any damages or losses arising from third-party services.`,
       },
     ],
   },
@@ -204,7 +256,7 @@ const SECTIONS: Section[] = [
     title: "Confidentiality",
     blocks: [
       {
-        p: `Personal information you give us is handled under our Privacy Policy. If we share confidential strategies, methods or materials with you, you agree to keep them confidential, not to disclose them to third parties without our permission, and not to use them for competitive purposes.`,
+        p: `Any personal information you provide is subject to our Privacy Policy. If we share confidential information, strategies, or proprietary methods, you agree to keep this information confidential, not disclose it to third parties without permission, and not use it for competitive purposes.`,
       },
     ],
   },
@@ -213,7 +265,7 @@ const SECTIONS: Section[] = [
     title: "Dispute Resolution",
     blocks: [
       {
-        p: `You agree that any legal proceeding will be brought on an individual basis only, and not as a class action, class arbitration or representative action. [Confirm with counsel whether an arbitration clause and venue should be added here.]`,
+        p: `You agree that any legal proceedings shall be brought on an individual basis and not as a class action, class arbitration, or representative action.`,
       },
     ],
   },
@@ -222,7 +274,7 @@ const SECTIONS: Section[] = [
     title: "Severability",
     blocks: [
       {
-        p: `If any provision of these Terms is found invalid or unenforceable, it will be modified to the minimum extent needed to make it enforceable, or if that is not possible, severed. The remaining provisions stay in full force.`,
+        p: `If any provision of these Terms is found to be invalid or unenforceable, that provision shall be modified to the minimum extent necessary to make it enforceable, or if not possible, severed. The remaining provisions shall remain in full force and effect.`,
       },
     ],
   },
@@ -231,36 +283,45 @@ const SECTIONS: Section[] = [
     title: "Entire Agreement",
     blocks: [
       {
-        p: `These Terms, together with our Privacy Policy and any other policy referenced here, are the entire agreement between you and the Company regarding the Site and Services.`,
+        p: `These Terms, together with our Privacy Policy and any other policies referenced herein, constitute the entire agreement between you and EcomSimulation regarding the Site and Services.`,
       },
     ],
   },
   {
     n: 17,
-    title: "Governing Law",
+    title: "Jurisdiction",
     blocks: [
       {
-        p: `These Terms are governed by the laws of [governing jurisdiction], without regard to conflict-of-laws rules, and comply with applicable U.S. federal and state law. If you are a California resident, an EU/EEA consumer, or a Canadian resident, you may have additional statutory rights that these Terms do not remove.`,
+        p: `These Terms comply with applicable U.S. federal and state laws. If you are a California resident, you have additional rights under California law. If you are located in the EU/EEA, you have consumer protection rights that cannot be waived. These Terms comply with applicable Canadian federal and provincial laws.`,
       },
     ],
   },
   {
     n: 18,
-    title: "Changes to These Terms",
+    title: "Modifications to Terms",
     blocks: [
       {
-        p: `We may change these Terms at any time by posting the updated version on the Site. Your continued use of the Site or Services after a change means you accept it.`,
+        p: `We may modify these Terms at any time by posting updated Terms on the Site. Your continued use of the Site and Services after modifications constitutes your acceptance of the updated Terms.`,
       },
     ],
   },
   {
     n: 19,
-    title: "Contact",
+    title: "SMS & Text Message Communications",
     blocks: [
       {
-        p: `Questions about these Terms can be sent to info@ecomsimulation.io or [company mailing address].`,
+        ul: [
+          "Message frequency: Message frequency varies based on your activity and program stage.",
+          "Consent to receive SMS messages is not a condition of any purchase or enrollment in our services.",
+          "Text messaging originator opt-in data and consent will not be shared with any third parties or affiliates for marketing or promotional purposes.",
+        ],
       },
     ],
+  },
+  {
+    n: 20,
+    title: "Contact",
+    blocks: [{ p: `Questions about these Terms can be sent to info@ecomsimulation.io or [company mailing address].` }],
   },
 ];
 
@@ -282,6 +343,7 @@ const CSS = `
 .legal-page section h2{font-size:19px;font-weight:800;letter-spacing:-.01em;color:#fff;margin-bottom:14px;}
 .legal-page section h2 .n{color:var(--blue);font-family:var(--lg-font);margin-right:8px;}
 .legal-page section h3{font-size:14.5px;font-weight:800;color:#fff;margin:18px 0 6px;}
+.legal-page .lg-sub{display:block;font-weight:800;color:#fff;font-size:13.5px;margin:14px 0 4px;}
 .legal-page section p{margin-bottom:12px;}
 .legal-page section ul{margin:8px 0 12px;padding-left:20px;}
 .legal-page section li{margin-bottom:8px;}
@@ -309,6 +371,7 @@ export default function TermsPage() {
             {s.blocks.map((b, i) => (
               <div key={i}>
                 {b.h && <h3>{b.h}</h3>}
+                {b.sub && <span className="lg-sub">{b.sub}</span>}
                 {b.p && <p>{b.p}</p>}
                 {b.ul && (
                   <ul>
