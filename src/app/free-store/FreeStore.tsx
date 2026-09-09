@@ -492,10 +492,6 @@ export default function FreeStore() {
             Takes under a minute. Our team calls you to get the AI tool set up and build your store.
           </p>
           <div className="card">
-            <div className="valline">
-              <span className="old">$3,497 value</span>
-              <span className="new">Today you pay nothing</span>
-            </div>
             <ul>
               <li>
                 <b>✓</b>A to Z course
