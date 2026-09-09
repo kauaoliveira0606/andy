@@ -8,9 +8,17 @@ const META_PIXEL_ID = "1467520008555084";
 /* Routes that must load NO Meta Pixel at all. */
 const EXCLUDED = new Set(["/thank-you-nq"]);
 
+/* Routes that load the pixel but fire a different standard event instead
+   of PageView. Anything not listed fires PageView. */
+const EVENT_BY_PATH: Record<string, string> = {
+  "/receiveaccess": "Lead",
+};
+
 export default function MetaPixel() {
   const pathname = usePathname();
   if (EXCLUDED.has(pathname)) return null;
+
+  const event = EVENT_BY_PATH[pathname] ?? "PageView";
 
   return (
     <>
@@ -25,7 +33,7 @@ t.src=v;s=b.getElementsByTagName(e)[0];
 s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '${META_PIXEL_ID}');
-fbq('track', 'PageView');
+fbq('track', '${event}');
 `}
       </Script>
       <noscript>
@@ -34,7 +42,7 @@ fbq('track', 'PageView');
           height="1"
           width="1"
           style={{ display: "none" }}
-          src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+          src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=${event}&noscript=1`}
           alt=""
         />
       </noscript>
