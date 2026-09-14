@@ -3,8 +3,7 @@
 import { useState } from "react";
 import styles from "./base44.module.css";
 
-const LINK =
-  "https://base44.com/pricing?utm_campaign=af_3794883&impact_click_id=RxV2hczqrxyZRaOyvXXkmVCxUkr01r2QiSyKXY0&experiment_id=25619^3794883^3783676^pricing&prompt=&irgwc=1&afsrc=1";
+const LINK = "https://re.aistorebuilder.com/base44-pricing?subid=ecomsimulation";
 
 export default function Base44Page() {
   const [copied, setCopied] = useState(false);
