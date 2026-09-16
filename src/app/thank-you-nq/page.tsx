@@ -12,6 +12,13 @@ export const metadata: Metadata = {
   description: "One step left to confirm your call. Reply to the email in your inbox and watch the video below before your call.",
 };
 
-export default function ThankYouNqPage() {
-  return <ThankYouContent firePixel={false} />;
+export default async function ThankYouNqPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const raw = params.first_name;
+  const firstName = Array.isArray(raw) ? raw[0] : raw;
+  return <ThankYouContent firePixel={false} firstName={firstName} />;
 }

@@ -18,6 +18,39 @@ const fontMono = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500", "70
 /* "Open The Guide Here" button on both thank-you pages -> the guide. */
 const MORE_VIDEOS_URL = "/guide";
 
+/* Breakout / FAQ videos shown under "Two Things To Do Before Your Call".
+   Titles are the scripts we currently have — drop in the real embed per item. */
+const BREAKOUT_VIDEOS = [
+  "Time Commitment Needed",
+  "What If I Don't Have Any Experience?",
+  "Capital Needed",
+  "What Happens If This Doesn't Work?",
+  "Brands We've Invested In",
+  "Pricing & Refunds",
+  "Our Student Results",
+  "My Results",
+];
+
+/* Every testimonial screenshot we have — same set used on /home. */
+const TESTIMONIALS = [
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68401724ce15dfb404e29823.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68401769ce15df3d78e29884.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b632ac070d197d70522c5c.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b63294dfd955fcaac40f61.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b632453006308be375afd3.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b632510dd810fbd4f675be.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b6308d0dd810274af673b5.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/67b630fce2e8e6afc23d8db5.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400f0e972192c15d06f409.jpeg",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400c6828def020dc9333ef.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/68400d269721921c2e06f123.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684010d6972192167706f5ea.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/6840161bd77c6200e23bcd98.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684015f3d77c625f653bcd14.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016c028def06165933f44.png",
+  "https://images.leadconnectorhq.com/image/f_webp/q_80/r_1200/u_https://assets.cdn.filesafe.space/OT0RsAWoihpP1XyWE3Xp/media/684016d27504ee74dd464ec2.png",
+];
+
 const CSS = `
 .ty-page{
   --bg:#0A0A0C; --bg-pure:#000000; --bg-card:#131316;
@@ -47,9 +80,9 @@ const CSS = `
 
 /* ---------- status pulse ---------- */
 .ty-page .status-pulse{
-  display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border-radius:100px;
-  background:rgba(42,120,214,0.22);border:1px solid rgba(140,198,255,0.55);
-  font-family:var(--font-mono),ui-monospace,monospace;font-size:12px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:10px;padding:10px 22px;border-radius:100px;max-width:92vw;
+  background:rgba(42,120,214,0.22);border:1px solid rgba(140,198,255,0.55);text-align:center;
+  font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;
   color:#EAF3FF;margin-bottom:22px;box-shadow:0 8px 24px -10px rgba(42,120,214,0.4);
 }
 .ty-page .status-pulse .pulse-dot{position:relative;width:9px;height:9px;border-radius:50%;background:var(--accent);}
@@ -132,6 +165,25 @@ const CSS = `
 .ty-page .step-arrow{display:inline-flex;align-items:center;margin-top:14px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-text);font-weight:700;gap:8px;}
 .ty-page .step-arrow .arrow-glyph{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;}
 
+/* ---------- breakout videos ---------- */
+.ty-page .breakout-section{background:var(--bg-pure);padding:72px 0;}
+.ty-page .breakout-list{display:flex;flex-direction:column;gap:44px;max-width:760px;margin:0 auto;padding:0 32px;}
+.ty-page .breakout-item h3{font-family:var(--font-head),system-ui,sans-serif;font-weight:700;font-size:clamp(17px,2vw,20px);color:var(--text);margin-bottom:16px;}
+.ty-page .breakout-frame{
+  position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#000;
+  box-shadow:0 0 0 1px rgba(42,120,214,0.1),0 24px 48px -24px rgba(42,120,214,0.2);
+  aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+}
+.ty-page .breakout-frame .vsl-play{width:56px;height:56px;font-size:20px;box-shadow:0 10px 30px -8px rgba(42,120,214,0.7);}
+
+/* ---------- testimonials / wins ---------- */
+.ty-page .wins-section{background:var(--bg);border-top:1px solid var(--line-soft);padding:72px 0;}
+.ty-page .wins-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:900px;margin:0 auto;padding:0 32px;}
+.ty-page .wins-grid img{width:100%;display:block;border-radius:14px;border:1px solid var(--line);object-fit:cover;box-shadow:0 20px 40px -26px rgba(0,0,0,0.6);}
+@media (max-width:640px){
+  .ty-page .wins-grid{grid-template-columns:1fr;padding:0 24px;}
+}
+
 /* ---------- cta bridge ---------- */
 .ty-page .cta-bridge{padding:64px 32px;background:var(--bg-pure);text-align:center;}
 .ty-page .cta-bridge-inner{max-width:720px;margin:0 auto;background:var(--bg-card);border:1px solid rgba(42,120,214,0.25);border-radius:20px;padding:40px 48px;box-shadow:0 0 0 1px rgba(42,120,214,0.08),0 32px 64px -24px rgba(42,120,214,0.15);}
@@ -171,8 +223,10 @@ const CHECK = (
 );
 
 /* firePixel=false is used only by /thank-you-nq, which must fire no Meta Pixel
-   events at all (the root layout also skips PageView for that path). */
-export default function ThankYouContent({ firePixel = true }: { firePixel?: boolean }) {
+   events at all (the root layout also skips PageView for that path).
+   firstName comes from the Typeform redirect's ?first_name= query param. */
+export default function ThankYouContent({ firePixel = true, firstName }: { firePixel?: boolean; firstName?: string }) {
+  const name = firstName?.trim();
   return (
     <div className={`ty-page ${fontHead.variable} ${fontBody.variable} ${fontMono.variable}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
@@ -190,16 +244,26 @@ export default function ThankYouContent({ firePixel = true }: { firePixel?: bool
         <div className="hero-inner">
           <div className="status-pulse">
             <span className="pulse-dot" aria-hidden="true" />
-            <span>1 Step Left</span>
+            <span>1 Step Left &rarr; Expect A Phone Call From Us</span>
           </div>
 
           <h1>
-            Your Application Is In. <em>We&rsquo;re Calling You Right Now.</em>
+            {name && `${name}, `}Your Application Is In. <em>We&rsquo;re Calling You Right Now.</em>
           </h1>
           <p className="hero-subhead">
             One of our team members is calling you in the next <b>2-10 minutes</b> to set up your game plan call.
             Keep your phone nearby and pick up!! This is the fastest way to get started.
           </p>
+
+          <span className="start-here">Step 01 · Watch This First</span>
+
+          <div className="vsl-wrap">
+            <div className="vsl-frame" aria-label="Booking confirmation overview video">
+              {/* Replace with your confirmation VSL embed */}
+              <span className="vsl-play" aria-hidden="true">&#9654;</span>
+              <span className="vsl-note">[ VSL embed goes here ]</span>
+            </div>
+          </div>
 
           <div className="mission-panel" aria-label="Application progress">
             <div className="mission-header">
@@ -253,16 +317,6 @@ export default function ThankYouContent({ firePixel = true }: { firePixel?: bool
               Your coach is calling you right now
             </div>
           </div>
-
-          <span className="start-here">Step 01 · Watch This First</span>
-
-          <div className="vsl-wrap">
-            <div className="vsl-frame" aria-label="Booking confirmation overview video">
-              {/* Replace with your confirmation VSL embed */}
-              <span className="vsl-play" aria-hidden="true">&#9654;</span>
-              <span className="vsl-note">[ VSL embed goes here ]</span>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -311,6 +365,32 @@ export default function ThankYouContent({ firePixel = true }: { firePixel?: bool
         </div>
       </section>
 
+      {/* ================= BREAKOUT VIDEOS ================= */}
+      <section className="breakout-section">
+        <div className="container-wide">
+          <div className="section-header">
+            <span className="eyebrow center">Watch Before Your Call</span>
+            <h2>Got Questions? Watch These First.</h2>
+            <p style={{ marginTop: 14, fontSize: 15.5, color: "var(--text-mute)", lineHeight: 1.6 }}>
+              The coach will skip the basics if you watch these. Come prepared and you&rsquo;ll get way more out of the
+              call.
+            </p>
+          </div>
+
+          <div className="breakout-list">
+            {BREAKOUT_VIDEOS.map((title) => (
+              <div className="breakout-item" key={title}>
+                <h3>{title}</h3>
+                <div className="breakout-frame" aria-label={`${title} video`}>
+                  {/* Replace with the real embed for this script */}
+                  <span className="vsl-play" aria-hidden="true">&#9654;</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ================= CTA BRIDGE ================= */}
       <section className="cta-bridge">
         <div className="cta-bridge-inner">
@@ -322,6 +402,25 @@ export default function ThankYouContent({ firePixel = true }: { firePixel?: bool
           <a href={MORE_VIDEOS_URL} target="_blank" rel="noopener noreferrer" className="cta-bridge-btn">
             Open The Guide Here <span className="btn-arrow" aria-hidden="true">→</span>
           </a>
+        </div>
+      </section>
+
+      {/* ================= TESTIMONIALS / WINS ================= */}
+      <section className="wins-section">
+        <div className="container-wide">
+          <div className="section-header">
+            <span className="eyebrow center">Community Wins</span>
+            <h2>More Wins From The Community</h2>
+            <p style={{ marginTop: 14, fontSize: 15.5, color: "var(--text-mute)", lineHeight: 1.6 }}>
+              Real screenshots. Real results. Real people.
+            </p>
+          </div>
+
+          <div className="wins-grid">
+            {TESTIMONIALS.map((src, i) => (
+              <img key={src} src={src} alt={`Student win ${i + 1}`} loading="lazy" />
+            ))}
+          </div>
         </div>
       </section>
 

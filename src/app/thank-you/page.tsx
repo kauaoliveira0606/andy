@@ -9,6 +9,13 @@ export const metadata: Metadata = {
   description: "One step left to confirm your call. Reply to the email in your inbox and watch the video below before your call.",
 };
 
-export default function ThankYouPage() {
-  return <ThankYouContent />;
+export default async function ThankYouPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+  const raw = params.first_name;
+  const firstName = Array.isArray(raw) ? raw[0] : raw;
+  return <ThankYouContent firstName={firstName} />;
 }
