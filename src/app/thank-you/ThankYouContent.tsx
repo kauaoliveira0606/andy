@@ -326,7 +326,7 @@ export default function ThankYouContent({ firePixel = true, firstName }: { fireP
           <div className="section-header">
             <span className="eyebrow center">Next Steps</span>
             <h2>
-              Two Things To Do <em>Before Your Call.</em>
+              Three Things To Do <em>Before Your Call.</em>
             </h2>
           </div>
 
@@ -359,6 +359,20 @@ export default function ThankYouContent({ firePixel = true, firstName }: { fireP
                 <div className="step-arrow">
                   <span className="arrow-glyph">!</span>Do This Now
                 </div>
+              </div>
+            </div>
+
+            <div className="step-card action">
+              <div className="step-num-block">
+                <div className="step-num">03</div>
+                <span className="step-num-tag">Go Deeper</span>
+              </div>
+              <div className="step-content">
+                <h3>Watch The FAQs, Guide &amp; Wins.</h3>
+                <p>
+                  Scroll down to watch our breakout FAQ videos, open the full due diligence guide, and check out real
+                  testimonials from students just like you. Come to your call prepared.
+                </p>
               </div>
             </div>
           </div>
