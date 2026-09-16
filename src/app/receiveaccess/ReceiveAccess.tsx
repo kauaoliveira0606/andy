@@ -95,8 +95,6 @@ const CSS = `
 .ra .video .play::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-46%,-50%);border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff;}
 .ra .video .vlabel{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);}
 
-.ra .warnbox{margin:22px auto 0;max-width:760px;background:var(--amber-soft);border:1px solid var(--amber-line);
-  border-radius:14px;padding:16px 20px;text-align:center;font-size:13.5px;font-weight:700;color:#7c2d12;}
 
 .ra .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
 @media(max-width:640px){.ra .steps{grid-template-columns:1fr;}}
@@ -104,8 +102,6 @@ const CSS = `
 .ra .step .num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;
   font-weight:900;color:var(--blue);background:rgba(47,123,255,.1);border:1px solid rgba(47,123,255,.28);margin-bottom:10px;}
 .ra .step p{font-size:13.5px;color:var(--muted);margin-top:5px;}
-.ra .step-note{margin-top:18px;font-size:13.5px;color:var(--muted);max-width:70ch;}
-.ra .step-note b{color:var(--ink);}
 
 .ra .faq-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:24px;}
 @media(max-width:860px){.ra .faq-grid{grid-template-columns:repeat(2,1fr);}}
@@ -203,10 +199,6 @@ export default function ReceiveAccess({ name }: { name?: string }) {
             most out of it. 👇
           </p>
           <Video label="Claim your free access" />
-          <div className="warnbox">
-            ⚠ Don&rsquo;t leave this page. If you do, you might lose your chance to get the $3,484 program and community
-            for free.
-          </div>
         </div>
       </section>
 
@@ -224,11 +216,6 @@ export default function ReceiveAccess({ name }: { name?: string }) {
               </div>
             ))}
           </div>
-          <p className="step-note" style={{ marginLeft: "auto", marginRight: "auto" }}>
-            In the next 5 to 10 minutes you&rsquo;ll get a text and a call from one of our team members. Pick up.
-            They&rsquo;ll onboard you and unlock your free store, program and community. <b>Miss the call and your free
-            slot goes to someone else.</b> Keep your phone nearby.
-          </p>
         </div>
       </section>
 
