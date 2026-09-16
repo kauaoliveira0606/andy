@@ -27,16 +27,17 @@ const STORES = [
 ];
 const MODULE_IMAGES = ["/paid/e1.png", "/paid/e2.png", "/paid/e3.png", "/paid/e4.png", "/paid/e5.png", "/paid/e6.png"];
 
-const FAQ_VIDEOS = [
-  "Is dropshipping saturated?",
-  "What results can I realistically expect?",
-  "Can I still do this with a full-time job?",
-  "I've never sold a product online. Can I still make this work?",
-  "Can I do this if I don't know a lot about AI?",
-  "AI branded dropshipping explained",
-  "What's the catch? This is too good to be true",
-  "How much does it actually cost to get started?",
-  "I'm not tech savvy. Can I still do this?",
+/* videoId set per item as real VTurb embeds come in; unset ones show a placeholder frame. */
+const FAQ_VIDEOS: { question: string; videoId?: string }[] = [
+  { question: "Is this really free?", videoId: "6a77b006c42b7fecd0cb5113" },
+  { question: "What if this isn't for me?", videoId: "6a77b17f133b0c599880da4d" },
+  { question: "What if I never sold online or aren't techy?", videoId: "6a77b2b3133b0c599880db0d" },
+  { question: "Do I actually own the store?", videoId: "6a77b424f35eb9bb868809d9" },
+  { question: "What results can I realistically expect?", videoId: "6a77b497bda06d1b04c799ac" },
+  { question: "What is actually inside the program?", videoId: "6a77b5f6aef224966a516bf0" },
+  { question: "What's the catch? This is too good to be true" },
+  { question: "How much does it actually cost to get started?" },
+  { question: "I'm not tech savvy. Can I still do this?" },
 ];
 
 const STEPS: [string, string, string][] = [
@@ -229,12 +230,25 @@ export default function ReceiveAccess({ name }: { name?: string }) {
             We know you have questions. Here are short videos answering the most common ones.
           </p>
           <div className="faq-grid" style={{ textAlign: "left" }}>
-            {FAQ_VIDEOS.map((q) => (
-              <div className="fvid" key={q}>
-                <div className="frame">
-                  <span className="play" aria-hidden="true" />
-                </div>
-                <p>{q}</p>
+            {FAQ_VIDEOS.map(({ question, videoId }) => (
+              <div className="fvid" key={question}>
+                {videoId ? (
+                  <div style={{ borderRadius: 11, overflow: "hidden" }}>
+                    <vturb-smartplayer id={`vid-${videoId}`} style={{ display: "block", margin: "0 auto", width: "100%" }}>
+                      <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "56.25% 0 0", zIndex: 0, backgroundColor: "black" }} />
+                    </vturb-smartplayer>
+                    <Script
+                      id={`vturb-faq-script-${videoId}`}
+                      strategy="afterInteractive"
+                      src={`https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/${videoId}/v4/player.js`}
+                    />
+                  </div>
+                ) : (
+                  <div className="frame">
+                    <span className="play" aria-hidden="true" />
+                  </div>
+                )}
+                <p>{question}</p>
               </div>
             ))}
           </div>
