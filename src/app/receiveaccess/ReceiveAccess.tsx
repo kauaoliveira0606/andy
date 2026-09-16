@@ -84,7 +84,10 @@ const CSS = `
 .ra .hero{padding-top:36px;text-align:center;}
 .ra .hero h1{margin:18px auto 0;max-width:26ch;}
 .ra .hero p.sub{margin:14px auto 0;max-width:56ch;font-size:14.5px;color:var(--muted);}
-.ra .hint{margin-top:18px;font-size:13.5px;font-weight:700;color:var(--ink);}
+.ra .coach-badge{display:inline-flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:100px;padding:10px 20px;font-size:13.5px;font-weight:600;color:var(--ink);}
+.ra .coach-badge .dot{width:8px;height:8px;border-radius:50%;background:#dc2626;flex-shrink:0;animation:ra-dot-pulse 1.4s infinite;}
+@keyframes ra-dot-pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.ra h1 .accent{color:var(--acc);}
 
 .ra .video{position:relative;margin:16px auto 0;max-width:760px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;
   border:1px solid rgba(80,150,255,.25);background:linear-gradient(160deg,#0c1a2e,#0a1220);display:flex;align-items:center;justify-content:center;}
@@ -188,16 +191,17 @@ export default function ReceiveAccess({ name }: { name?: string }) {
       {/* HERO */}
       <section className="hero">
         <div className="wrap">
-          <span className="eyebrow warn">⚠ Action Required</span>
+          <span className="coach-badge">
+            <span className="dot" /> Your coach is calling now, answer your phone
+          </span>
           <h1>
-            {firstName && `${firstName}, `}Your Free Program Access Is Live For The Next 24 Hours. We&rsquo;re Calling
-            In The Next 1&ndash;10 Minutes.
+            {firstName && `${firstName}, `}A Coach Is Calling You In The <span className="accent">Next Few Minutes</span>.
+            Answer It To Claim Your <span className="accent">Free Access</span>.
           </h1>
           <p className="sub">
-            Get in contact with our team right now so your Free Program access doesn&rsquo;t expire. Make sure you answer
-            when we reach out.
+            <b>Watch the short video below before they call</b>, so you know exactly what to expect and how to get the
+            most out of it. 👇
           </p>
-          <p className="hint">Click on the video to see how you can claim your free access 👇</p>
           <Video label="Claim your free access" />
           <div className="warnbox">
             ⚠ Don&rsquo;t leave this page. If you do, you might lose your chance to get the $3,484 program and community
