@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 
 const font = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--fs-font" });
 
@@ -166,10 +167,6 @@ const CSS = `
 .fs .watch-first{text-align:center;color:var(--green);font-weight:700;font-size:0.95rem;margin-bottom:14px;}
 
 .fs .video-container{max-width:720px;margin:0 auto 28px;padding:0 24px;}
-.fs .video-wrapper{position:relative;width:100%;aspect-ratio:9/16;max-width:360px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);background:linear-gradient(135deg,#101014,#050506);display:flex;align-items:center;justify-content:center;}
-.fs .vid-play{width:64px;height:64px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(34,197,94,0.6);}
-.fs .vid-play svg{width:26px;height:26px;fill:#000;margin-left:3px;}
-.fs .vid-label{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.45);}
 
 .fs .claim-box{padding:0 24px 28px;text-align:center;}
 .fs .claim-card{background:var(--card);border:1.5px solid #eee;border-radius:24px;max-width:480px;width:100%;margin:0 auto;padding:32px 28px 26px;}
@@ -530,13 +527,14 @@ export default function FreeStore() {
 
       {/* VIDEO */}
       <div className="video-container">
-        <div className="video-wrapper" aria-label="Free program overview video">
-          {/* Replace with the real VSL embed */}
-          <span className="vid-play" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
-          </span>
-          <span className="vid-label">[ VSL embed goes here ]</span>
-        </div>
+        <vturb-smartplayer id="vid-6a82401f5db7a2bc312f50d8" style={{ display: "block", margin: "0 auto", width: "100%", maxWidth: 400 }}>
+          <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "177.77777777777777% 0 0", zIndex: 0, backgroundColor: "black" }} />
+        </vturb-smartplayer>
+        <Script
+          id="vturb-player-script"
+          strategy="afterInteractive"
+          src="https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/6a82401f5db7a2bc312f50d8/v4/player.js"
+        />
       </div>
 
       {/* CLAIM CARD */}
