@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Montserrat } from "next/font/google";
+import Script from "next/script";
 
 const font = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--ra-font" });
 
@@ -248,7 +249,16 @@ export default function ReceiveAccess({ name }: { name?: string }) {
           <p className="lead center" style={{ marginTop: 8 }}>
             A quick walkthrough of everything you just unlocked.
           </p>
-          <Video label="Inside the program" />
+          <div style={{ maxWidth: 760, margin: "16px auto 0", borderRadius: 16, overflow: "hidden" }}>
+            <vturb-smartplayer id="vid-6a83b1948953ee546322c623" style={{ display: "block", margin: "0 auto", width: "100%" }}>
+              <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "56.25% 0 0", zIndex: 0, backgroundColor: "black" }} />
+            </vturb-smartplayer>
+            <Script
+              id="vturb-program-walkthrough-script"
+              strategy="afterInteractive"
+              src="https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/6a83b1948953ee546322c623/v4/player.js"
+            />
+          </div>
         </div>
       </section>
 
