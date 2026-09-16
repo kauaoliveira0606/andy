@@ -54,7 +54,7 @@ const CSS = `
   --bg:#000000; --panel:#ffffff; --ink:#0a0a0a; --muted:#374151; --line:rgba(0,0,0,.10);
   --acc:#39d353; --acc-soft:rgba(57,211,83,.12); --acc-line:rgba(57,211,83,.4);
   --blue:#2f7bff; --amber:#f59e0b; --amber-soft:#fff7ed; --amber-line:#fdba74;
-  --text-onbg:#ffffff; --text-onbg-mute:rgba(255,255,255,.82);
+  --text-onbg:#ffffff; --text-onbg-mute:#ffffff;
   --f:var(--ra-font),-apple-system,BlinkMacSystemFont,sans-serif;
   background:var(--bg); color:var(--text-onbg-mute); font-family:var(--f);
   font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; overflow-x:hidden;
@@ -142,10 +142,10 @@ const CSS = `
 
 .ra footer{border-top:1px solid rgba(255,255,255,.12);padding:36px 0 30px;text-align:center;background:#000000;}
 .ra footer .links{display:flex;gap:18px;justify-content:center;margin-bottom:12px;}
-.ra footer .links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;}
-.ra footer .links a:hover{color:#fff;}
-.ra footer .income{max-width:820px;margin:0 auto 12px;font-size:11px;color:rgba(255,255,255,.55);line-height:1.6;}
-.ra footer .copy{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);}
+.ra footer .links a{color:#ffffff;text-decoration:none;font-size:13px;}
+.ra footer .links a:hover{color:var(--acc);}
+.ra footer .income{max-width:820px;margin:0 auto 12px;font-size:11px;color:rgba(255,255,255,.85);line-height:1.6;}
+.ra footer .copy{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.85);}
 `;
 
 function useCountdown(seconds: number) {
