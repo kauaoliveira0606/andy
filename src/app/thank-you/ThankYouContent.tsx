@@ -26,7 +26,7 @@ const BREAKOUT_VIDEOS = [
   "Capital Needed",
   "What Happens If This Doesn't Work?",
   "Brands We've Invested In",
-  "Pricing & Refunds",
+  "Our Dispute Rate",
   "Our Student Results",
   "My Results",
 ];
