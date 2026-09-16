@@ -89,9 +89,6 @@ const CSS = `
 
 .ra .video{position:relative;margin:16px auto 0;max-width:760px;aspect-ratio:16/9;border-radius:16px;overflow:hidden;
   border:1px solid rgba(80,150,255,.25);background:linear-gradient(160deg,#0c1a2e,#0a1220);display:flex;align-items:center;justify-content:center;}
-.ra .video .play{width:64px;height:44px;border-radius:10px;background:linear-gradient(135deg,#7db4ff,#2f7bff);position:relative;box-shadow:0 8px 30px rgba(47,123,255,.5);}
-.ra .video .play::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-46%,-50%);border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff;}
-.ra .video .vlabel{position:absolute;bottom:9px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);}
 
 
 .ra .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
@@ -159,11 +156,16 @@ function useCountdown(seconds: number) {
   return `${mm}:${ss}`;
 }
 
-const Video = ({ label }: { label: string }) => (
-  <div className="video">
-    {/* Replace with the real VSL embed */}
-    <span className="play" aria-hidden="true" />
-    <span className="vlabel">{label}</span>
+const Video = () => (
+  <div className="video" style={{ background: "none", border: "none", maxWidth: 400, aspectRatio: "auto", display: "block" }}>
+    <vturb-smartplayer id="vid-6a823fba5db7a2bc312f5081" style={{ display: "block", margin: "0 auto", width: "100%", maxWidth: 400 }}>
+      <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "177.77777777777777% 0 0", zIndex: 0, backgroundColor: "black" }} />
+    </vturb-smartplayer>
+    <Script
+      id="vturb-hero-script"
+      strategy="afterInteractive"
+      src="https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/6a823fba5db7a2bc312f5081/v4/player.js"
+    />
   </div>
 );
 
@@ -193,7 +195,7 @@ export default function ReceiveAccess({ name }: { name?: string }) {
             <b>Watch the short video below before they call</b>, so you know exactly what to expect and how to get the
             most out of it. 👇
           </p>
-          <Video label="Claim your free access" />
+          <Video />
         </div>
       </section>
 
