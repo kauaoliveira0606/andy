@@ -5,9 +5,6 @@ import { Inter } from "next/font/google";
 
 const font = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--fs-font" });
 
-/* Opt-in lead capture -> Zapier -> wherever leads get routed from there. */
-const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/21197109/4409gj4/";
-
 const IMG = "https://ecomsimulation.io/__l5e/assets-v1";
 const MODULE_IMAGES = ["/paid/e1.png", "/paid/e2.png", "/paid/e3.png", "/paid/e4.png", "/paid/e5.png", "/paid/e6.png"];
 const ACCESS_FLOW_IMAGE = "/paid/ecom.png";
@@ -324,11 +321,13 @@ function LeadForm({
   setForm,
   onSubmit,
   submitting,
+  error,
 }: {
   form: FormState;
   setForm: (f: FormState) => void;
   onSubmit: (e: React.FormEvent) => void;
   submitting: boolean;
+  error?: boolean;
 }) {
   return (
     <form onSubmit={onSubmit}>
@@ -371,6 +370,11 @@ function LeadForm({
           to be able to access these tools. If that&rsquo;s not possible for you, please LEAVE this page now.
         </span>
       </label>
+      {error && (
+        <p style={{ color: "#dc2626", fontSize: "0.82rem", textAlign: "center", margin: "-2px 0 2px" }}>
+          Something went wrong sending that. Please try again.
+        </p>
+      )}
       <button type="submit" className="cta-btn" disabled={submitting}>
         {submitting ? "Sending..." : "Claim Your Free Access"}
       </button>
@@ -382,7 +386,9 @@ export default function FreeStore() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalSubmitting, setModalSubmitting] = useState(false);
   const [modalDone, setModalDone] = useState(false);
+  const [modalError, setModalError] = useState(false);
   const [inlineSubmitting, setInlineSubmitting] = useState(false);
+  const [inlineError, setInlineError] = useState(false);
   const [inlineForm, setInlineForm] = useState<FormState>(EMPTY_FORM);
   const [modalForm, setModalForm] = useState<FormState>(EMPTY_FORM);
   const exitFiredRef = useRef(false);
@@ -458,7 +464,7 @@ export default function FreeStore() {
     const digits = phone.replace(/\D/g, "");
     if (!form.name.trim() || !form.email.trim() || digits.length < 7 || !form.agree) return false;
     try {
-      await fetch(ZAPIER_WEBHOOK_URL, {
+      const res = await fetch("/api/collect-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -468,8 +474,9 @@ export default function FreeStore() {
           source: "free-store",
         }),
       });
+      if (!res.ok) return false;
     } catch {
-      /* fall through to redirect either way */
+      return false;
     }
     window.location.href = `/receiveaccess?name=${encodeURIComponent(form.name)}`;
     return true;
@@ -478,16 +485,24 @@ export default function FreeStore() {
   const handleInlineSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setInlineSubmitting(true);
+    setInlineError(false);
     const ok = await submitLead(inlineForm);
-    if (!ok) setInlineSubmitting(false);
+    if (!ok) {
+      setInlineSubmitting(false);
+      setInlineError(true);
+    }
   };
 
   const handleModalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setModalSubmitting(true);
+    setModalError(false);
     const ok = await submitLead(modalForm);
     if (ok) setModalDone(true);
-    else setModalSubmitting(false);
+    else {
+      setModalSubmitting(false);
+      setModalError(true);
+    }
   };
 
   return (
@@ -532,7 +547,7 @@ export default function FreeStore() {
           </div>
           <h2>Claim Your Free Access</h2>
           <p>Drop your info below and a coach will call you to onboard you.</p>
-          <LeadForm form={inlineForm} setForm={setInlineForm} onSubmit={handleInlineSubmit} submitting={inlineSubmitting} />
+          <LeadForm form={inlineForm} setForm={setInlineForm} onSubmit={handleInlineSubmit} submitting={inlineSubmitting} error={inlineError} />
         </div>
         <div className="review-badge">
           <div className="stars">
@@ -778,7 +793,7 @@ export default function FreeStore() {
             </p>
 
             {!modalDone ? (
-              <LeadForm form={modalForm} setForm={setModalForm} onSubmit={handleModalSubmit} submitting={modalSubmitting} />
+              <LeadForm form={modalForm} setForm={setModalForm} onSubmit={handleModalSubmit} submitting={modalSubmitting} error={modalError} />
             ) : (
               <div className="modal-success">
                 <p className="title">You&rsquo;re in!</p>
