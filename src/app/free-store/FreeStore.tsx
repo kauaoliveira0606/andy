@@ -5,8 +5,12 @@ import { Inter } from "next/font/google";
 
 const font = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--fs-font" });
 
+/* Opt-in lead capture -> Zapier -> wherever leads get routed from there. */
+const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/21197109/4409gj4/";
+
 const IMG = "https://ecomsimulation.io/__l5e/assets-v1";
-const GWAGON = `${IMG}/f794f1a6-65e2-47b0-b23b-a66fdb5e6b97/andy-gwagon-2.jpg`;
+const MODULE_IMAGES = ["/paid/e1.png", "/paid/e2.png", "/paid/e3.png", "/paid/e4.png", "/paid/e5.png", "/paid/e6.png"];
+const ACCESS_FLOW_IMAGE = "/paid/ecom.png";
 const PROOF = [
   `${IMG}/51754f44-121b-444f-baa8-a14ca19078f6/proof-1.jpg`,
   `${IMG}/a8098d90-3911-439a-8be1-3a154671ed25/proof-2.png`,
@@ -124,15 +128,6 @@ const WHY_ITEMS: { icon: React.ReactNode; title: string; desc: string }[] = [
   },
 ];
 
-/* The program modules — shown as cards since we don't have curriculum screenshots to embed. */
-const MODULES: { k: string; h: string; p: string }[] = [
-  { k: "Find", h: "Pick Your Person, Then Your Product", p: "Instead of chasing random trending products, you pick a specific group of people with a real problem, then find the products that solve it. That's what makes a brand instead of a store with a countdown timer." },
-  { k: "Build", h: "The AI Builds Your Store", p: "Product loaded, pages written, checkout wired up. Live in minutes, then you make it yours." },
-  { k: "Create", h: "Make Content That Sells", p: "Organic content and AI-made ads, taught by people who do it every day." },
-  { k: "Launch", h: "Run Your First Ads", p: "Start small, let the data talk, and never touch the budget while it's testing." },
-  { k: "Scale", h: "Feed What Works", p: "Cut the losers, scale the winners, and let systems handle more orders without more hours." },
-];
-
 const NEXT_STEPS: { n: string; h: string; p: string }[] = [
   { n: "1", h: "Fill Out The Short Form", p: "It takes two minutes to fill it out." },
   { n: "2", h: "Answer The Call", p: "Our team calls you, gets you the AI tool, and builds your store." },
@@ -170,7 +165,7 @@ const CSS = `
 .fs .hero{max-width:1040px;margin:0 auto;padding:40px 24px 16px;text-align:center;}
 .fs .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.14);border:1px solid rgba(34,197,94,0.35);color:var(--green);font-size:0.8rem;font-weight:600;padding:5px 14px;border-radius:100px;margin-bottom:24px;letter-spacing:0.3px;}
 .fs .hero h1{font-size:clamp(1.7rem,5vw,3.2rem);font-weight:900;line-height:1.15;letter-spacing:-0.5px;margin-bottom:20px;color:#fff;}
-.fs .hero-sub{font-size:1.1rem;color:rgba(255,255,255,0.68);max-width:560px;margin:0 auto 20px;}
+.fs .hero-sub{font-size:1.1rem;color:rgba(255,255,255,0.92);max-width:560px;margin:0 auto 20px;}
 .fs .watch-first{text-align:center;color:var(--green);font-weight:700;font-size:0.95rem;margin-bottom:14px;}
 
 .fs .video-container{max-width:720px;margin:0 auto 28px;padding:0 24px;}
@@ -193,6 +188,7 @@ const CSS = `
 .fs .phone-row input{flex:1;}
 .fs .agree-row{display:flex;align-items:flex-start;gap:10px;font-size:0.8rem;line-height:1.5;color:#666;cursor:pointer;padding:2px 4px;}
 .fs .agree-row input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--green);cursor:pointer;}
+.fs .agree-mark{background:#dcfce7;color:#15803d;font-weight:700;padding:0 5px;border-radius:5px;}
 
 .fs .cta-btn{background:linear-gradient(180deg,#3ba85f 0%,#2f8049 100%);color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:0.3px;text-transform:uppercase;line-height:1.25;padding:14px 40px;border-radius:14px;border:1px solid rgba(0,0,0,0.18);cursor:pointer;display:inline-block;transition:opacity .15s,transform .15s;margin-bottom:16px;width:100%;max-width:380px;font-family:var(--fs-font),sans-serif;}
 .fs .cta-btn:hover{opacity:0.88;transform:translateY(-1px);}
@@ -209,7 +205,7 @@ const CSS = `
 .fs .section{max-width:800px;margin:0 auto;padding:56px 24px;}
 .fs .section-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--green);margin-bottom:12px;text-align:center;}
 .fs .section-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;letter-spacing:-0.5px;margin-bottom:16px;text-align:center;color:#fff;}
-.fs .section-desc{color:rgba(255,255,255,0.62);font-size:1rem;max-width:560px;margin:0 auto 40px;text-align:center;}
+.fs .section-desc{color:rgba(255,255,255,0.9);font-size:1rem;max-width:560px;margin:0 auto 40px;text-align:center;}
 
 .fs .value-card-outer{background:var(--card);border:1.5px solid #e5e7eb;border-radius:16px;overflow:hidden;margin-top:24px;color:#111;}
 .fs .value-card-brand{padding:14px 20px;border-bottom:1.5px solid #e5e7eb;text-align:center;}
@@ -245,17 +241,16 @@ const CSS = `
 .fs .why-body strong{display:block;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
 .fs .why-body p{font-size:0.9rem;color:var(--text2);line-height:1.65;}
 
-.fs .modules-list{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
-.fs .module-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 26px;color:#111;}
-.fs .module-k{font-size:0.72rem;font-weight:900;letter-spacing:0.16em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
-.fs .module-card h3{font-size:1.05rem;font-weight:800;color:#0a0a0a;margin-bottom:8px;}
-.fs .module-card p{font-size:0.9rem;color:#4b5563;line-height:1.6;}
+.fs .modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:24px;}
+@media (max-width:640px){.fs .modules-grid{grid-template-columns:1fr;}}
+.fs .module-shot{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);}
 
-.fs .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:8px;}
+.fs .next-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-top:8px;color:#111;}
+.fs .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;}
 @media (max-width:640px){.fs .next-grid{grid-template-columns:1fr;}}
 .fs .next-num{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;margin-bottom:16px;}
-.fs .next-grid strong{display:block;font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px;}
-.fs .next-grid p{font-size:0.9rem;color:rgba(255,255,255,0.6);line-height:1.6;}
+.fs .next-grid strong{display:block;font-size:1.05rem;font-weight:800;color:#0a0a0a;margin-bottom:8px;}
+.fs .next-grid p{font-size:0.9rem;color:#4b5563;line-height:1.6;}
 
 .fs .win-cols{columns:3;column-gap:16px;margin-bottom:16px;}
 @media (max-width:700px){.fs .win-cols{columns:2;}}
@@ -279,10 +274,10 @@ const CSS = `
 .fs .urgency .dot{width:6px;height:6px;border-radius:50%;background:#f87171;animation:fs-pulse 1.4s infinite;}
 @keyframes fs-pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-.fs footer{border-top:1px solid rgba(255,255,255,0.1);padding:16px 24px 24px;text-align:center;color:rgba(255,255,255,0.55);font-size:0.8rem;}
-.fs footer a{color:rgba(255,255,255,0.55);margin:0 8px;}
+.fs footer{border-top:1px solid rgba(255,255,255,0.1);padding:16px 24px 24px;text-align:center;color:rgba(255,255,255,0.75);font-size:0.8rem;}
+.fs footer a{color:rgba(255,255,255,0.75);margin:0 8px;}
 .fs footer a:hover{color:#fff;}
-.fs .footer-disclaimer{max-width:700px;margin:16px auto 0;font-size:0.72rem;color:rgba(255,255,255,0.35);line-height:1.6;}
+.fs .footer-disclaimer{max-width:700px;margin:16px auto 0;font-size:0.72rem;color:rgba(255,255,255,0.55);line-height:1.6;}
 
 .fs .modal-overlay{display:flex;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;}
 .fs .modal-box{background:var(--card);border-radius:24px;max-width:480px;width:100%;padding:36px 32px 28px;position:relative;max-height:90vh;overflow-y:auto;color:#111;}
@@ -370,8 +365,10 @@ function LeadForm({
       <label className="agree-row">
         <input type="checkbox" required checked={form.agree} onChange={(e) => setForm({ ...form, agree: e.target.checked })} />
         <span>
-          By checking this box you understand you&rsquo;ll need a normal budget for ad spend once your store is live.
-          If that&rsquo;s not possible for you right now, please come back when it is.
+          By checking this box you understand that it is a requirement to have at least{" "}
+          <mark className="agree-mark">$50</mark>
+          {" "}
+          to be able to access these tools. If that&rsquo;s not possible for you, please LEAVE this page now.
         </span>
       </label>
       <button type="submit" className="cta-btn" disabled={submitting}>
@@ -461,14 +458,14 @@ export default function FreeStore() {
     const digits = phone.replace(/\D/g, "");
     if (!form.name.trim() || !form.email.trim() || digits.length < 7 || !form.agree) return false;
     try {
-      await fetch("/api/collect-lead", {
+      await fetch(ZAPIER_WEBHOOK_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
           email: form.email,
           phone: phone.startsWith("+") ? phone : form.country + phone,
-          webhook: "free-store",
+          source: "free-store",
         }),
       });
     } catch {
@@ -506,7 +503,7 @@ export default function FreeStore() {
           </span>
         </div>
         <h1>
-          I&rsquo;ll Help You Build A Successful E-commerce Business Completely For <span style={{ color: "var(--green)" }}>FREE</span>
+          I&rsquo;ll Help You Build A Successful E&#8209;commerce Business Completely For <span style={{ color: "var(--green)" }}>FREE</span>
         </h1>
         <p className="hero-sub">
           Watch the short video below. I show you exactly what this is, why I&rsquo;m giving it away, and how my team
@@ -556,7 +553,7 @@ export default function FreeStore() {
         <h2 className="section-title">
           You&rsquo;re Not Just Getting A Store. You&rsquo;re Getting The Whole Blueprint And The Tools To Build It.
         </h2>
-        <p style={{ textAlign: "center", fontSize: "1rem", color: "rgba(255,255,255,0.62)", lineHeight: 1.7 }}>
+        <p style={{ textAlign: "center", fontSize: "1rem", color: "rgba(255,255,255,0.9)", lineHeight: 1.7 }}>
           Other platforms hand you a store and disappear. We stay with you until it works.
         </p>
 
@@ -629,7 +626,7 @@ export default function FreeStore() {
         </div>
         <div className="who-photo">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={GWAGON} alt="Andy Stauring" loading="lazy" />
+          <img src={ACCESS_FLOW_IMAGE} alt="How you get access" loading="lazy" />
         </div>
       </div>
 
@@ -655,15 +652,14 @@ export default function FreeStore() {
       <hr className="divider" />
 
       {/* FULL PROGRAM */}
-      <div className="section" style={{ maxWidth: 900 }}>
+      <div className="section" style={{ maxWidth: 1100 }}>
         <p className="section-label">What&rsquo;s Inside</p>
         <h2 className="section-title">The Full Program You Just Unlocked</h2>
-        <div className="modules-list">
-          {MODULES.map((m) => (
-            <div className="module-card" key={m.k}>
-              <div className="module-k">{m.k}</div>
-              <h3>{m.h}</h3>
-              <p>{m.p}</p>
+        <div className="modules-grid">
+          {MODULE_IMAGES.map((src, i) => (
+            <div className="module-shot" key={src}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt={`Module ${i + 1}`} loading="lazy" />
             </div>
           ))}
         </div>
@@ -675,14 +671,16 @@ export default function FreeStore() {
         <h2 className="section-title">
           Here&rsquo;s Exactly What To Do <span style={{ color: "var(--green)", fontStyle: "italic" }}>Now.</span>
         </h2>
-        <div className="next-grid">
-          {NEXT_STEPS.map((s) => (
-            <div key={s.n}>
-              <div className="next-num">{s.n}</div>
-              <strong>{s.h}</strong>
-              <p>{s.p}</p>
-            </div>
-          ))}
+        <div className="next-card">
+          <div className="next-grid">
+            {NEXT_STEPS.map((s) => (
+              <div key={s.n}>
+                <div className="next-num">{s.n}</div>
+                <strong>{s.h}</strong>
+                <p>{s.p}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
