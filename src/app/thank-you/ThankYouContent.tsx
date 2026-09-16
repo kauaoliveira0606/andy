@@ -64,18 +64,37 @@ const CSS = `
 .ty-page .hero-subhead{font-size:clamp(17px,1.4vw,19px);color:var(--text-mute);line-height:1.55;max-width:52ch;margin:0 auto 32px;}
 .ty-page .hero-subhead b{color:var(--text);font-weight:600;}
 
-/* ---------- stepper ---------- */
-.ty-page .stepper{display:flex;align-items:flex-start;gap:0;max-width:560px;margin:8px auto 36px;padding:0 8px;width:100%;}
-.ty-page .step-node{display:flex;flex-direction:column;align-items:center;gap:10px;width:90px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);text-align:center;line-height:1.3;}
-.ty-page .step-node.future{color:var(--text-mute);}
-.ty-page .step-node .node-circle{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-head),system-ui,sans-serif;font-size:18px;font-weight:700;border:2px solid var(--line);background:var(--bg-card);color:var(--text-faint);transition:all .3s ease;}
-.ty-page .step-node.done .node-circle{background:var(--accent);border-color:var(--accent);color:#fff;box-shadow:0 0 0 4px rgba(42,120,214,0.2);}
-.ty-page .step-node.done{color:var(--text-mute);}
-.ty-page .step-node.pending .node-circle{background:rgba(42,120,214,0.12);border-color:rgba(140,198,255,0.6);color:var(--accent-text);box-shadow:0 0 0 4px rgba(42,120,214,0.12);}
-.ty-page .step-node.pending{color:var(--accent-text);}
-.ty-page .step-bar{flex:1;height:2px;margin-top:25px;min-width:16px;background:var(--line);border-radius:2px;}
-.ty-page .step-bar.done{background:var(--accent);}
-.ty-page .step-bar.pending{background:linear-gradient(90deg,var(--accent),rgba(42,120,214,0.2));}
+/* ---------- mission progress ---------- */
+.ty-page .mission-panel{max-width:640px;width:100%;margin:8px auto 36px;background:var(--bg-card);border:1px solid rgba(42,120,214,0.28);border-radius:20px;padding:32px 32px 28px;box-shadow:0 0 0 1px rgba(42,120,214,0.06),0 30px 60px -28px rgba(42,120,214,0.2);text-align:left;}
+.ty-page .mission-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:12px;flex-wrap:wrap;}
+.ty-page .mission-eyebrow{font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--accent-text);margin-bottom:4px;}
+.ty-page .mission-title{font-family:var(--font-head),system-ui,sans-serif;font-size:18px;font-weight:700;color:var(--text);}
+.ty-page .mission-status{display:flex;align-items:center;gap:8px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#FDBA4A;}
+.ty-page .mission-status .dot{width:8px;height:8px;border-radius:50%;background:#FDBA4A;position:relative;}
+.ty-page .mission-status .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:rgba(253,186,74,0.4);animation:ty-pulse-ring 1.6s ease-out infinite;}
+
+.ty-page .mission-bar-track{height:10px;width:100%;background:rgba(255,255,255,0.06);border:1px solid var(--line);border-radius:100px;overflow:hidden;margin-bottom:30px;}
+.ty-page .mission-bar-fill{height:100%;width:66%;border-radius:100px;background:linear-gradient(90deg,var(--accent-deep),var(--accent-bright));}
+
+.ty-page .mission-track{position:relative;display:flex;justify-content:space-between;}
+.ty-page .mission-track::before{content:"";position:absolute;top:24px;left:24px;right:24px;height:2px;background:var(--line);z-index:0;}
+.ty-page .mission-track .mission-line-fill{position:absolute;top:24px;left:24px;height:2px;background:linear-gradient(90deg,#3FCB6B,#FDBA4A);z-index:1;width:calc(50% - 24px);}
+.ty-page .mission-node{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:10px;width:33.33%;text-align:center;}
+.ty-page .mission-node .node-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid var(--line);background:var(--bg-pure);transition:all .3s ease;}
+.ty-page .mission-node.done .node-circle{border-color:#3FCB6B;background:rgba(63,203,107,0.16);color:#3FCB6B;box-shadow:0 0 14px 3px rgba(63,203,107,0.3);}
+.ty-page .mission-node.current .node-circle{border-color:#FDBA4A;background:rgba(253,186,74,0.16);color:#FDBA4A;box-shadow:0 0 0 4px rgba(253,186,74,0.18);animation:ty-node-pulse 1.8s ease-in-out infinite;}
+.ty-page .mission-node.locked .node-circle{border-color:var(--line);background:rgba(255,255,255,0.03);color:var(--text-faint);opacity:0.6;}
+.ty-page .mission-node .node-stage{font-family:var(--font-mono),ui-monospace,monospace;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;}
+.ty-page .mission-node.done .node-stage{color:#3FCB6B;}
+.ty-page .mission-node.current .node-stage{color:#FDBA4A;}
+.ty-page .mission-node.locked .node-stage{color:var(--text-faint);}
+.ty-page .mission-node .node-label{font-size:11.5px;font-weight:600;line-height:1.3;color:var(--text-mute);}
+.ty-page .mission-node.locked .node-label{color:var(--text-faint);}
+@keyframes ty-node-pulse{0%,100%{box-shadow:0 0 0 0 rgba(253,186,74,0.5),0 0 14px 4px rgba(253,186,74,0.3);}50%{box-shadow:0 0 0 8px rgba(253,186,74,0),0 0 20px 8px rgba(253,186,74,0.5);}}
+
+.ty-page .mission-caption{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#FDBA4A;}
+.ty-page .mission-caption .dot{width:7px;height:7px;border-radius:50%;background:#FDBA4A;animation:ty-simple-pulse 1.4s ease-in-out infinite;}
+@keyframes ty-simple-pulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
 
 /* ---------- start-here ---------- */
 .ty-page .start-here{display:inline-flex;align-items:center;gap:12px;font-family:var(--font-mono),ui-monospace,monospace;font-weight:700;font-size:13px;letter-spacing:0.16em;text-transform:uppercase;color:var(--accent-text);margin-bottom:28px;}
@@ -122,40 +141,28 @@ const CSS = `
 .ty-page .cta-bridge-btn:hover{background:var(--accent-bright);color:#0A0A0C;transform:translateY(-2px);box-shadow:0 14px 32px -10px rgba(42,120,214,0.55);}
 .ty-page .cta-bridge-btn .btn-arrow{font-size:16px;line-height:1;}
 
-/* ---------- disclaimer + footer ---------- */
-.ty-page .disclaimer-section{background:var(--bg-pure);padding:0 32px 8px;text-align:center;}
-.ty-page .disclaimer-section p{max-width:80ch;margin:0 auto;font-size:11.5px;line-height:1.6;color:var(--text-faint);}
-.ty-page .site-footer{background:var(--bg-pure);padding:40px 0 48px;border-top:1px solid var(--line-soft);color:var(--text-mute);}
-.ty-page .foot-inner{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center;}
-.ty-page .brand-row{display:flex;align-items:center;gap:12px;}
-.ty-page .brand-mark svg{width:32px;height:32px;display:block;border-radius:8px;}
-.ty-page .brand-word{font-family:var(--font-head),system-ui,sans-serif;font-weight:600;font-size:16px;letter-spacing:-0.02em;color:var(--text);}
-.ty-page .brand-tier{font-family:var(--font-mono),ui-monospace,monospace;font-size:10px;letter-spacing:0.28em;text-transform:uppercase;color:var(--accent-text);padding:5px 10px;border:1px solid rgba(140,198,255,0.35);border-radius:100px;background:rgba(140,198,255,0.06);}
-.ty-page .foot-copy{font-family:var(--font-mono),ui-monospace,monospace;font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--text-faint);}
+/* ---------- footer (ai-advertiser style) ---------- */
+.ty-page .site-footer{background:var(--bg-pure);margin-top:24px;max-width:720px;margin-left:auto;margin-right:auto;border-top:1px solid var(--line-soft);padding:32px 32px 40px;text-align:center;}
+.ty-page .foot-disc{font-size:11px;font-weight:700;color:var(--text-mute);line-height:1.6;max-width:60ch;margin:0 auto;}
+.ty-page .foot-links{margin-top:20px;display:flex;align-items:center;justify-content:center;gap:16px;}
+.ty-page .foot-links a{font-size:12px;color:var(--text-faint);text-decoration:none;transition:color .2s ease;}
+.ty-page .foot-links a:hover{color:var(--text);}
+.ty-page .foot-links .sep{color:rgba(255,255,255,0.25);}
+.ty-page .foot-copy{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.35);}
+.ty-page .foot-mail{margin-top:4px;font-size:11px;color:rgba(255,255,255,0.35);}
+.ty-page .foot-mail a{color:inherit;text-decoration:none;}
+.ty-page .foot-mail a:hover{color:var(--text-faint);}
 
 @media (max-width:768px){
   .ty-page .container-wide,.ty-page .hero-inner{padding-left:20px;padding-right:20px;}
   .ty-page .hero h1 br{display:none;}
-  .ty-page .step-node{width:66px;font-size:10px;}
-  .ty-page .step-node .node-circle{width:44px;height:44px;font-size:15px;}
+  .ty-page .mission-panel{padding:24px 20px 22px;}
+  .ty-page .mission-node .node-circle{width:40px;height:40px;font-size:15px;}
+  .ty-page .mission-node .node-label{font-size:10.5px;}
   .ty-page .step-card{grid-template-columns:1fr;gap:18px;padding:24px;}
   .ty-page .cta-bridge-inner{padding:32px 24px;}
 }
 `;
-
-function BrandMark() {
-  return (
-    <span className="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 64 64">
-        <rect width="64" height="64" rx="14" fill="#0F1115" stroke="rgba(140,198,255,0.25)" strokeWidth="1" />
-        <circle cx="32" cy="32" r="25" fill="none" stroke="#8CC6FF" strokeWidth="6" />
-        <text x="32" y="38" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontSize="21" fontWeight="800" fill="#8CC6FF">
-          ES
-        </text>
-      </svg>
-    </span>
-  );
-}
 
 const CHECK = (
   <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -187,39 +194,63 @@ export default function ThankYouContent({ firePixel = true }: { firePixel?: bool
           </div>
 
           <h1>
-            You <em>Booked Your Call!</em>
+            Your Application Is In. <em>We&rsquo;re Calling You Right Now.</em>
           </h1>
+          <p className="hero-subhead">
+            One of our team members is calling you in the next <b>2-10 minutes</b> to set up your game plan call.
+            Keep your phone nearby and pick up!! This is the fastest way to get started.
+          </p>
 
-          <div className="stepper" aria-label="Booking progress">
-            <div className="step-node done">
-              <span className="node-circle">{CHECK}</span>
-              <span className="node-label">
-                Application
-                <br />
-                Submitted
-              </span>
+          <div className="mission-panel" aria-label="Application progress">
+            <div className="mission-header">
+              <div>
+                <div className="mission-eyebrow">Application Status</div>
+                <div className="mission-title">Mission Progress</div>
+              </div>
+              <div className="mission-status">
+                <span className="dot" aria-hidden="true" />
+                Coach Is Calling
+              </div>
             </div>
-            <div className="step-bar pending" />
-            <div className="step-node pending">
-              <span className="node-circle">!</span>
-              <span className="node-label">
-                Education
-                <br />
-                Phase
-              </span>
+
+            <div className="mission-bar-track">
+              <div className="mission-bar-fill" />
             </div>
-            <div className="step-bar future" />
-            <div className="step-node future">
-              <span className="node-circle">
-                <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="8" cy="8" r="3" />
-                </svg>
-              </span>
-              <span className="node-label">
-                Gameplan
-                <br />
-                Call
-              </span>
+
+            <div className="mission-track">
+              <div className="mission-line-fill" aria-hidden="true" />
+              <div className="mission-node done">
+                <span className="node-circle">{CHECK}</span>
+                <span className="node-stage">Stage 1</span>
+                <span className="node-label">
+                  Application
+                  <br />
+                  Submitted
+                </span>
+              </div>
+              <div className="mission-node current">
+                <span className="node-circle">&#9889;</span>
+                <span className="node-stage">Stage 2</span>
+                <span className="node-label">
+                  Coach Is
+                  <br />
+                  Calling
+                </span>
+              </div>
+              <div className="mission-node locked">
+                <span className="node-circle">&#128274;</span>
+                <span className="node-stage">Stage 3</span>
+                <span className="node-label">
+                  Game Plan Call
+                  <br />
+                  Scheduled
+                </span>
+              </div>
+            </div>
+
+            <div className="mission-caption">
+              <span className="dot" aria-hidden="true" />
+              Your coach is calling you right now
             </div>
           </div>
 
@@ -294,29 +325,22 @@ export default function ThankYouContent({ firePixel = true }: { firePixel?: bool
         </div>
       </section>
 
-      {/* ================= DISCLAIMER ================= */}
-      <section className="disclaimer-section">
-        <p>
-          EcomSimulation. This page is for informational purposes only and does not constitute financial advice. Past
-          performance does not guarantee future results. Not affiliated with or endorsed by Meta, TikTok, or any platform
-          mentioned.
-        </p>
-      </section>
-
       {/* ================= FOOTER ================= */}
       <footer className="site-footer">
-        <div className="container-wide">
-          <div className="foot-inner">
-            <div className="brand-row" style={{ padding: 0 }}>
-              <BrandMark />
-              <span className="brand-word">EcomSimulation</span>
-              <span className="brand-tier">Accelerator</span>
-            </div>
-            <p className="foot-copy">
-              © {new Date().getFullYear()} EcomSimulation · This page is intended for invited applicants only.
-            </p>
-          </div>
+        <p className="foot-disc">
+          This site is not a part of the Facebook™ or Meta™ website or Meta™ Inc. Additionally, this site is NOT
+          endorsed by Facebook™ or Meta™ in any way. Results are not typical. Your results will vary based on effort,
+          experience, and market conditions.
+        </p>
+        <div className="foot-links">
+          <a href="/terms">Terms of Service</a>
+          <span className="sep">·</span>
+          <a href="/privacy">Privacy Policy</a>
         </div>
+        <p className="foot-copy">© {new Date().getFullYear()} EcomSimulation. All rights reserved.</p>
+        <p className="foot-mail">
+          Questions? <a href="mailto:info@ecomsimulation.io">info@ecomsimulation.io</a>
+        </p>
       </footer>
     </div>
   );
