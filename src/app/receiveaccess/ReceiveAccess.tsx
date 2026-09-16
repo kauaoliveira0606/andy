@@ -27,17 +27,13 @@ const STORES = [
 ];
 const MODULE_IMAGES = ["/paid/e1.png", "/paid/e2.png", "/paid/e3.png", "/paid/e4.png", "/paid/e5.png", "/paid/e6.png"];
 
-/* videoId set per item as real VTurb embeds come in; unset ones show a placeholder frame. */
-const FAQ_VIDEOS: { question: string; videoId?: string }[] = [
+const FAQ_VIDEOS: { question: string; videoId: string }[] = [
   { question: "Is this really free?", videoId: "6a77b006c42b7fecd0cb5113" },
   { question: "What if this isn't for me?", videoId: "6a77b17f133b0c599880da4d" },
   { question: "What if I never sold online or aren't techy?", videoId: "6a77b2b3133b0c599880db0d" },
   { question: "Do I actually own the store?", videoId: "6a77b424f35eb9bb868809d9" },
   { question: "What results can I realistically expect?", videoId: "6a77b497bda06d1b04c799ac" },
   { question: "What is actually inside the program?", videoId: "6a77b5f6aef224966a516bf0" },
-  { question: "What's the catch? This is too good to be true" },
-  { question: "How much does it actually cost to get started?" },
-  { question: "I'm not tech savvy. Can I still do this?" },
 ];
 
 const STEPS: [string, string, string][] = [
@@ -109,9 +105,6 @@ const CSS = `
 @media(max-width:860px){.ra .faq-grid{grid-template-columns:repeat(2,1fr);}}
 @media(max-width:560px){.ra .faq-grid{grid-template-columns:1fr;}}
 .ra .fvid{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:12px;}
-.ra .fvid .frame{position:relative;aspect-ratio:16/9;border-radius:11px;overflow:hidden;border:1px solid rgba(80,150,255,.2);background:linear-gradient(160deg,#0c1a2e,#0a1220);display:flex;align-items:center;justify-content:center;}
-.ra .fvid .frame .play{width:44px;height:31px;border-radius:8px;background:linear-gradient(135deg,#7db4ff,#2f7bff);position:relative;}
-.ra .fvid .frame .play::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-46%,-50%);border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent #fff;}
 .ra .fvid p{font-size:13px;font-weight:700;color:var(--ink);line-height:1.35;}
 
 .ra .modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;}
@@ -232,22 +225,16 @@ export default function ReceiveAccess({ name }: { name?: string }) {
           <div className="faq-grid" style={{ textAlign: "left" }}>
             {FAQ_VIDEOS.map(({ question, videoId }) => (
               <div className="fvid" key={question}>
-                {videoId ? (
-                  <div style={{ borderRadius: 11, overflow: "hidden" }}>
-                    <vturb-smartplayer id={`vid-${videoId}`} style={{ display: "block", margin: "0 auto", width: "100%" }}>
-                      <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "56.25% 0 0", zIndex: 0, backgroundColor: "black" }} />
-                    </vturb-smartplayer>
-                    <Script
-                      id={`vturb-faq-script-${videoId}`}
-                      strategy="afterInteractive"
-                      src={`https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/${videoId}/v4/player.js`}
-                    />
-                  </div>
-                ) : (
-                  <div className="frame">
-                    <span className="play" aria-hidden="true" />
-                  </div>
-                )}
+                <div style={{ borderRadius: 11, overflow: "hidden" }}>
+                  <vturb-smartplayer id={`vid-${videoId}`} style={{ display: "block", margin: "0 auto", width: "100%" }}>
+                    <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "56.25% 0 0", zIndex: 0, backgroundColor: "black" }} />
+                  </vturb-smartplayer>
+                  <Script
+                    id={`vturb-faq-script-${videoId}`}
+                    strategy="afterInteractive"
+                    src={`https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/${videoId}/v4/player.js`}
+                  />
+                </div>
                 <p>{question}</p>
               </div>
             ))}
