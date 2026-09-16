@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect } from "react";
-import { Montserrat } from "next/font/google";
+import { useEffect, useRef, useState } from "react";
+import { Inter } from "next/font/google";
 
-const font = Montserrat({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--fs-font" });
-
-/* Wire this to the real lead-form / opt-in destination before launch. */
-const CTA_URL = "#claim";
+const font = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700", "800", "900"], variable: "--fs-font" });
 
 const IMG = "https://ecomsimulation.io/__l5e/assets-v1";
 const GWAGON = `${IMG}/f794f1a6-65e2-47b0-b23b-a66fdb5e6b97/andy-gwagon-2.jpg`;
@@ -29,512 +26,805 @@ const STORES = [
   `${IMG}/fff83430-de05-4b1f-97f2-50a00855d43c/ai-store-10.png`,
 ];
 
-const STATS: [string, string][] = [
-  ["1,000+", "Students started with us"],
-  ["1,000+", "Stores launched"],
-  ["$10M+", "In student sales"],
+/* Value stack shown in the "What's Included" card. */
+const VALUE_ITEMS: { name: string; value: string; free?: boolean }[] = [
+  { name: "Fully Built AI Online Store", value: "$700 value" },
+  { name: "Step-By-Step Course (Follow-Along Format)", value: "$997 value" },
+  { name: "Personal Onboarding Call", value: "FREE", free: true },
+  { name: "Coaching Calls With 7-Figure Coaches", value: "$900 value" },
+  { name: "Founder Community", value: "$500 value" },
+  { name: "Step-By-Step Blueprint To Follow", value: "$400 value" },
+];
+const TOTAL_VALUE = "$3,497";
+
+/* Generic, brand-agnostic facts about the dropshipping model itself. */
+const WHY_ITEMS: { icon: React.ReactNode; title: string; desc: string }[] = [
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+        <line x1="12" y1="22.08" x2="12" y2="12" />
+      </svg>
+    ),
+    title: "No Products To Buy Upfront",
+    desc: "You only pay for a product after a customer buys it from your store. No buying inventory. No risk of unsold stock sitting in your garage.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="22" y1="2" x2="11" y2="13" />
+        <polygon points="22 2 15 22 11 13 2 9 22 2" />
+      </svg>
+    ),
+    title: "No Shipping Or Handling",
+    desc: "Your supplier packs and ships everything directly to your customer. You never touch a product.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="3" width="20" height="14" rx="2" />
+        <path d="M8 21h8M12 17v4" />
+      </svg>
+    ),
+    title: "Work From Anywhere",
+    desc: "Run your store from your couch after work, on your lunch break, or wherever you've got your laptop.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <polyline points="12 6 12 12 16 14" />
+      </svg>
+    ),
+    title: "Your Store Runs 24/7",
+    desc: "Your online store takes orders even while you're sleeping. It never closes.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" />
+        <path d="M12 6v6l4 2" />
+      </svg>
+    ),
+    title: "Low Startup Cost",
+    desc: "Most businesses require thousands to start. With branded e-commerce, you can get up and running for less than the cost of a dinner out.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+    title: "Recurring Demand",
+    desc: "Supplements and consumables mean customers come back every month without you doing anything.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M9 9h.01M15 9h.01M9 15h6" />
+      </svg>
+    ),
+    title: "AI Helps You",
+    desc: "AI finds products, builds the store, makes ads, handles marketing, connects suppliers. The busy work gets done fast.",
+  },
+  {
+    icon: (
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+      </svg>
+    ),
+    title: "No Product To Build",
+    desc: "You're the middleman. You build the store to sell their products.",
+  },
 ];
 
-const VALUE: [string, string][] = [
-  ["The Complete AI Dropshipping Course", "$997"],
-  ["Coaching Calls With 7 Figure Coaches", "$900"],
-  ["Founder Community", "$500"],
-  ["The AI Store Builder (Done For You) + Winning Products Loaded", "$700"],
-  ["Step-By-Step Blueprint To Follow", "$400"],
+/* The program modules — shown as cards since we don't have curriculum screenshots to embed. */
+const MODULES: { k: string; h: string; p: string }[] = [
+  { k: "Find", h: "Pick Your Person, Then Your Product", p: "Instead of chasing random trending products, you pick a specific group of people with a real problem, then find the products that solve it. That's what makes a brand instead of a store with a countdown timer." },
+  { k: "Build", h: "The AI Builds Your Store", p: "Product loaded, pages written, checkout wired up. Live in minutes, then you make it yours." },
+  { k: "Create", h: "Make Content That Sells", p: "Organic content and AI-made ads, taught by people who do it every day." },
+  { k: "Launch", h: "Run Your First Ads", p: "Start small, let the data talk, and never touch the budget while it's testing." },
+  { k: "Scale", h: "Feed What Works", p: "Cut the losers, scale the winners, and let systems handle more orders without more hours." },
 ];
 
-const SYSTEM: [string, string, string][] = [
-  ["Find", "Pick Your Person, Then Your Product", "Instead of chasing random trending products, you pick a specific group of people with a real problem, then find the products that solve it. That's what makes a brand instead of a store with a countdown timer."],
-  ["Build", "The AI Builds Your Store", "Product loaded, pages written, checkout wired up. Live in minutes, then you make it yours."],
-  ["Create", "Make Content That Sells", "Organic content and AI-made ads, taught by people who do it every day."],
-  ["Launch", "Run Your First Ads", "Start small, let the data talk, and never touch the budget while it's testing."],
-  ["Scale", "Feed What Works", "Cut the losers, scale the winners, and let systems handle more orders without more hours."],
-];
-
-const STEPS: [string, string, string][] = [
-  ["1", "Claim Your Free Access", "Enter your details in under a minute. No card, no commitment."],
-  ["2", "Answer The Call", "Our team calls you, gets you the AI tool, and builds your store."],
-  ["3", "Make Your First Sale", "Follow the system, launch your product, and make your first sale."],
+const NEXT_STEPS: { n: string; h: string; p: string }[] = [
+  { n: "1", h: "Fill Out The Short Form", p: "It takes two minutes to fill it out." },
+  { n: "2", h: "Answer The Call", p: "Our team calls you, gets you the AI tool, and builds your store." },
+  { n: "3", h: "Get Your Free Course Access", p: "You get instant access to the private portal — every module and all the content." },
 ];
 
 const FAQ: [string, string][] = [
-  [
-    "Is it really free? What's the catch?",
-    "Yes, it is free. Thousands of people have paid for this program. A billion-dollar AI company pays us when you become a long-term user of their platform, so you get the whole program free and they get a new high-quality user. You win, we win, they win.",
-  ],
-  [
-    "How much does it actually cost to get started?",
-    "Access to the course, coaching, community, AI store builder and blueprint is free. You still need a normal budget for the essentials of running a store, such as ad spend and any tools you choose to add. There is no card required to sign up.",
-  ],
-  [
-    "I've never sold online and I'm not techy, can I still do this?",
-    "Yes. The AI builds the store, our team gets you set up on the call, and the blueprint tells you what to do next at every step. No experience or tech skills needed.",
-  ],
-  [
-    "Do I actually own the store, or do you control it?",
-    "You own it. It is built on your account, in your name, and it is yours to keep and run.",
-  ],
-  [
-    "Can I do this with a full-time job, or will I be doing customer service all day?",
-    "Most members work this around a job. The store is built for you, the system tells you what to focus on, and fulfilment and support get handled with tools rather than hours at a desk.",
-  ],
+  ["What happens after I apply?", "A member of Andy's team calls you within 5 to 10 minutes to make sure you're a fit, then gets you set up with access the same day."],
+  ["Do I need e-commerce or tech experience?", "None. This was built for complete beginners. AI does most of the heavy lifting — building your store, writing copy, and researching products. You just follow the system."],
+  ["What makes this e-commerce model different?", "This is not the typical dropshipping you see with pump-and-dump stores. You're building a real branded e-commerce business with long-term equity — something you can eventually sell."],
+  ["How much money do I need to start?", "You need a laptop and the AI tool subscription to get started, and down the line, a normal budget for ad spend. On your onboarding call we'll go over your situation and give you personalized guidance based on where you're at."],
+  ["Can I do this while working a full-time job?", "Yes. Most members started part-time. The system is designed to run with focused effort — you don't need to quit your job first. Build revenue, then transition when it makes sense."],
+  ["How much time does this take per day?", "An hour or two in the evening is plenty. The AI handles the store build, the product research, and most of the busy work. Your job is to follow the steps and stay consistent."],
+  ["How do I actually make sales?", "Inside the free course, we teach you exactly how. We cover paid ads (Facebook, Instagram, TikTok), organic marketing, email/SMS marketing, and more. We walk you through exactly how to get your first sale, step by step."],
+  ["Do I need to buy products upfront or handle shipping?", "No and no. You only pay for a product after a customer buys it from your store. The supplier handles packing and shipping directly to your customer. You never touch inventory."],
+  ["Is this legit or is it another scam?", "Fair question. It's legit. You get a real store, a real course that used to sell for $3,497, and a real coach who gets on a call with you. Nothing is hidden. A billion-dollar AI company covers the cost because they want you using their tool. That's the whole catch."],
 ];
 
 const CSS = `
 .fs{
-  --bg:#03060c; --bg-card:linear-gradient(135deg,#0a0f18,#0d1522); --band:#000;
-  --acc:#39d353; --acc-soft:rgba(57,211,83,.10); --acc-line:rgba(57,211,83,.28);
-  --red:#ef4444; --btn:linear-gradient(135deg,#7db4ff,#2f7bff 55%,#6db0ff);
-  --border:rgba(255,255,255,.09); --border-2:rgba(57,211,83,.4); --glow:rgba(57,211,83,.22);
-  --text:#fff; --text-dim:rgba(255,255,255,.85); --text-mut:rgba(255,255,255,.55);
-  --f:var(--fs-font),-apple-system,BlinkMacSystemFont,sans-serif;
-  background:var(--bg); color:var(--text-dim); font-family:var(--f);
-  font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  --bg:#000000; --card:#ffffff; --border:rgba(0,0,0,0.09);
+  --text:#111111; --text2:#6b7280; --green:#22c55e; --gold:#f59e0b; --accent:#22c55e;
+  font-family:var(--fs-font),'Inter',sans-serif;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size:56px 56px;
+  color:#fff; line-height:1.6;
 }
-.fs *{box-sizing:border-box;margin:0;padding:0;}
-.fs ::selection{background:var(--acc);color:#04140a;}
+.fs *{box-sizing:border-box;}
+.fs a{color:inherit;text-decoration:none;}
 .fs img{max-width:100%;display:block;}
-.fs .wrap{max-width:1080px;margin:0 auto;padding:0 22px;}
-.fs section{padding:58px 0;}
-.fs .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-line);border-radius:9999px;padding:8px 16px;background:var(--acc-soft);}
-.fs h1{font-size:clamp(26px,4.4vw,44px);font-weight:900;letter-spacing:-.02em;line-height:1.12;color:#fff;text-wrap:balance;}
-.fs h2{font-size:clamp(24px,3.6vw,38px);font-weight:900;letter-spacing:-.02em;line-height:1.14;color:#fff;text-wrap:balance;}
-.fs h3{font-size:19px;font-weight:800;color:#fff;letter-spacing:-.01em;}
-.fs .green{color:var(--acc);}
-.fs .redx{color:var(--red);}
-.fs .center{text-align:center;}
-.fs .lead{font-size:17px;color:var(--text-dim);max-width:56ch;}
-.fs .lead.center{margin-left:auto;margin-right:auto;}
 
-.fs .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;max-width:460px;
-  font-size:16px;font-weight:900;letter-spacing:.01em;padding:18px 28px;border-radius:9999px;text-decoration:none;
-  background:var(--btn);color:#fff;box-shadow:0 12px 34px -10px rgba(47,123,255,.55);
-  transition:transform .15s,opacity .15s;cursor:pointer;border:0;}
-.fs .btn:hover{transform:translateY(-1px);opacity:.94;}
-.fs .btn .arw{transition:transform .2s;}
-.fs .btn:hover .arw{transform:translateX(3px);}
-.fs .cta-wrap{display:flex;flex-direction:column;align-items:center;}
+.fs .hero{max-width:1040px;margin:0 auto;padding:40px 24px 16px;text-align:center;}
+.fs .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(34,197,94,0.14);border:1px solid rgba(34,197,94,0.35);color:var(--green);font-size:0.8rem;font-weight:600;padding:5px 14px;border-radius:100px;margin-bottom:24px;letter-spacing:0.3px;}
+.fs .hero h1{font-size:clamp(1.7rem,5vw,3.2rem);font-weight:900;line-height:1.15;letter-spacing:-0.5px;margin-bottom:20px;color:#fff;}
+.fs .hero-sub{font-size:1.1rem;color:rgba(255,255,255,0.68);max-width:560px;margin:0 auto 20px;}
+.fs .watch-first{text-align:center;color:var(--green);font-weight:700;font-size:0.95rem;margin-bottom:14px;}
 
-/* hero */
-.fs .hero{padding-top:34px;text-align:center;position:relative;}
-.fs .hero::before{content:"";position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(ellipse 640px 340px at 50% -8%,rgba(57,211,83,.10),transparent 65%);}
-.fs .hero-inner{position:relative;max-width:900px;margin:0 auto;}
-.fs .hero h1{margin:22px auto 0;max-width:20ch;}
-.fs .hero p.sub{margin:16px auto 0;max-width:52ch;font-size:16px;color:var(--text-dim);}
-.fs .video-box{margin:26px auto 0;max-width:760px;aspect-ratio:16/9;border-radius:16px;border:1px solid var(--border);
-  background:linear-gradient(160deg,#0c1622,#05090f);display:flex;align-items:center;justify-content:center;
-  box-shadow:0 24px 60px -30px var(--glow);}
-.fs .video-box .play{width:66px;height:46px;border-radius:10px;background:var(--btn);position:relative;box-shadow:0 8px 30px rgba(47,123,255,.45);}
-.fs .video-box .play::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-46%,-50%);border-style:solid;border-width:9px 0 9px 15px;border-color:transparent transparent transparent #fff;}
-.fs .video-note{position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mut);}
-.fs .social{margin-top:24px;display:flex;flex-wrap:wrap;gap:12px 26px;justify-content:center;align-items:center;font-size:13px;color:var(--text-mut);}
-.fs .social > span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;}
-.fs .avatars{display:flex;}
-.fs .avatars img{width:30px;height:30px;border-radius:50%;border:2px solid var(--bg);object-fit:cover;margin-left:-8px;}
-.fs .avatars img:first-child{margin-left:0;}
-.fs .stars{color:#ffb020;letter-spacing:1px;}
+.fs .video-container{max-width:720px;margin:0 auto 28px;padding:0 24px;}
+.fs .video-wrapper{position:relative;width:100%;aspect-ratio:9/16;max-width:360px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.12);background:linear-gradient(135deg,#101014,#050506);display:flex;align-items:center;justify-content:center;}
+.fs .vid-play{width:64px;height:64px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px -8px rgba(34,197,94,0.6);}
+.fs .vid-play svg{width:26px;height:26px;fill:#000;margin-left:3px;}
+.fs .vid-label{position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:0.72rem;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.45);}
 
-/* stats */
-.fs .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:760px;margin:0 auto;}
-@media(max-width:640px){.fs .stat-grid{grid-template-columns:1fr;}}
-.fs .stat{border:1px solid var(--border);border-radius:16px;background:var(--bg-card);padding:26px 16px;text-align:center;}
-.fs .stat .n{font-size:clamp(26px,4vw,38px);font-weight:900;color:var(--acc);line-height:1;letter-spacing:-.02em;}
-.fs .stat:nth-child(3) .n{color:var(--acc);}
-.fs .stat .l{margin-top:8px;font-size:13px;color:var(--text-mut);}
+.fs .claim-box{padding:0 24px 28px;text-align:center;}
+.fs .claim-card{background:var(--card);border:1.5px solid #eee;border-radius:24px;max-width:480px;width:100%;margin:0 auto;padding:32px 28px 26px;}
+.fs .claim-logo{font-family:var(--fs-font),sans-serif;font-weight:900;font-size:1.4rem;letter-spacing:-0.03em;color:#0a0a0a;margin-bottom:14px;}
+.fs .claim-logo span{color:var(--green);}
+.fs .claim-card h2{text-align:center;font-size:1.7rem;font-weight:900;color:#0a0a0a;letter-spacing:-0.5px;margin-bottom:10px;}
+.fs .claim-card > p{text-align:center;color:#666;font-size:0.95rem;line-height:1.55;margin-bottom:24px;}
+.fs form{display:flex;flex-direction:column;gap:12px;max-width:420px;margin:0 auto;text-align:left;}
+.fs form input[type="text"],.fs form input[type="email"],.fs form input[type="tel"]{background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:50px;padding:15px 20px;font-size:0.95rem;font-family:var(--fs-font),sans-serif;outline:none;transition:border .15s;color:#111;width:100%;}
+.fs form input:focus{border-color:var(--green);}
+.fs .phone-row{display:flex;gap:10px;}
+.fs .phone-row select{background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:50px;padding:15px 16px;font-size:0.9rem;font-family:var(--fs-font),sans-serif;color:#333;outline:none;cursor:pointer;min-width:96px;text-align:center;}
+.fs .phone-row input{flex:1;}
+.fs .agree-row{display:flex;align-items:flex-start;gap:10px;font-size:0.8rem;line-height:1.5;color:#666;cursor:pointer;padding:2px 4px;}
+.fs .agree-row input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--green);cursor:pointer;}
 
-/* cards / value stack */
-.fs .card{border:1px solid var(--border);border-radius:20px;background:var(--bg-card);padding:26px;max-width:720px;margin:26px auto 0;box-shadow:0 24px 60px -34px var(--glow);}
-.fs .value-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);}
-.fs .value-row:last-of-type{border-bottom:0;}
-.fs .value-row .name{font-size:14.5px;font-weight:600;color:var(--text);}
-.fs .value-row .price{flex-shrink:0;font-size:14.5px;font-weight:800;color:var(--red);text-decoration:line-through;}
-.fs .total-row{display:flex;align-items:center;justify-content:space-between;margin-top:16px;font-weight:900;}
-.fs .total-row .lbl{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mut);}
-.fs .total-row .val{font-size:19px;color:var(--red);text-decoration:line-through;}
-.fs .price-today{display:flex;align-items:center;justify-content:space-between;margin-top:10px;border:1px solid var(--border-2);border-radius:14px;padding:14px 18px;background:var(--acc-soft);}
-.fs .price-today .lbl{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#fff;font-weight:800;}
-.fs .price-today .val{font-size:24px;font-weight:900;color:var(--acc);}
-.fs .scarcity{margin-top:14px;text-align:center;font-size:12.5px;color:var(--text-mut);}
+.fs .cta-btn{background:linear-gradient(180deg,#3ba85f 0%,#2f8049 100%);color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:0.3px;text-transform:uppercase;line-height:1.25;padding:14px 40px;border-radius:14px;border:1px solid rgba(0,0,0,0.18);cursor:pointer;display:inline-block;transition:opacity .15s,transform .15s;margin-bottom:16px;width:100%;max-width:380px;font-family:var(--fs-font),sans-serif;}
+.fs .cta-btn:hover{opacity:0.88;transform:translateY(-1px);}
+.fs .cta-btn:disabled{opacity:0.6;cursor:not-allowed;}
+.fs .cta-btn-sub{display:block;margin-top:3px;font-size:0.78rem;font-weight:600;text-transform:none;letter-spacing:0;opacity:0.9;}
 
-/* who / no catch */
-.fs .who{display:grid;grid-template-columns:1fr 340px;gap:26px;align-items:center;}
-@media(max-width:760px){.fs .who{grid-template-columns:1fr;}}
-.fs .who p{margin-top:12px;color:var(--text-dim);}
-.fs .who p:first-child{margin-top:0;}
-.fs .who .kick{color:#fff;font-weight:800;}
-.fs .who-photo{border-radius:20px;overflow:hidden;border:1px solid var(--border);}
-.fs .who-photo img{width:100%;height:100%;object-fit:cover;}
+.fs .review-badge{display:inline-flex;align-items:center;gap:10px;margin-top:14px;background:#0a0a0a;border-radius:100px;padding:8px 18px 8px 8px;box-shadow:0 4px 16px rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);}
+.fs .review-badge .stars{display:flex;gap:1px;}
+.fs .review-badge .stars span{color:#facc15;font-size:0.7rem;}
+.fs .review-badge .txt{font-size:0.78rem;font-weight:700;color:#fff;}
 
-/* screenshot grids */
-.fs .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
-@media(max-width:820px){.fs .shots{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:520px){.fs .shots{grid-template-columns:1fr;}}
-.fs .shot{border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-card);aspect-ratio:4/3;}
-.fs .shot img{width:100%;height:100%;object-fit:cover;object-position:top center;}
-.fs .shots.stores .shot{aspect-ratio:16/10;}
-.fs .disclaim{margin-top:16px;font-size:12px;color:var(--text-mut);max-width:760px;}
+.fs .divider{border:none;border-top:1px solid rgba(255,255,255,0.1);margin:0;}
 
-/* system steps */
-.fs .sys-list{display:grid;gap:14px;max-width:820px;margin:28px auto 0;}
-.fs .sys{display:grid;grid-template-columns:120px 1fr;gap:20px;border:1px solid var(--border);border-radius:14px;background:var(--bg-card);padding:22px 24px;}
-@media(max-width:640px){.fs .sys{grid-template-columns:1fr;gap:8px;}}
-.fs .sys .k{font-size:12px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);padding-top:3px;}
-.fs .sys p{font-size:14px;color:var(--text-dim);margin-top:5px;}
+.fs .section{max-width:800px;margin:0 auto;padding:56px 24px;}
+.fs .section-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--green);margin-bottom:12px;text-align:center;}
+.fs .section-title{font-size:clamp(1.5rem,4vw,2.2rem);font-weight:800;letter-spacing:-0.5px;margin-bottom:16px;text-align:center;color:#fff;}
+.fs .section-desc{color:rgba(255,255,255,0.62);font-size:1rem;max-width:560px;margin:0 auto 40px;text-align:center;}
 
-/* how it works */
-.fs .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:28px;}
-@media(max-width:760px){.fs .steps{grid-template-columns:1fr;}}
-.fs .step{border:1px solid var(--border);border-radius:16px;background:var(--bg-card);padding:26px 22px;}
-.fs .step .num{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:900;color:var(--acc);background:var(--acc-soft);border:1px solid var(--acc-line);margin-bottom:12px;}
-.fs .step p{font-size:13.5px;color:var(--text-dim);margin-top:6px;}
+.fs .value-card-outer{background:var(--card);border:1.5px solid #e5e7eb;border-radius:16px;overflow:hidden;margin-top:24px;color:#111;}
+.fs .value-card-brand{padding:14px 20px;border-bottom:1.5px solid #e5e7eb;text-align:center;}
+.fs .value-card-brand span{font-size:0.7rem;font-weight:800;letter-spacing:0.14em;text-transform:uppercase;color:#6b7280;}
+.fs .value-row{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid #f3f4f6;}
+.fs .value-row:last-child{border-bottom:none;}
+.fs .value-row-left{display:flex;align-items:center;gap:10px;}
+.fs .value-check{width:22px;height:22px;background:#dcfce7;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fs .value-name{font-size:0.9rem;font-weight:600;color:#111;}
+.fs .value-price{font-size:0.8rem;font-weight:700;color:#6b7280;white-space:nowrap;margin-left:12px;}
+.fs .value-price.free{color:#16a34a;font-weight:800;}
+.fs .value-total-box{background:#f9fafb;border-top:1.5px solid #e5e7eb;padding:16px 20px;}
+.fs .value-total-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.fs .value-total-row span:first-child{font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#6b7280;}
+.fs .value-total-row span:last-child{font-size:0.95rem;font-weight:800;color:#9ca3af;text-decoration:line-through;}
+.fs .value-price-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.fs .value-price-row span:first-child{font-size:0.95rem;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:#111;}
+.fs .value-price-row span:last-child{font-size:1.6rem;font-weight:900;color:var(--green);}
+.fs .value-urgency{text-align:center;font-size:0.75rem;color:#6b7280;line-height:1.5;}
 
-/* faq */
-.fs .faq{max-width:820px;margin:28px auto 0;display:grid;gap:12px;}
-.fs .faq-item{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);overflow:hidden;}
-.fs .faq-item.open{border-color:var(--border-2);}
-.fs .faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 22px;
-  background:none;border:0;cursor:pointer;color:#fff;font-family:var(--f);font-size:15.5px;font-weight:800;text-align:left;}
-.fs .faq-q .pl{flex-shrink:0;width:26px;height:26px;border-radius:6px;background:var(--acc-soft);border:1px solid var(--acc-line);color:var(--acc);display:flex;align-items:center;justify-content:center;font-size:16px;transition:transform .25s;}
-.fs .faq-item.open .pl{transform:rotate(45deg);}
+.fs .who-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px 32px;max-width:640px;margin:0 auto;text-align:left;color:#111;}
+.fs .who-card p{font-size:1rem;color:#374151;line-height:1.75;margin-bottom:16px;}
+.fs .who-sig{display:flex;align-items:center;gap:16px;padding-top:20px;border-top:1px solid var(--border);}
+.fs .who-sig .name{font-family:Georgia,serif;font-style:italic;font-size:1.4rem;color:var(--text);white-space:nowrap;}
+.fs .who-sig .sep{width:1px;height:28px;background:var(--border);flex-shrink:0;}
+.fs .who-sig .title{font-size:0.72rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);}
+.fs .who-photo{max-width:640px;margin:24px auto 0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.1);}
+
+.fs .why-list{background:var(--card);border:1px solid var(--border);border-radius:20px;overflow:hidden;color:#111;}
+.fs .why-item{display:flex;align-items:flex-start;gap:20px;padding:28px 32px;border-bottom:1px solid var(--border);}
+.fs .why-item:last-child{border-bottom:none;}
+.fs .why-icon{width:48px;height:48px;background:#fdf8ef;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#c8a84b;}
+.fs .why-body strong{display:block;font-size:1rem;font-weight:700;color:var(--text);margin-bottom:6px;}
+.fs .why-body p{font-size:0.9rem;color:var(--text2);line-height:1.65;}
+
+.fs .modules-list{display:flex;flex-direction:column;gap:16px;margin-top:24px;}
+.fs .module-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px 26px;color:#111;}
+.fs .module-k{font-size:0.72rem;font-weight:900;letter-spacing:0.16em;text-transform:uppercase;color:var(--green);margin-bottom:8px;}
+.fs .module-card h3{font-size:1.05rem;font-weight:800;color:#0a0a0a;margin-bottom:8px;}
+.fs .module-card p{font-size:0.9rem;color:#4b5563;line-height:1.6;}
+
+.fs .next-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:32px;margin-top:8px;}
+@media (max-width:640px){.fs .next-grid{grid-template-columns:1fr;}}
+.fs .next-num{width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;margin-bottom:16px;}
+.fs .next-grid strong{display:block;font-size:1.05rem;font-weight:800;color:#fff;margin-bottom:8px;}
+.fs .next-grid p{font-size:0.9rem;color:rgba(255,255,255,0.6);line-height:1.6;}
+
+.fs .win-cols{columns:3;column-gap:16px;margin-bottom:16px;}
+@media (max-width:700px){.fs .win-cols{columns:2;}}
+@media (max-width:480px){.fs .win-cols{columns:1;}}
+.fs .win-card{break-inside:avoid;margin-bottom:16px;background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;color:#111;}
+.fs .win-card-label{padding:14px 18px;}
+.fs .win-card-label .eyebrow{font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--green);margin-bottom:4px;}
+.fs .win-card-label .title{font-size:0.9rem;font-weight:700;color:var(--text);}
+.fs .win-card-label .sub{font-size:0.8rem;color:var(--text2);margin-top:2px;}
+.fs .win-card img{width:100%;object-fit:cover;}
+
+.fs .faq-list{display:flex;flex-direction:column;gap:8px;}
+.fs .faq-item{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;color:#111;}
+.fs .faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 24px;background:none;border:none;color:var(--text);font-size:0.975rem;font-weight:600;cursor:pointer;text-align:left;gap:16px;font-family:var(--fs-font),sans-serif;}
+.fs .faq-icon{width:22px;height:22px;flex-shrink:0;background:rgba(0,0,0,0.07);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.9rem;transition:transform .2s;}
+.fs .faq-item.open .faq-icon{transform:rotate(45deg);}
 .fs .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
-.fs .faq-a p{padding:0 22px 20px;font-size:14.5px;color:var(--text-dim);}
+.fs .faq-a-inner{padding:0 24px 20px;font-size:0.9rem;color:var(--text2);line-height:1.7;}
 
-/* final cta */
-.fs .final{background:var(--band);border-top:1px solid var(--border-2);text-align:center;}
-.fs .final .valline{display:flex;align-items:center;justify-content:space-between;font-size:13px;}
-.fs .final .valline .old{text-decoration:line-through;color:var(--red);}
-.fs .final .valline .new{color:var(--acc);font-weight:800;}
-.fs .final ul{list-style:none;margin:16px 0 0;display:grid;gap:8px;text-align:left;}
-.fs .final li{font-size:13.5px;color:var(--text-dim);}
-.fs .final li b{color:var(--acc);font-weight:900;margin-right:8px;}
+.fs .urgency{display:inline-flex;align-items:center;gap:6px;background:rgba(239,68,68,0.14);border:1px solid rgba(239,68,68,0.3);color:#f87171;font-size:0.78rem;font-weight:600;padding:5px 12px;border-radius:100px;margin-bottom:20px;}
+.fs .urgency .dot{width:6px;height:6px;border-radius:50%;background:#f87171;animation:fs-pulse 1.4s infinite;}
+@keyframes fs-pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-/* footer */
-.fs footer{background:#000;border-top:1px solid var(--border);padding:44px 0 36px;text-align:center;}
-.fs footer .links{display:flex;gap:18px;justify-content:center;margin-bottom:14px;}
-.fs footer .links a{color:var(--text-dim);text-decoration:none;font-size:13px;}
-.fs footer .links a:hover{color:var(--acc);}
-.fs footer .income{max-width:820px;margin:0 auto 14px;font-size:11.5px;color:var(--text-mut);line-height:1.65;}
-.fs footer .copy{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-mut);}
+.fs footer{border-top:1px solid rgba(255,255,255,0.1);padding:16px 24px 24px;text-align:center;color:rgba(255,255,255,0.55);font-size:0.8rem;}
+.fs footer a{color:rgba(255,255,255,0.55);margin:0 8px;}
+.fs footer a:hover{color:#fff;}
+.fs .footer-disclaimer{max-width:700px;margin:16px auto 0;font-size:0.72rem;color:rgba(255,255,255,0.35);line-height:1.6;}
+
+.fs .modal-overlay{display:flex;position:fixed;inset:0;z-index:999;background:rgba(0,0,0,0.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px;}
+.fs .modal-box{background:var(--card);border-radius:24px;max-width:480px;width:100%;padding:36px 32px 28px;position:relative;max-height:90vh;overflow-y:auto;color:#111;}
+.fs .modal-close{position:absolute;top:16px;right:16px;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#888;line-height:1;}
+.fs .modal-success{text-align:center;padding:16px 0;}
+.fs .modal-success .title{font-size:1.1rem;font-weight:800;color:var(--green);margin-bottom:6px;}
+.fs .modal-success p{font-size:0.9rem;color:#666;}
+.fs .modal-disclaimer{text-align:center;font-size:0.72rem;color:#aaa;margin-top:16px;line-height:1.6;}
+.fs .modal-disclaimer a{color:#555;text-decoration:underline;}
+
+@media (max-width:600px){
+  .fs .hero{padding:24px 16px 8px;}
+  .fs .section{padding:40px 16px;}
+  .fs .claim-card{padding:26px 20px 22px;}
+  .fs .who-card{padding:22px 20px;}
+  .fs .why-item{padding:22px 20px;gap:14px;}
+  .fs .value-card-outer{margin-top:20px;}
+}
 `;
 
+const COUNTRIES = [
+  ["+1", "\u{1F1FA}\u{1F1F8} +1"],
+  ["+44", "\u{1F1EC}\u{1F1E7} +44"],
+  ["+61", "\u{1F1E6}\u{1F1FA} +61"],
+  ["+64", "\u{1F1F3}\u{1F1FF} +64"],
+  ["+49", "\u{1F1E9}\u{1F1EA} +49"],
+  ["+33", "\u{1F1EB}\u{1F1F7} +33"],
+  ["+353", "\u{1F1EE}\u{1F1EA} +353"],
+  ["+55", "\u{1F1E7}\u{1F1F7} +55"],
+  ["+52", "\u{1F1F2}\u{1F1FD} +52"],
+];
+
+const CHECK = (
+  <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+    <path d="M2 6l3 3 5-5" stroke="#16a34a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+type FormState = { name: string; email: string; country: string; phone: string; agree: boolean };
+const EMPTY_FORM: FormState = { name: "", email: "", country: "+1", phone: "", agree: false };
+
+function LeadForm({
+  form,
+  setForm,
+  onSubmit,
+  submitting,
+}: {
+  form: FormState;
+  setForm: (f: FormState) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  submitting: boolean;
+}) {
+  return (
+    <form onSubmit={onSubmit}>
+      <input
+        type="text"
+        placeholder="First name"
+        required
+        value={form.name}
+        onChange={(e) => setForm({ ...form, name: e.target.value })}
+      />
+      <input
+        type="email"
+        placeholder="Email"
+        required
+        value={form.email}
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
+      />
+      <div className="phone-row">
+        <select value={form.country} onChange={(e) => setForm({ ...form, country: e.target.value })}>
+          {COUNTRIES.map(([code, label]) => (
+            <option value={code} key={label}>
+              {label}
+            </option>
+          ))}
+        </select>
+        <input
+          type="tel"
+          required
+          placeholder="Phone number"
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+        />
+      </div>
+      <label className="agree-row">
+        <input type="checkbox" required checked={form.agree} onChange={(e) => setForm({ ...form, agree: e.target.checked })} />
+        <span>
+          By checking this box you understand you&rsquo;ll need a normal budget for ad spend once your store is live.
+          If that&rsquo;s not possible for you right now, please come back when it is.
+        </span>
+      </label>
+      <button type="submit" className="cta-btn" disabled={submitting}>
+        {submitting ? "Sending..." : "Claim Your Free Access"}
+      </button>
+    </form>
+  );
+}
+
 export default function FreeStore() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalSubmitting, setModalSubmitting] = useState(false);
+  const [modalDone, setModalDone] = useState(false);
+  const [inlineSubmitting, setInlineSubmitting] = useState(false);
+  const [inlineForm, setInlineForm] = useState<FormState>(EMPTY_FORM);
+  const [modalForm, setModalForm] = useState<FormState>(EMPTY_FORM);
+  const exitFiredRef = useRef(false);
+  const exitReadyRef = useRef(false);
+  const lastScrollRef = useRef({ y: 0, t: 0 });
+
   useEffect(() => {
     document.querySelectorAll<HTMLElement>(".fs .faq-item").forEach((item) => {
       const q = item.querySelector<HTMLElement>(".faq-q");
       const a = item.querySelector<HTMLElement>(".faq-a");
-      q?.addEventListener("click", () => {
+      const handler = () => {
         const open = item.classList.contains("open");
         document.querySelectorAll(".fs .faq-item.open").forEach((o) => {
           o.classList.remove("open");
-          o.querySelector<HTMLElement>(".faq-a")!.style.maxHeight = "0px";
+          const oa = o.querySelector<HTMLElement>(".faq-a");
+          if (oa) oa.style.maxHeight = "0px";
         });
         if (!open && a) {
           item.classList.add("open");
           a.style.maxHeight = a.scrollHeight + "px";
         }
-      });
+      };
+      q?.addEventListener("click", handler);
     });
   }, []);
 
-  const Cta = ({ label = "Get My Free Store + Program" }: { label?: string }) => (
-    <div className="cta-wrap">
-      <a href={CTA_URL} className="btn">
-        {label} <span className="arw" aria-hidden="true">→</span>
-      </a>
-    </div>
-  );
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      exitReadyRef.current = true;
+    }, 20000);
+
+    const onMouseLeave = (e: MouseEvent) => {
+      if (e.clientY < 10 && exitReadyRef.current && !exitFiredRef.current) {
+        exitFiredRef.current = true;
+        setModalOpen(true);
+      }
+    };
+    const onScroll = () => {
+      const now = Date.now();
+      const y = window.scrollY;
+      const last = lastScrollRef.current;
+      if (y > 300 && y < last.y && now - last.t < 300 && exitReadyRef.current && !exitFiredRef.current) {
+        exitFiredRef.current = true;
+        setModalOpen(true);
+      }
+      lastScrollRef.current = { y, t: now };
+    };
+
+    document.addEventListener("mouseleave", onMouseLeave);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      clearTimeout(timer);
+      document.removeEventListener("mouseleave", onMouseLeave);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!modalOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setModalOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [modalOpen]);
+
+  const submitLead = async (form: FormState) => {
+    const phone = form.phone.trim();
+    const digits = phone.replace(/\D/g, "");
+    if (!form.name.trim() || !form.email.trim() || digits.length < 7 || !form.agree) return false;
+    try {
+      await fetch("/api/collect-lead", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          phone: phone.startsWith("+") ? phone : form.country + phone,
+          webhook: "free-store",
+        }),
+      });
+    } catch {
+      /* fall through to redirect either way */
+    }
+    window.location.href = `/receiveaccess?name=${encodeURIComponent(form.name)}`;
+    return true;
+  };
+
+  const handleInlineSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setInlineSubmitting(true);
+    const ok = await submitLead(inlineForm);
+    if (!ok) setInlineSubmitting(false);
+  };
+
+  const handleModalSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setModalSubmitting(true);
+    const ok = await submitLead(modalForm);
+    if (ok) setModalDone(true);
+    else setModalSubmitting(false);
+  };
 
   return (
     <div className={`fs ${font.variable}`}>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
 
       {/* HERO */}
-      <section className="hero" id="claim">
-        <div className="wrap">
-          <div className="hero-inner">
-            <span className="eyebrow">Free Store + Free Program</span>
-            <h1>
-              I Charged <span className="redx">$3,497</span> For My AI Dropshipping Program. Today, You Get It{" "}
-              <span className="green">FREE.</span>
-            </h1>
-            <p className="sub">
-              Watch the short video below. Your store is built by AI in about 10 minutes, and our team calls you to set
-              the whole thing up. No experience or tech skills needed.
+      <div className="hero">
+        <div className="hero-badge">
+          <span style={{ color: "#f97316", fontSize: "0.9rem" }}>&#10022;</span>
+          <span style={{ fontSize: "0.72rem", fontWeight: 800, letterSpacing: "1px", textTransform: "uppercase" }}>
+            Free E-commerce Program
+          </span>
+        </div>
+        <h1>
+          I&rsquo;ll Help You Build A Successful E-commerce Business Completely For <span style={{ color: "var(--green)" }}>FREE</span>
+        </h1>
+        <p className="hero-sub">
+          Watch the short video below. I show you exactly what this is, why I&rsquo;m giving it away, and how my team
+          gets you set up. No experience and no degree needed.
+        </p>
+      </div>
+
+      <p className="watch-first">&#8595; Watch this first, it&rsquo;s short and it explains everything.</p>
+
+      {/* VIDEO */}
+      <div className="video-container">
+        <div className="video-wrapper" aria-label="Free program overview video">
+          {/* Replace with the real VSL embed */}
+          <span className="vid-play" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
+          </span>
+          <span className="vid-label">[ VSL embed goes here ]</span>
+        </div>
+      </div>
+
+      {/* CLAIM CARD */}
+      <div className="claim-box">
+        <div className="claim-card">
+          <div className="claim-logo">
+            Ecom<span>Simulation</span>
+          </div>
+          <h2>Claim Your Free Access</h2>
+          <p>Drop your info below and a coach will call you to onboard you.</p>
+          <LeadForm form={inlineForm} setForm={setInlineForm} onSubmit={handleInlineSubmit} submitting={inlineSubmitting} />
+        </div>
+        <div className="review-badge">
+          <div className="stars">
+            <span>&#9733;</span>
+            <span>&#9733;</span>
+            <span>&#9733;</span>
+            <span>&#9733;</span>
+            <span>&#9733;</span>
+          </div>
+          <span className="txt">4.7 From 100+ Reviews</span>
+        </div>
+      </div>
+
+      <hr className="divider" />
+
+      {/* WHAT'S INCLUDED */}
+      <div className="section">
+        <h2 className="section-title">
+          You&rsquo;re Not Just Getting A Store. You&rsquo;re Getting The Whole Blueprint And The Tools To Build It.
+        </h2>
+        <p style={{ textAlign: "center", fontSize: "1rem", color: "rgba(255,255,255,0.62)", lineHeight: 1.7 }}>
+          Other platforms hand you a store and disappear. We stay with you until it works.
+        </p>
+
+        <div className="value-card-outer">
+          <div className="value-card-brand">
+            <span>AI Ecommerce Store</span>
+          </div>
+          <div>
+            {VALUE_ITEMS.map((item) => (
+              <div className="value-row" key={item.name}>
+                <div className="value-row-left">
+                  <div className="value-check">{CHECK}</div>
+                  <span className="value-name">{item.name}</span>
+                </div>
+                <span className={`value-price ${item.free ? "free" : ""}`}>{item.value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="value-total-box">
+            <div className="value-total-row">
+              <span>Total Value</span>
+              <span>{TOTAL_VALUE}</span>
+            </div>
+            <div className="value-price-row">
+              <span>Your Price</span>
+              <span>FREE</span>
+            </div>
+            <p className="value-urgency">
+              &#9889; This won&rsquo;t be free forever. Our partners currently cover the cost — but that could change
+              at any time.
             </p>
-            <div className="video-box">
-              {/* Replace with the real VSL embed */}
-              <span className="play" aria-hidden="true" />
-              <span className="video-note">[ VSL embed goes here ]</span>
-            </div>
-            <div style={{ marginTop: 22 }}>
-              <Cta />
-            </div>
-            <div className="social">
-              <span>
-                <span className="avatars">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="https://ecomsimulation.io/assets/m1-BmqYXOR6.jpg" alt="" />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="https://ecomsimulation.io/assets/m2-BbOCtJlv.jpg" alt="" />
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="https://ecomsimulation.io/assets/m3-CpOlQfeh.jpg" alt="" />
-                </span>
-                <span>
-                  Join <b style={{ color: "#fff" }}>1,000+</b> Ecom entrepreneurs
-                </span>
-              </span>
-              <span>
-                <span className="stars">★★★★★</span>
-                <b style={{ color: "#fff" }}>4.7</b> from 100+ reviews
-              </span>
-            </div>
           </div>
         </div>
-      </section>
 
-      {/* STATS */}
-      <section style={{ paddingTop: 0 }}>
-        <div className="wrap">
-          <div className="stat-grid">
-            {STATS.map(([n, l]) => (
-              <div className="stat" key={l}>
-                <div className="n">{n}</div>
-                <div className="l">{l}</div>
-              </div>
-            ))}
-          </div>
+        <div style={{ marginTop: 20, textAlign: "center" }}>
+          <button className="cta-btn" onClick={() => setModalOpen(true)}>
+            GET MY SYSTEM <span aria-hidden="true">→</span>
+            <span className="cta-btn-sub">(AI Tools + Free Course)</span>
+          </button>
         </div>
-      </section>
+      </div>
 
-      {/* VALUE STACK */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">Included</span>
-            <h2 style={{ marginTop: 14 }}>Everything You Get</h2>
-          </div>
-          <div className="card">
-            {VALUE.map(([name, price]) => (
-              <div className="value-row" key={name}>
-                <span className="name">{name}</span>
-                <span className="price">{price}</span>
-              </div>
-            ))}
-            <div className="total-row">
-              <span className="lbl">Total Value</span>
-              <span className="val">$3,497</span>
-            </div>
-            <div className="price-today">
-              <span className="lbl">Your Price Today</span>
-              <span className="val">FREE</span>
-            </div>
-            <p className="scarcity">This will not be free forever. It goes back to $3,497 once free access closes.</p>
-          </div>
-          <div style={{ marginTop: 26 }} className="center">
-            <Cta />
-          </div>
-        </div>
-      </section>
+      <hr className="divider" />
 
       {/* NO CATCH */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">No Catch</span>
-            <h2 style={{ marginTop: 14 }}>Wait, Who Are You And Why Is This Free?</h2>
+      <div className="section">
+        <p className="section-label">No Catch</p>
+        <h2 className="section-title">
+          Wait, <span style={{ color: "var(--green)" }}>Who Are You and How Is This Free?</span>
+        </h2>
+        <div className="who-card">
+          <p>
+            My name is Andy Stauring. I&rsquo;ve generated 8 figures in the past 6 years through e-commerce, and have
+            been documenting my journey over the last 5 years.
+          </p>
+          <p>
+            I used to charge {TOTAL_VALUE} for this program. Now a billion-dollar AI company covers it because they
+            want you using their tool. They pay me, you get the course for free, and the only thing you need is the
+            AI tool itself.
+          </p>
+          <p>
+            This is the exact tool that&rsquo;s helped our students build real, branded stores from scratch — no
+            experience needed.
+          </p>
+          <div className="who-sig">
+            <span className="name">Andy</span>
+            <span className="sep" />
+            <span className="title">Founder, EcomSimulation</span>
           </div>
-          <div className="card">
-            <div className="who">
-              <div>
-                <p>
-                  My name is Andy Stauring. I&rsquo;ve generated 8 figures in the past 6 years through e-commerce, and
-                  have been documenting my journey over the last 5 years.
-                </p>
-                <p>
-                  Thousands of people have paid for this program. So the fair question is: why give it away now? Where is
-                  the catch?
-                </p>
-                <p>
-                  There is none. A billion-dollar AI company pays us when you become a long-term user of their platform.
-                  You get the whole program free. They get a new high-quality user.
-                </p>
-                <p className="kick">You win, we win, they win.</p>
-              </div>
-              <div className="who-photo">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={GWAGON} alt="Andy Stauring" loading="lazy" />
+        </div>
+        <div className="who-photo">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={GWAGON} alt="Andy Stauring" loading="lazy" />
+        </div>
+      </div>
+
+      <hr className="divider" />
+
+      {/* WHY THIS MODEL */}
+      <div className="section">
+        <p className="section-label">Why This Model</p>
+        <h2 className="section-title">Why Thousands Of People Are Choosing This Online Business</h2>
+        <div className="why-list">
+          {WHY_ITEMS.map((item) => (
+            <div className="why-item" key={item.title}>
+              <div className="why-icon">{item.icon}</div>
+              <div className="why-body">
+                <strong>{item.title}</strong>
+                <p>{item.desc}</p>
               </div>
             </div>
-          </div>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* MEMBER RESULTS */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">Live · new wins posted this week</span>
-            <h2 style={{ marginTop: 14 }}>See How Our Members Are Doing</h2>
-            <p className="lead center" style={{ marginTop: 10 }}>
-              Real dashboards from real members. No edits, no cherry picking, just what happens when you actually run the
-              process.
-            </p>
-          </div>
-          <div className="shots">
-            {PROOF.map((src, i) => (
-              <div className="shot" key={i}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`Member result ${i + 1}`} loading="lazy" />
-              </div>
-            ))}
-          </div>
-          <p className="disclaim">
-            Results shown are from student stores and are not typical. Building an ecommerce business carries risk. See the
-            full disclaimer at the bottom of this page.
-          </p>
-        </div>
-      </section>
+      <hr className="divider" />
 
-      {/* AI-BUILT STORES */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">Live</span>
-            <h2 style={{ marginTop: 14 }}>Here Are Some Stores Our AI Built</h2>
-            <p className="lead center" style={{ marginTop: 10 }}>
-              Real stores generated for members. Yours is built the same way, on your call.
-            </p>
-          </div>
-          <div className="shots stores">
-            {STORES.map((src, i) => (
-              <div className="shot" key={i}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt={`AI-built store ${i + 1}`} loading="lazy" />
-              </div>
-            ))}
-          </div>
+      {/* FULL PROGRAM */}
+      <div className="section" style={{ maxWidth: 900 }}>
+        <p className="section-label">What&rsquo;s Inside</p>
+        <h2 className="section-title">The Full Program You Just Unlocked</h2>
+        <div className="modules-list">
+          {MODULES.map((m) => (
+            <div className="module-card" key={m.k}>
+              <div className="module-k">{m.k}</div>
+              <h3>{m.h}</h3>
+              <p>{m.p}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* THE SYSTEM */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">The System</span>
-            <h2 style={{ marginTop: 14 }}>One System. Every Step Laid Out.</h2>
-            <p className="lead center" style={{ marginTop: 10 }}>
-              This is the exact 6-week path inside the program. No guessing what comes next, ever.
-            </p>
-          </div>
-          <div className="sys-list">
-            {SYSTEM.map(([k, h, p]) => (
-              <div className="sys" key={k}>
-                <div className="k">{k}</div>
-                <div>
-                  <h3>{h}</h3>
-                  <p>{p}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      {/* WHAT HAPPENS NEXT */}
+      <div className="section">
+        <p className="section-label">What Happens Next</p>
+        <h2 className="section-title">
+          Here&rsquo;s Exactly What To Do <span style={{ color: "var(--green)", fontStyle: "italic" }}>Now.</span>
+        </h2>
+        <div className="next-grid">
+          {NEXT_STEPS.map((s) => (
+            <div key={s.n}>
+              <div className="next-num">{s.n}</div>
+              <strong>{s.h}</strong>
+              <p>{s.p}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </div>
 
-      {/* HOW IT WORKS */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">How It Works</span>
-            <h2 style={{ marginTop: 14 }}>You Are 3 Steps From Started</h2>
-          </div>
-          <div className="steps">
-            {STEPS.map(([n, h, p]) => (
-              <div className="step" key={n}>
-                <div className="num">{n}</div>
-                <h3>{h}</h3>
-                <p>{p}</p>
+      <hr className="divider" />
+
+      {/* TESTIMONIALS */}
+      <div className="section">
+        <p className="section-label">Student Wins</p>
+        <h2 className="section-title">People Just Like You Who Followed The System</h2>
+        <p className="section-desc">No hype. Just outcomes from students who went through the same system you&rsquo;re about to access.</p>
+
+        <div className="win-cols">
+          {PROOF.map((src, i) => (
+            <div className="win-card" key={src}>
+              <div className="win-card-label">
+                <div className="eyebrow">Member Result</div>
+                <div className="title">Real Student Dashboard</div>
+                <div className="sub">Unedited screenshot from a member&rsquo;s store</div>
               </div>
-            ))}
-          </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt={`Member result ${i + 1}`} loading="lazy" />
+            </div>
+          ))}
+          {STORES.map((src, i) => (
+            <div className="win-card" key={src}>
+              <div className="win-card-label">
+                <div className="eyebrow">AI-Built Store</div>
+                <div className="title">Live Member Store</div>
+                <div className="sub">Built by our AI on a real onboarding call</div>
+              </div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={src} alt={`AI-built store ${i + 1}`} loading="lazy" />
+            </div>
+          ))}
         </div>
-      </section>
+
+        <div style={{ textAlign: "center", marginTop: 32 }}>
+          <button className="cta-btn" style={{ maxWidth: 380 }} onClick={() => setModalOpen(true)}>
+            GET MY SYSTEM <span aria-hidden="true">→</span>
+            <span className="cta-btn-sub">(AI Tools + Free Course)</span>
+          </button>
+        </div>
+      </div>
+
+      <hr className="divider" />
 
       {/* FAQ */}
-      <section>
-        <div className="wrap">
-          <div className="center">
-            <span className="eyebrow">Questions</span>
-            <h2 style={{ marginTop: 14 }}>Frequently Asked Questions</h2>
-          </div>
-          <div className="faq">
-            {FAQ.map(([q, a]) => (
-              <div className="faq-item" key={q}>
-                <button className="faq-q" type="button">
-                  {q}
-                  <span className="pl">+</span>
-                </button>
-                <div className="faq-a">
-                  <p>{a}</p>
-                </div>
+      <div className="section">
+        <p className="section-label">Common Questions</p>
+        <h2 className="section-title">Got Questions? We&rsquo;ve Got Answers.</h2>
+        <p className="section-desc" style={{ marginBottom: 32 }}>
+          Everything people ask before they get started.
+        </p>
+        <div className="faq-list">
+          {FAQ.map(([q, a]) => (
+            <div className="faq-item" key={q}>
+              <button className="faq-q" type="button">
+                {q}
+                <span className="faq-icon">+</span>
+              </button>
+              <div className="faq-a">
+                <p className="faq-a-inner">{a}</p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="final">
-        <div className="wrap">
-          <span className="eyebrow">Get Started</span>
-          <h2 style={{ marginTop: 14 }}>Start Your Store For Free</h2>
-          <p className="lead center" style={{ marginTop: 10 }}>
-            Takes under a minute. Our team calls you to get the AI tool set up and build your store.
-          </p>
-          <div className="card">
-            <ul>
-              <li>
-                <b>✓</b>A to Z course
-              </li>
-              <li>
-                <b>✓</b>Coaching calls
-              </li>
-              <li>
-                <b>✓</b>AI store builder and winning products
-              </li>
-              <li>
-                <b>✓</b>Community
-              </li>
-              <li>
-                <b>✓</b>Step-by-step roadmap
-              </li>
-            </ul>
-            <div style={{ marginTop: 20 }}>
-              <Cta />
             </div>
+          ))}
+        </div>
+        <div style={{ textAlign: "center", marginTop: 32 }}>
+          <button className="cta-btn" style={{ maxWidth: 380 }} onClick={() => setModalOpen(true)}>
+            GET MY SYSTEM <span aria-hidden="true">→</span>
+            <span className="cta-btn-sub">(AI Tools + Free Course)</span>
+          </button>
+        </div>
+      </div>
+
+      {/* MODAL */}
+      {modalOpen && (
+        <div
+          className="modal-overlay"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setModalOpen(false);
+          }}
+        >
+          <div className="modal-box">
+            <button className="modal-close" onClick={() => setModalOpen(false)} aria-label="Close">
+              &times;
+            </button>
+            <div className="claim-logo" style={{ textAlign: "center" }}>
+              Ecom<span>Simulation</span>
+            </div>
+            <h2 style={{ textAlign: "center", fontSize: "1.7rem", fontWeight: 900, color: "#0a0a0a", letterSpacing: "-0.5px", marginBottom: 10 }}>
+              Claim Your Free Access
+            </h2>
+            <p style={{ textAlign: "center", color: "#666", fontSize: "0.95rem", lineHeight: 1.55, marginBottom: 28 }}>
+              Drop your info below and a coach will call you to onboard you.
+            </p>
+
+            {!modalDone ? (
+              <LeadForm form={modalForm} setForm={setModalForm} onSubmit={handleModalSubmit} submitting={modalSubmitting} />
+            ) : (
+              <div className="modal-success">
+                <p className="title">You&rsquo;re in!</p>
+                <p>We&rsquo;ll reach out within 24 hours to get you set up. Check your inbox.</p>
+              </div>
+            )}
+
+            <p className="modal-disclaimer">
+              Your information is 100% secure.
+              <br />
+              By submitting you agree to our{" "}
+              <a href="/terms" target="_blank" rel="noopener noreferrer">
+                terms
+              </a>{" "}
+              and{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer">
+                policies
+              </a>
+              .
+            </p>
           </div>
         </div>
-      </section>
+      )}
 
       {/* FOOTER */}
       <footer>
-        <div className="wrap">
-          <div className="links">
-            <a href="/terms" target="_blank" rel="noopener noreferrer">
-              Terms &amp; Conditions
-            </a>
-            <a href="/privacy" target="_blank" rel="noopener noreferrer">
-              Privacy Policy
-            </a>
-          </div>
-          <p className="income">
-            Income disclaimer: results are not typical and are not a guarantee of earnings. Figures and student results
-            are for illustration only. Building a business takes consistent work over time. This is educational and not
-            financial, legal, or tax advice. Not affiliated with or endorsed by Meta, TikTok, Wix, or any platform
-            mentioned.
-          </p>
-          <p className="copy">© {new Date().getFullYear()} Ecom Simulation. All rights reserved.</p>
+        <div>
+          <a href="/privacy" target="_blank" rel="noopener noreferrer">
+            Privacy Policy
+          </a>
+          <a href="/terms" target="_blank" rel="noopener noreferrer">
+            Terms of Service
+          </a>
         </div>
+        <p className="footer-disclaimer">
+          Income disclaimer: results are not typical and are not a guarantee of earnings. Individual results will
+          vary based on effort, experience, background, and market conditions. This is an educational program. We
+          make no guarantees of income or business outcomes.
+        </p>
+        <p className="footer-disclaimer" style={{ marginTop: 10 }}>
+          This website is not endorsed by, affiliated with, or associated with Meta Platforms, Inc. (formerly
+          Facebook, Inc.). Facebook is a trademark of Meta Platforms, Inc.
+        </p>
+        <p style={{ marginTop: 12 }}>© {new Date().getFullYear()} EcomSimulation. All rights reserved.</p>
       </footer>
     </div>
   );
