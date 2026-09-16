@@ -51,11 +51,12 @@ const STATS: [string, string][] = [
 
 const CSS = `
 .ra{
-  --bg:#f4f6fb; --panel:#ffffff; --ink:#0a0a0a; --muted:#374151; --line:rgba(0,0,0,.10);
+  --bg:#000000; --panel:#ffffff; --ink:#0a0a0a; --muted:#374151; --line:rgba(0,0,0,.10);
   --acc:#39d353; --acc-soft:rgba(57,211,83,.12); --acc-line:rgba(57,211,83,.4);
   --blue:#2f7bff; --amber:#f59e0b; --amber-soft:#fff7ed; --amber-line:#fdba74;
+  --text-onbg:#ffffff; --text-onbg-mute:rgba(255,255,255,.82);
   --f:var(--ra-font),-apple-system,BlinkMacSystemFont,sans-serif;
-  background:var(--bg); color:var(--muted); font-family:var(--f);
+  background:var(--bg); color:var(--text-onbg-mute); font-family:var(--f);
   font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; overflow-x:hidden;
 }
 .ra *{box-sizing:border-box;margin:0;padding:0;}
@@ -71,17 +72,19 @@ const CSS = `
 .ra .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:900;letter-spacing:.14em;
   text-transform:uppercase;color:var(--acc);border:1px solid var(--acc-line);border-radius:9999px;padding:7px 15px;background:var(--acc-soft);}
 .ra .eyebrow.warn{color:#b45309;border-color:var(--amber-line);background:var(--amber-soft);}
-.ra h1{font-size:clamp(24px,3.6vw,36px);font-weight:900;letter-spacing:-.02em;line-height:1.16;color:var(--ink);text-wrap:balance;}
-.ra h2{font-size:clamp(21px,3vw,30px);font-weight:900;letter-spacing:-.02em;line-height:1.18;color:var(--ink);text-wrap:balance;}
+.ra h1{font-size:clamp(24px,3.6vw,36px);font-weight:900;letter-spacing:-.02em;line-height:1.16;color:var(--text-onbg);text-wrap:balance;}
+.ra h2{font-size:clamp(21px,3vw,30px);font-weight:900;letter-spacing:-.02em;line-height:1.18;color:var(--text-onbg);text-wrap:balance;}
 .ra h3{font-size:16px;font-weight:800;color:var(--ink);}
+.ra .panel h2{color:var(--ink);}
 .ra .center{text-align:center;}
-.ra .lead{font-size:14.5px;color:var(--muted);max-width:60ch;}
+.ra .lead{font-size:14.5px;color:var(--text-onbg-mute);max-width:60ch;}
+.ra .panel .lead{color:var(--muted);}
 .ra .lead.center{margin-left:auto;margin-right:auto;}
 
 .ra .panel{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 20px 50px -34px rgba(20,40,90,.25);}
 .ra .hero{padding-top:36px;text-align:center;}
 .ra .hero h1{margin:18px auto 0;max-width:26ch;}
-.ra .hero p.sub{margin:14px auto 0;max-width:56ch;font-size:14.5px;color:var(--muted);}
+.ra .hero p.sub{margin:14px auto 0;max-width:56ch;font-size:14.5px;color:var(--text-onbg-mute);}
 .ra .coach-badge{display:inline-flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:100px;padding:10px 20px;font-size:13.5px;font-weight:600;color:var(--ink);}
 .ra .coach-badge .dot{width:8px;height:8px;border-radius:50%;background:#dc2626;flex-shrink:0;animation:ra-dot-pulse 1.4s infinite;}
 @keyframes ra-dot-pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
@@ -134,15 +137,15 @@ const CSS = `
 @keyframes ra-ping{0%{box-shadow:0 0 0 0 rgba(57,211,83,.5);}70%{box-shadow:0 0 0 8px rgba(57,211,83,0);}100%{box-shadow:0 0 0 0 rgba(57,211,83,0);}}
 
 .ra .final{text-align:center;}
-.ra .final .checks{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:16px;font-size:13.5px;font-weight:700;color:var(--ink);}
+.ra .final .checks{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:16px;font-size:13.5px;font-weight:700;color:var(--text-onbg);}
 .ra .final .checks span b{color:var(--acc);margin-right:6px;}
 
-.ra footer{border-top:1px solid var(--line);padding:36px 0 30px;text-align:center;background:#eef1f7;}
+.ra footer{border-top:1px solid rgba(255,255,255,.12);padding:36px 0 30px;text-align:center;background:#000000;}
 .ra footer .links{display:flex;gap:18px;justify-content:center;margin-bottom:12px;}
-.ra footer .links a{color:var(--muted);text-decoration:none;font-size:13px;}
-.ra footer .links a:hover{color:var(--blue);}
-.ra footer .income{max-width:820px;margin:0 auto 12px;font-size:11px;color:#6b7280;line-height:1.6;}
-.ra footer .copy{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:#9ca3af;}
+.ra footer .links a{color:rgba(255,255,255,.75);text-decoration:none;font-size:13px;}
+.ra footer .links a:hover{color:#fff;}
+.ra footer .income{max-width:820px;margin:0 auto 12px;font-size:11px;color:rgba(255,255,255,.55);line-height:1.6;}
+.ra footer .copy{font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);}
 `;
 
 function useCountdown(seconds: number) {
