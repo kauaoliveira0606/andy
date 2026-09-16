@@ -244,7 +244,7 @@ export default function ThankYouContent({ firePixel = true, firstName }: { fireP
         <div className="hero-inner">
           <div className="status-pulse">
             <span className="pulse-dot" aria-hidden="true" />
-            <span>1 Step Left &rarr; Expect A Phone Call From Us</span>
+            <span>Expect A Phone Call From Us</span>
           </div>
 
           <h1>
