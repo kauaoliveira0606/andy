@@ -28,8 +28,8 @@ const TOTAL = COMMITMENTS.length;
 
 const CSS = `
 .cm-page{
-  --bg:#0A0A0C; --card:#131316; --border:rgba(255,255,255,0.08);
-  --text:rgba(255,255,255,0.98); --text2:rgba(255,255,255,0.72); --text3:rgba(255,255,255,0.5);
+  --bg:#0A0A0C; --card:#17171b; --border:rgba(255,255,255,0.14);
+  --text:#ffffff; --text2:rgba(255,255,255,0.94); --text3:rgba(255,255,255,0.78);
   --accent:#2A78D6; --accent-hover:#1B5FB0; --accent-bright:#8FC7FF;
   --green:#22c55e;
   font-family:var(--font-body), system-ui, sans-serif;
@@ -100,7 +100,8 @@ const CSS = `
   color:var(--text); outline:none; transition:border-color .15s; width:100%;
 }
 .cm-input:focus{border-color:var(--accent);}
-.cm-input[readonly]{background:rgba(255,255,255,0.03); color:var(--text2); cursor:default;}
+.cm-input[readonly]{background:rgba(255,255,255,0.05); color:var(--text2); cursor:default;}
+.cm-input::placeholder{color:rgba(255,255,255,0.45);}
 
 .cm-sig-pad-wrap{
   background:var(--card); border:1.5px solid var(--border); border-radius:12px;
