@@ -16,19 +16,32 @@ const PROOF = [
   `${IMG}/2cc8ea97-6406-4916-a798-620e95bf7426/proof-7.jpg`,
   `${IMG}/0b48ac41-4da6-48d6-afac-f69f7f325b7a/proof-8.png`,
 ];
+const STORES = [
+  `${IMG}/be0f5ed8-f885-45ab-95d4-2287b5075b0d/ai-store-4.avif`,
+  `${IMG}/577e553f-79d9-43ae-b379-35705a3dd1d8/ai-store-6.avif`,
+  `${IMG}/afb89d2c-52d9-4597-932e-d5549e395b58/ai-store-7.png`,
+  `${IMG}/1130ccf0-f596-4751-be89-73f35c1ecef9/ai-store-8.png`,
+  `${IMG}/d401245e-f050-4295-92d9-d98f0f593505/ai-store-9.png`,
+  `${IMG}/fff83430-de05-4b1f-97f2-50a00855d43c/ai-store-10.png`,
+];
+const MODULE_IMAGES = ["/paid/e1.png", "/paid/e2.png", "/paid/e3.png", "/paid/e4.png", "/paid/e5.png", "/paid/e6.png"];
 
 const FAQ_VIDEOS = [
+  "Is dropshipping saturated?",
+  "What results can I realistically expect?",
+  "Can I still do this with a full-time job?",
+  "I've never sold a product online. Can I still make this work?",
+  "Can I do this if I don't know a lot about AI?",
+  "AI branded dropshipping explained",
+  "What's the catch? This is too good to be true",
   "How much does it actually cost to get started?",
-  "What is AI dropshipping?",
-  "What if I already have stores running?",
-  "What results can you realistically expect?",
-  "Can I do this as a beginner?",
-  "Can I do this even if I'm not from the US?",
+  "I'm not tech savvy. Can I still do this?",
 ];
 
 const STEPS: [string, string, string][] = [
-  ["01", "Answer the call from our team", "This is the only way to unlock your free store, program and community."],
-  ["02", "Watch the FAQ videos below", "Every question you're probably thinking gets answered before your call."],
+  ["1", "Answer The Call", "A coach is reaching out in the next 5–10 minutes. Save the number and pick up."],
+  ["2", "Get Access To The AI Ecommerce Tools Library", "On the call, your coach sets you up with the one AI tool that runs the whole system."],
+  ["3", "Get Your Free Course Access", "You get instant access to the private portal — every module and all the content."],
 ];
 
 const STATS: [string, string][] = [
@@ -82,7 +95,7 @@ const CSS = `
 .ra .warnbox{margin:22px auto 0;max-width:760px;background:var(--amber-soft);border:1px solid var(--amber-line);
   border-radius:14px;padding:16px 20px;text-align:center;font-size:13.5px;font-weight:700;color:#7c2d12;}
 
-.ra .steps{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px;}
+.ra .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
 @media(max-width:640px){.ra .steps{grid-template-columns:1fr;}}
 .ra .step{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;}
 .ra .step .num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:9px;
@@ -100,15 +113,24 @@ const CSS = `
 .ra .fvid .frame .play::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-46%,-50%);border-style:solid;border-width:6px 0 6px 10px;border-color:transparent transparent transparent #fff;}
 .ra .fvid p{font-size:13px;font-weight:700;color:var(--ink);line-height:1.35;}
 
+.ra .modules-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;}
+@media(max-width:640px){.ra .modules-grid{grid-template-columns:1fr;}}
+.ra .module-shot{border-radius:14px;overflow:hidden;border:1px solid var(--line);}
+
 .ra .who{display:grid;grid-template-columns:1fr;gap:12px;}
 .ra .who p{color:var(--muted);}
 .ra .who .kick{color:var(--ink);font-weight:800;}
 .ra .who .sig{margin-top:6px;font-size:12.5px;font-weight:700;color:var(--acc);}
 
-.ra .shots{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px;}
-@media(max-width:820px){.ra .shots{grid-template-columns:repeat(2,1fr);}}
-.ra .shot{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;aspect-ratio:4/3;}
-.ra .shot img{width:100%;height:100%;object-fit:cover;object-position:top center;}
+.ra .win-cols{columns:3;column-gap:14px;margin-top:22px;}
+@media(max-width:820px){.ra .win-cols{columns:2;}}
+@media(max-width:520px){.ra .win-cols{columns:1;}}
+.ra .win-card{break-inside:avoid;margin-bottom:14px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.ra .win-card-label{padding:12px 16px;}
+.ra .win-card-label .eyebrow-sm{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--acc);margin-bottom:3px;}
+.ra .win-card-label .title{font-size:13px;font-weight:700;color:var(--ink);}
+.ra .win-card-label .sub{font-size:11.5px;color:var(--muted);margin-top:2px;}
+.ra .win-card img{width:100%;display:block;object-fit:cover;}
 .ra .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px;}
 @media(max-width:720px){.ra .stat-grid{grid-template-columns:repeat(2,1fr);}}
 .ra .stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px 12px;text-align:center;}
@@ -239,6 +261,22 @@ export default function ReceiveAccess({ name }: { name?: string }) {
         </div>
       </section>
 
+      {/* FULL PROGRAM */}
+      <section>
+        <div className="wrap center">
+          <span className="eyebrow">What&rsquo;s Inside</span>
+          <h2 style={{ marginTop: 12 }}>The Full Program You Just Unlocked</h2>
+          <div className="modules-grid">
+            {MODULE_IMAGES.map((src, i) => (
+              <div className="module-shot" key={src}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={src} alt={`Module ${i + 1}`} loading="lazy" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* NO CATCH */}
       <section>
         <div className="wrap center">
@@ -283,11 +321,27 @@ export default function ReceiveAccess({ name }: { name?: string }) {
                 </div>
               ))}
             </div>
-            <div className="shots">
+            <div className="win-cols">
               {PROOF.map((src, i) => (
-                <div className="shot" key={i}>
+                <div className="win-card" key={src}>
+                  <div className="win-card-label">
+                    <div className="eyebrow-sm">Member Result</div>
+                    <div className="title">Real Student Dashboard</div>
+                    <div className="sub">Unedited screenshot from a member&rsquo;s store</div>
+                  </div>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt={`Student store result #${i + 1}`} loading="lazy" />
+                  <img src={src} alt={`Member result ${i + 1}`} loading="lazy" />
+                </div>
+              ))}
+              {STORES.map((src, i) => (
+                <div className="win-card" key={src}>
+                  <div className="win-card-label">
+                    <div className="eyebrow-sm">AI-Built Store</div>
+                    <div className="title">Live Member Store</div>
+                    <div className="sub">Built by our AI on a real onboarding call</div>
+                  </div>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt={`AI-built store ${i + 1}`} loading="lazy" />
                 </div>
               ))}
             </div>
