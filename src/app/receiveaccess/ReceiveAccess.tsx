@@ -151,8 +151,9 @@ const Video = ({ label }: { label: string }) => (
   </div>
 );
 
-export default function ReceiveAccess() {
+export default function ReceiveAccess({ name }: { name?: string }) {
   const clock = useCountdown(10 * 60);
+  const firstName = name?.trim();
 
   return (
     <div className={`ra ${font.variable}`}>
@@ -167,7 +168,8 @@ export default function ReceiveAccess() {
         <div className="wrap">
           <span className="eyebrow warn">⚠ Action Required</span>
           <h1>
-            Your Free Program Access Is Live For The Next 24 Hours. We&rsquo;re Calling In The Next 1&ndash;10 Minutes.
+            {firstName && `${firstName}, `}Your Free Program Access Is Live For The Next 24 Hours. We&rsquo;re Calling
+            In The Next 1&ndash;10 Minutes.
           </h1>
           <p className="sub">
             Get in contact with our team right now so your Free Program access doesn&rsquo;t expire. Make sure you answer
