@@ -258,11 +258,14 @@ export default function ThankYouContent({ firePixel = true, firstName }: { fireP
           <span className="start-here">Step 01 · Watch This First</span>
 
           <div className="vsl-wrap">
-            <div className="vsl-frame" aria-label="Booking confirmation overview video">
-              {/* Replace with your confirmation VSL embed */}
-              <span className="vsl-play" aria-hidden="true">&#9654;</span>
-              <span className="vsl-note">[ VSL embed goes here ]</span>
-            </div>
+            <vturb-smartplayer id="vid-6ab2b1a5d9072774a6ff8e2a" style={{ display: "block", margin: "0 auto", width: "100%", maxWidth: 400 }}>
+              <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "177.77777777777777% 0 0", zIndex: 0, backgroundColor: "black" }} />
+            </vturb-smartplayer>
+            <Script
+              id="vturb-confirmation-script"
+              strategy="afterInteractive"
+              src="https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/6ab2b1a5d9072774a6ff8e2a/v4/player.js"
+            />
           </div>
 
           <div className="mission-panel" aria-label="Application progress">
