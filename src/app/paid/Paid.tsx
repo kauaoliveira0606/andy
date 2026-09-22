@@ -527,13 +527,13 @@ export default function Paid() {
 
       {/* VIDEO */}
       <div className="video-container">
-        <vturb-smartplayer id="vid-6a824300b820f6a10a60299c" style={{ display: "block", margin: "0 auto", width: "100%", maxWidth: 400 }}>
+        <vturb-smartplayer id="vid-6ab2b1b34ebd21688da54a8c" style={{ display: "block", margin: "0 auto", width: "100%", maxWidth: 400 }}>
           <div className="vturb-player-placeholder" style={{ position: "relative", width: "100%", padding: "177.77777777777777% 0 0", zIndex: 0, backgroundColor: "black" }} />
         </vturb-smartplayer>
         <Script
           id="vturb-player-script"
           strategy="afterInteractive"
-          src="https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/6a824300b820f6a10a60299c/v4/player.js"
+          src="https://scripts.converteai.net/a75d7c73-f0c0-4135-93ad-4b36c0f4d6f6/players/6ab2b1b34ebd21688da54a8c/v4/player.js"
         />
       </div>
 
