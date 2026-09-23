@@ -180,9 +180,6 @@ const CSS = `
 .fs .phone-row{display:flex;gap:10px;}
 .fs .phone-row select{background:#f5f5f5;border:1.5px solid #e5e7eb;border-radius:50px;padding:15px 16px;font-size:0.9rem;font-family:var(--fs-font),sans-serif;color:#333;outline:none;cursor:pointer;min-width:96px;text-align:center;}
 .fs .phone-row input{flex:1;}
-.fs .agree-row{display:flex;align-items:flex-start;gap:10px;font-size:0.8rem;line-height:1.5;color:#666;cursor:pointer;padding:2px 4px;}
-.fs .agree-row input{margin-top:2px;width:16px;height:16px;flex-shrink:0;accent-color:var(--green);cursor:pointer;}
-.fs .agree-mark{background:#dcfce7;color:#15803d;font-weight:700;padding:0 5px;border-radius:5px;}
 
 .fs .cta-btn{background:linear-gradient(180deg,#3ba85f 0%,#2f8049 100%);color:#fff;font-weight:800;font-size:1.05rem;letter-spacing:0.3px;text-transform:uppercase;line-height:1.25;padding:14px 40px;border-radius:14px;border:1px solid rgba(0,0,0,0.18);cursor:pointer;display:inline-block;transition:opacity .15s,transform .15s;margin-bottom:16px;width:100%;max-width:380px;font-family:var(--fs-font),sans-serif;}
 .fs .cta-btn:hover{opacity:0.88;transform:translateY(-1px);}
@@ -310,8 +307,8 @@ const CHECK = (
   </svg>
 );
 
-type FormState = { name: string; email: string; country: string; phone: string; agree: boolean };
-const EMPTY_FORM: FormState = { name: "", email: "", country: "+1", phone: "", agree: false };
+type FormState = { name: string; email: string; country: string; phone: string };
+const EMPTY_FORM: FormState = { name: "", email: "", country: "+1", phone: "" };
 
 function LeadForm({
   form,
@@ -358,15 +355,6 @@ function LeadForm({
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
         />
       </div>
-      <label className="agree-row">
-        <input type="checkbox" required checked={form.agree} onChange={(e) => setForm({ ...form, agree: e.target.checked })} />
-        <span>
-          By checking this box you understand that it is a requirement to have at least{" "}
-          <mark className="agree-mark">$50</mark>
-          {" "}
-          to be able to access these tools. If that&rsquo;s not possible for you, please LEAVE this page now.
-        </span>
-      </label>
       {error && (
         <p style={{ color: "#dc2626", fontSize: "0.82rem", textAlign: "center", margin: "-2px 0 2px" }}>
           Something went wrong sending that. Please try again.
@@ -459,7 +447,7 @@ export default function Paid() {
   const submitLead = async (form: FormState) => {
     const phone = form.phone.trim();
     const digits = phone.replace(/\D/g, "");
-    if (!form.name.trim() || !form.email.trim() || digits.length < 7 || !form.agree) return false;
+    if (!form.name.trim() || !form.email.trim() || digits.length < 7) return false;
     try {
       const res = await fetch("/api/collect-lead-paid", {
         method: "POST",
